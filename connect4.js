@@ -2,12 +2,12 @@ class Connect4 {
   constructor(numRows, numCols) {
     this.numRows = numRows;
     this.numCols = numCols;
-
+    this.board = [];
     // Creating the game board
     for (let i = 0; i < this.numRows; i++) {
-      this[i] = [];
+      this.board[i] = [];
       for (let j = 0; j < this.numCols; j++) {
-        this[i][j] = null;
+        this.board[i][j] = null;
       }
     }
   }
@@ -16,8 +16,8 @@ class Connect4 {
     // returns counter position if successful
     // returns 1 if column is full
     for (let i = 0; i < this.numRows; i++) {
-      if (this[i][j] === null) {
-        this[i][j] = counter;
+      if (this.board[i][j] === null) {
+        this.board[i][j] = counter;
         return [i, j];
       }
     }
@@ -32,17 +32,17 @@ class Connect4 {
    
     const [i, j] = pos;
 
-    if (this[i][j] === null) {
+    if (this.board[i][j] === null) {
       return 1;
     }
 
-    const counter = this[i][j];
+    const counter = this.board[i][j];
     let connected = 0;
 
     for (let t = -3; t < 4; t++) {
       switch (direction) {
         case 'horizontal':
-          if (this[i][j + t] === counter) {
+          if (this.board[i][j + t] === counter) {
             connected++;
             break;
           } else {
@@ -50,9 +50,7 @@ class Connect4 {
             break;
           }
         case 'vertical':
-          if (i + t < 0) {
-            break;
-          } else if (this[i + t][j] === counter) {
+          if (this.board[i + t][j] === counter) {
             connected++;
             break;
           } else {
@@ -60,9 +58,7 @@ class Connect4 {
             break;
           }
         case 'diagonal':
-          if (i + t < 0) {
-            break;
-          } else if (this[i + t][j + t] === counter) {
+          if (this.board[i + t][j + t] === counter) {
             connected++;
             break
           } else {
@@ -77,3 +73,5 @@ class Connect4 {
     return false;
   }
 }
+
+module.exports = Connect4;
