@@ -7,7 +7,7 @@ const Connect4 = require('./connect4');
 let game = new Connect4(6, 7);
 
 describe('addCounter', () => {
-  test('i can add a counter to each column', () => {
+  test('can add a counter to each column', () => {
     for (let j = 0; j < numCols; j++) {
       game.addCounter('x', j);
     }
@@ -21,7 +21,7 @@ describe('addCounter', () => {
     ]);
   });
   
-  test('i can stack counters in a column', () => {
+  test('can stack counters in a column', () => {
     for (let i = 0; i < 5; i++) {
       game.addCounter('x', 2);
     }
@@ -35,7 +35,7 @@ describe('addCounter', () => {
     ]);
   });
   
-  test('i get the right return code when trying to put a counter in a full column', () => {
+  test('gets the right return code when trying to put a counter in a full column', () => {
     expect(game.addCounter('x', 2)).toBe(1);
   });
 
@@ -83,6 +83,17 @@ describe('checkWin', () => {
     ];
     expect(game.checkWin([0, 0], 'diagonal')).toBeTruthy();
   });  
+
+  // following tests use the same game board as the above test
+  test('correctly identifies a horizontal non-win', () => {
+    expect(game.checkWin([0, 0], 'horizontal')).toBeFalsy();
+  });
+
+  test('correctly identifies a vertical non-win', () => {
+    expect(game.checkWin([2, 2], 'vertical')).toBeFalsy();
+  });
+
+  test('correctly identifies a diagonal non-win', () => {
+    expect(game.checkWin([1, 3], 'diagonal')).toBeFalsy();
+  });
 });
-
-
