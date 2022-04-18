@@ -1,10 +1,10 @@
-// Note - the game's board state appears upside down when printing to the screen
+// Note - the game's board state appears rotated by 90deg when printing to the screen
 
-const numRows = 6;
 const numCols = 7;
+const numRows = 6;
 const Connect4 = require('./connect4');
 
-let game = new Connect4(6, 7);
+let game = new Connect4(7, 6);
 
 describe('addCounter', () => {
   test('can add a counter to each column', () => {
@@ -12,12 +12,13 @@ describe('addCounter', () => {
       game.addCounter('x', j);
     }
     expect(game.board).toEqual([
-      ['x' , 'x' , 'x' , 'x' , 'x' , 'x' , 'x' ],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
     ]);
   });
   
@@ -26,12 +27,13 @@ describe('addCounter', () => {
       game.addCounter('x', 2);
     }
     expect(game.board).toEqual([
-      ['x' , 'x' , 'x' , 'x' , 'x' , 'x' , 'x' ],
-      [null, null, 'x' , null, null, null, null],
-      [null, null, 'x' , null, null, null, null],
-      [null, null, 'x' , null, null, null, null],
-      [null, null, 'x' , null, null, null, null],
-      [null, null, 'x' , null, null, null, null],
+      ['x' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+      ['x' , 'x' , 'x' , 'x' , 'x' , 'x' ],
+      ['x' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
     ]);
   });
   
@@ -40,48 +42,51 @@ describe('addCounter', () => {
   });
 
   test('returns the correct position of latest placement', () => {
-    expect(game.addCounter('o', 4)).toEqual([1, 4]);
+    expect(game.addCounter('o', 4)).toEqual([4, 1]);
   });
 });
 
 describe('checkWin', () => {
-  game = new Connect4(6, 7); 
+  game = new Connect4(7, 6); 
   test('correctly identifies a horizontal win', () => {
     game.board = [
-      ['x' , 'o' , 'o' , 'x' , 'o' , 'x' , 'x' ],
-      [null, null, 'o' , 'o',  'o' , 'o' , null],
-      [null, null, 'o' , null, null, null, null],
-      [null, null, 'x' , null, null, null, null],
-      [null, null, 'o' , null, null, null, null],
-      [null, null, null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+      ['o' , 'x' , 'o' , 'x' , 'x' , 'x' ],
+      ['x' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
     ];
-    expect(game.checkWin([1, 5], 'horizontal')).toBeTruthy();
+    expect(game.checkWin([4, 0], 'horizontal')).toBeTruthy();
   });
 
-  game = new Connect4(6, 7);
+  game = new Connect4(7, 6);
   test('correctly identifies a vertical win', () => {
     game.board = [
-      ['x' , 'o' , 'o' , 'x' , 'o' , 'x' , 'x' ],
-      [null, null, 'o' , 'o',  'x' , 'o' , null],
-      [null, null, 'o' , null, 'x' , null, null],
-      [null, null, 'x' , null, 'x' , null, null],
-      [null, null, 'o' , null, 'x' , null, null],
-      [null, null, null, null, null, null, null],
+      ['o' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+      ['o' , 'o' , 'x' , 'x' , 'x' , 'x' ],
+      ['x' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+      ['o' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
     ];
-    expect(game.checkWin([1, 4], 'vertical')).toBeTruthy();
+    expect(game.checkWin([2, 3], 'vertical')).toBeTruthy();
   });
 
-  game = new Connect4(6, 7);
+  game = new Connect4(7, 6);
   test('correctly identifies a diagonal win', () => {
     game.board = [
-      ['x' , 'o' , 'o' , 'x' , 'o' , 'x' , 'x' ],
-      [null, 'x' , 'o' , 'o' , 'x' , 'o' , null],
-      [null, null, 'x' , 'o' , 'x' , null, null],
-      [null, null, 'x' , 'x' , 'o' , null, null],
-      [null, null, 'o' , null, 'o' , null, null],
-      [null, null, null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+      ['x' , 'o' , 'o' , null, null, null],
+      ['o' , 'x' , 'x' , 'o' , 'x' , 'o' ],
+      ['x' , 'x' , 'o' , null, null, null],
+      ['x' , 'o' , null, null, null, null],
+      ['o' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
     ];
-    expect(game.checkWin([0, 0], 'diagonal')).toBeTruthy();
+    expect(game.checkWin([5, 0], 'diagonal')).toBeTruthy();
   });  
 
   // following tests use the same game board as the above test
@@ -94,6 +99,6 @@ describe('checkWin', () => {
   });
 
   test('correctly identifies a diagonal non-win', () => {
-    expect(game.checkWin([1, 3], 'diagonal')).toBeFalsy();
+    expect(game.checkWin([1, 2], 'diagonal')).toBeFalsy();
   });
 });

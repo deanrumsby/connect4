@@ -1,13 +1,16 @@
 class Connect4 {
-  constructor(numRows, numCols) {
-    this.numRows = numRows;
+  constructor(numCols, numRows) {
     this.numCols = numCols;
+    this.numRows = numRows;
     this.board = [];
     // Creating the game board
-    for (let i = 0; i < this.numRows; i++) {
-      this.board[i] = [];
-      for (let j = 0; j < this.numCols; j++) {
-        this.board[i][j] = null;
+    // our coordinates for the game board will be (j, i) ie. (col, row)
+    // this may seem strange but it is more useful to work with
+    // as keeping each columns data in a single array is more natural for this game
+    for (let j = 0; j < this.numCols; j++) {
+      this.board[j] = [];
+      for (let i = 0; i < this.numRows; i++) {
+        this.board[j][i] = null;
       }
     }
   }
@@ -16,58 +19,58 @@ class Connect4 {
     // returns counter position if successful
     // returns 1 if column is full
     for (let i = 0; i < this.numRows; i++) {
-      if (this.board[i][j] === null) {
-        this.board[i][j] = counter;
-        return [i, j];
+      if (this.board[j][i] === null) {
+        this.board[j][i] = counter;
+        return [j, i];
       }
     }
     return 1;
   }
 
   checkWin(pos, direction) {
-    // checks for win at position [i, j] for a given direction (horizontal/vertical/diagonal)
+    // checks for win at position [j, i] for a given direction (horizontal/vertical/diagonal)
     // returns true if win
     // returns false if no win
     // returns 1 if provided with a null counter position
    
-    const [i, j] = pos;
+    const [j, i] = pos;
 
-    if (this.board[i][j] === null) {
+    if (this.board[j][i] === null) {
       return 1;
     }
 
-    const counter = this.board[i][j];
+    const counter = this.board[j][i];
     let connected = 0;
     let alt_diag_connected = 0;
 
     for (let t = -3; t < 4; t++) {
       switch (direction) {
         case 'horizontal':
-          if (this.board[i][j + t] === counter) {
+          if (j + t < 0) {
+            break;
+          } else if (this.board[j + t][i] === counter) {
             connected++;
           } else {
             connected = 0;
           }
           break;
         case 'vertical':
-          if (i + t < 0) {
-            break;
-          } else if (this.board[i + t][j] === counter) {
+          if (this.board[j][i + t] === counter) {
             connected++;
           } else {
             connected = 0;
           }
           break;
         case 'diagonal':
-          if (i + t < 0) {
+          if (j + t < 0) {
             break;
           }
-          if (this.board[i + t][j + t] === counter) {
+          if (this.board[j + t][i + t] === counter) {
             connected++;
           } else {
             connected = 0;
           }
-          if (this.board[i + t][j - t] === counter) {
+          if (this.board[j + t][i - t] === counter) {
             alt_diag_connected++;
           } else {
             alt_diag_connected = 0;
