@@ -1,0 +1,15 @@
+.game-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.cell {
+    width: 50px;
+    height: 50px;
+    border: solid black 1px;
+}
+
+.game-board {
+    display: inline-flex;
+    border: solid black 1px;
+}

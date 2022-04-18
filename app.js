@@ -1,22 +1,20 @@
 const numCols = 7;
 const numRows = 6;
 const game = new Connect4(numCols, numRows);
-
 const gameBoard = document.querySelector('#game-board');
-gameBoard.style.gridTemplateColumns = `repeat(${numCols}, 1fr)`;
-gameBoard.style.gridTemplateRows = `repeat(${numRows}, 1fr)`;
-// for (let i = 0; i < numRows; i++) {
-//   for (let j = 0; j < numCols; j++) {
-//     const cell = document.createElement('div');
-//     cell.id = `${i}${j}`;
-//   }
 
-function createGameGrid(numRows, numCols, gameBoardElt) {
-  // creates a CSS grid for playing connect4
+function createBoard(numCols, numRows, container) {
+  container.classList.add('game-board');
+  for (let j = 0; j < numCols; j++) {
+    const column = document.createElement('div');
+    column.classList.add('game-col');
+    container.append(column);
+    for (let i = 0; i < numRows; i++) {
+      const cell = document.createElement('div');
+      cell.classList.add('cell');
+      column.append(cell);
+    }
+  }
 }
 
-gameBoard.addEventListener('click', (e) => {
-  console.log(e);
-})
-
-
+createBoard(numCols, numRows, gameBoard);
