@@ -44,9 +44,8 @@ describe('addCounter', () => {
   });
 });
 
-game = new Connect4(6, 7); 
-
 describe('checkWin', () => {
+  game = new Connect4(6, 7); 
   test('correctly identifies a horizontal win', () => {
     game.board = [
       ['x' , 'o' , 'o' , 'x' , 'o' , 'x' , 'x' ],
@@ -55,9 +54,35 @@ describe('checkWin', () => {
       [null, null, 'x' , null, null, null, null],
       [null, null, 'o' , null, null, null, null],
       [null, null, null, null, null, null, null],
-    ]
+    ];
     expect(game.checkWin([1, 5], 'horizontal')).toBeTruthy();
   });
+
+  game = new Connect4(6, 7);
+  test('correctly identifies a vertical win', () => {
+    game.board = [
+      ['x' , 'o' , 'o' , 'x' , 'o' , 'x' , 'x' ],
+      [null, null, 'o' , 'o',  'x' , 'o' , null],
+      [null, null, 'o' , null, 'x' , null, null],
+      [null, null, 'x' , null, 'x' , null, null],
+      [null, null, 'o' , null, 'x' , null, null],
+      [null, null, null, null, null, null, null],
+    ];
+    expect(game.checkWin([1, 4], 'vertical')).toBeTruthy();
+  });
+
+  game = new Connect4(6, 7);
+  test('correctly identifies a diagonal win', () => {
+    game.board = [
+      ['x' , 'o' , 'o' , 'x' , 'o' , 'x' , 'x' ],
+      [null, 'x' , 'o' , 'o' , 'x' , 'o' , null],
+      [null, null, 'x' , 'o' , 'x' , null, null],
+      [null, null, 'x' , 'x' , 'o' , null, null],
+      [null, null, 'o' , null, 'o' , null, null],
+      [null, null, null, null, null, null, null],
+    ];
+    expect(game.checkWin([0, 0], 'diagonal')).toBeTruthy();
+  });  
 });
 
 

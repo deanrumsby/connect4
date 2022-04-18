@@ -38,35 +38,43 @@ class Connect4 {
 
     const counter = this.board[i][j];
     let connected = 0;
+    let alt_diag_connected = 0;
 
     for (let t = -3; t < 4; t++) {
       switch (direction) {
         case 'horizontal':
           if (this.board[i][j + t] === counter) {
             connected++;
-            break;
           } else {
             connected = 0;
-            break;
           }
+          break;
         case 'vertical':
-          if (this.board[i + t][j] === counter) {
-            connected++;
+          if (i + t < 0) {
             break;
+          } else if (this.board[i + t][j] === counter) {
+            connected++;
           } else {
             connected = 0;
+          }
+          break;
+        case 'diagonal':
+          if (i + t < 0) {
             break;
           }
-        case 'diagonal':
           if (this.board[i + t][j + t] === counter) {
             connected++;
-            break
           } else {
             connected = 0;
-            break;
           }
+          if (this.board[i + t][j - t] === counter) {
+            alt_diag_connected++;
+          } else {
+            alt_diag_connected = 0;
+          }
+          break;
       }
-      if (connected === 4) {
+      if (connected === 4 || alt_diag_connected === 4) {
         return true;
       }
     }
