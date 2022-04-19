@@ -1,6 +1,6 @@
 .game-col {
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
 }
 
 .cell {
@@ -12,4 +12,12 @@
 .game-board {
     display: inline-flex;
     border: solid black 1px;
+}
+
+.red {
+    background-color: red;
+}
+
+.yellow {
+    background-color: yellow;
 }
