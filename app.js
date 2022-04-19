@@ -1,6 +1,4 @@
-const numCols = 7;
-const numRows = 6;
-const game = new Connect4(numCols, numRows);
+const game = new Connect4();
 const main = document.querySelector('main');
 let counter = 'x';
 
@@ -11,7 +9,7 @@ function createBoard(numCols, numRows, parent) {
   const gameArray = [];
   const gameBoard = document.createElement('div');
   gameBoard.classList.add('game-board');
-  for (let j = 0; j < numCols; j++) {
+  for (let j = 0; j < game.numCols; j++) {
     gameArray[j] = [];
     const column = document.createElement('div');
     column.classList.add('game-col');
@@ -24,7 +22,8 @@ function createBoard(numCols, numRows, parent) {
       if (
         game.checkWin(pos, 'horizontal')
         || game.checkWin(pos, 'vertical')
-        || game.checkWin(pos, 'diagonal')) {
+        || game.checkWin(pos, 'diagonal')) 
+        {
           console.log('WINNER FOUND!');
         }
       if (counter === 'x') {
@@ -34,7 +33,7 @@ function createBoard(numCols, numRows, parent) {
       }
     });
     gameBoard.append(column);
-    for (let i = 0; i < numRows; i++) {
+    for (let i = 0; i < game.numRows; i++) {
       const cell = document.createElement('div');
       cell.classList.add('cell');
       column.append(cell);
@@ -55,4 +54,4 @@ function updateCell(pos) {
   }
 }
 
-const gameArray = createBoard(numCols, numRows, main);
+const gameArray = createBoard(game.numCols, game.numRows, main);

@@ -1,14 +1,11 @@
 // Note - the game's board state appears rotated by 90deg when printing to the screen
 
-const numCols = 7;
-const numRows = 6;
 const Connect4 = require('./connect4');
-
-let game = new Connect4(7, 6);
+let game = new Connect4();
 
 describe('addCounter', () => {
   test('can add a counter to each column', () => {
-    for (let j = 0; j < numCols; j++) {
+    for (let j = 0; j < game.numCols; j++) {
       game.addCounter('x', j);
     }
     expect(game.board).toEqual([
@@ -47,7 +44,7 @@ describe('addCounter', () => {
 });
 
 describe('checkWin', () => {
-  game = new Connect4(7, 6); 
+  game = new Connect4(); 
   test('correctly identifies a horizontal win', () => {
     game.board = [
       ['x' , null, null, null, null, null],
@@ -61,7 +58,7 @@ describe('checkWin', () => {
     expect(game.checkWin([4, 0], 'horizontal')).toBeTruthy();
   });
 
-  game = new Connect4(7, 6);
+  game = new Connect4();
   test('correctly identifies a vertical win', () => {
     game.board = [
       ['o' , null, null, null, null, null],
@@ -75,7 +72,7 @@ describe('checkWin', () => {
     expect(game.checkWin([2, 3], 'vertical')).toBeTruthy();
   });
 
-  game = new Connect4(7, 6);
+  game = new Connect4();
   test('correctly identifies a diagonal win', () => {
     game.board = [
       ['x' , null, null, null, null, null],

@@ -1,5 +1,5 @@
 class Connect4 {
-  constructor(numCols, numRows) {
+  constructor(numCols = 7, numRows = 6) {
     this.numCols = numCols;
     this.numRows = numRows;
     this.board = [];
