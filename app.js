@@ -1,6 +1,7 @@
 const game = new Connect4();
 const main = document.querySelector('main');
 let counter = 'x';
+let gameOn = true;
 
 function createBoard(numCols, numRows, parent) {
   // creates the visual game board and returns gameArray - a 2D array that contains
@@ -17,7 +18,9 @@ function createBoard(numCols, numRows, parent) {
 
     // adding a click event listener to each column of the game board
     column.addEventListener('click', () => {
-      clickColumn(j);
+      if (gameOn) {
+        clickColumn(j);
+      }
     });
 
     gameBoard.append(column);
@@ -49,7 +52,7 @@ function clickColumn(j) {
     game.checkWin(pos, 'horizontal')
     || game.checkWin(pos, 'vertical')
     || game.checkWin(pos, 'diagonal')) {
-      console.log('WINNER FOUND!');
+      endGame();
   }
   // if not, switch the counter to the next player
   if (counter === 'x') {
@@ -69,6 +72,10 @@ function updateCell(pos) {
   } else if (cellCounter === 'o') {
     gameArray[j][i].classList.add('yellow');
   }
+}
+
+function endGame() {
+  gameOn = false;
 }
 
 const gameArray = createBoard(game.numCols, game.numRows, main);
