@@ -17,7 +17,21 @@ function createBoard(numCols, numRows, parent) {
     column.classList.add('game-col');
     column.addEventListener('click', () => {
       const pos = game.addCounter(counter, j);
+      if (pos === 1) {
+        return;
+      }
       updateCell(pos);
+      if (
+        game.checkWin(pos, 'horizontal')
+        || game.checkWin(pos, 'vertical')
+        || game.checkWin(pos, 'diagonal')) {
+          console.log('WINNER FOUND!');
+        }
+      if (counter === 'x') {
+        counter = 'o';
+      } else if (counter === 'o') {
+        counter = 'x';
+      }
     });
     gameBoard.append(column);
     for (let i = 0; i < numRows; i++) {

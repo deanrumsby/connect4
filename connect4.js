@@ -5,7 +5,7 @@ class Connect4 {
     this.board = [];
     // Creating the game board
     // our coordinates for the game board will be (j, i) ie. (col, row)
-    // this may seem strange but it is more useful to work with
+    // this may seem strange but it is more useful to work with when building a UI
     // as keeping each columns data in a single array is more natural for this game
     for (let j = 0; j < this.numCols; j++) {
       this.board[j] = [];
@@ -46,7 +46,7 @@ class Connect4 {
     for (let t = -3; t < 4; t++) {
       switch (direction) {
         case 'horizontal':
-          if (j + t < 0) {
+          if (j + t < 0 || j + t > 6) {
             break;
           } else if (this.board[j + t][i] === counter) {
             connected++;
@@ -62,7 +62,7 @@ class Connect4 {
           }
           break;
         case 'diagonal':
-          if (j + t < 0) {
+          if (j + t < 0 || j + t > 6) {
             break;
           }
           if (this.board[j + t][i + t] === counter) {
