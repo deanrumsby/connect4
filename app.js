@@ -3,37 +3,27 @@ const main = document.querySelector('main');
 let counter = 'x';
 
 function createBoard(numCols, numRows, parent) {
-  // Creates the visual grid on which the game is played
-  // Adds event listeners to each column that will add a counter when clicked
-  // Returns an array 'gameArray' that is a DOM rep of our game.board attribute
+  // creates the visual game board and returns gameArray - a 2D array that contains
+  // a div representing each cell of our game.board attribute
   const gameArray = [];
   const gameBoard = document.createElement('div');
   gameBoard.classList.add('game-board');
-  for (let j = 0; j < game.numCols; j++) {
+
+  // create each column and add classes
+  for (let j = 0; j < numCols; j++) {
     gameArray[j] = [];
     const column = document.createElement('div');
     column.classList.add('game-col');
+
+    // adding a click event listener to each column of the game board
     column.addEventListener('click', () => {
-      const pos = game.addCounter(counter, j);
-      if (pos === 1) {
-        return;
-      }
-      updateCell(pos);
-      if (
-        game.checkWin(pos, 'horizontal')
-        || game.checkWin(pos, 'vertical')
-        || game.checkWin(pos, 'diagonal')) 
-        {
-          console.log('WINNER FOUND!');
-        }
-      if (counter === 'x') {
-        counter = 'o';
-      } else if (counter === 'o') {
-        counter = 'x';
-      }
+      clickColumn(j);
     });
+
     gameBoard.append(column);
-    for (let i = 0; i < game.numRows; i++) {
+
+    // for each column create each cell and add classes
+    for (let i = 0; i < numRows; i++) {
       const cell = document.createElement('div');
       cell.classList.add('cell');
       column.append(cell);
@@ -44,7 +34,34 @@ function createBoard(numCols, numRows, parent) {
   return gameArray;
 }
 
+function clickColumn(j) {
+  // when a column is clicked in game
+  // first we add a counter to the column and store it's position
+  const pos = game.addCounter(counter, j);
+  // if the column is full we go no further
+  if (pos === 1) {
+    return;
+  }
+  // update the cell visually via the DOM
+  updateCell(pos);
+  // check if there are any successful win lines
+  if (
+    game.checkWin(pos, 'horizontal')
+    || game.checkWin(pos, 'vertical')
+    || game.checkWin(pos, 'diagonal')) {
+      console.log('WINNER FOUND!');
+  }
+  // if not, switch the counter to the next player
+  if (counter === 'x') {
+    counter = 'o';
+  } else if (counter === 'o') {
+    counter = 'x';
+  }
+
+}
+
 function updateCell(pos) {
+  // changes a cell red or yellow depending on which player counter it contains
   [j, i] = pos;
   cellCounter = game.board[j][i];
   if (cellCounter === 'x') {

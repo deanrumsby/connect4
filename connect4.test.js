@@ -86,6 +86,20 @@ describe('checkWin', () => {
     expect(game.checkWin([5, 0], 'diagonal')).toBeTruthy();
   });  
 
+  game = new Connect4();
+  test('correctly identifies a diagonal win in the other direction', () => {
+    game.board = [
+      ['x' , null, null, null, null, null],
+      ['x' , 'o' , 'o' , null, null, null],
+      ['o' , 'x' , 'x' , 'o' , 'x' , 'o' ],
+      ['x' , 'x' , 'x' , null, null, null],
+      ['x' , 'x' , 'o' , 'x' , null, null],
+      ['o' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+    ];
+    expect(game.checkWin([4, 3], 'diagonal')).toBeTruthy();
+  }); 
+
   // following tests use the same game board as the above test
   test('correctly identifies a horizontal non-win', () => {
     expect(game.checkWin([0, 0], 'horizontal')).toBeFalsy();
