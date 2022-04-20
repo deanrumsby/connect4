@@ -47,10 +47,12 @@ function clickColumn(j) {
   // update the cell visually via the DOM
   updateCell(pos);
   // check if there are any successful win lines
+  // or if the board is full
   if (
     game.checkWin(pos, 'horizontal')
     || game.checkWin(pos, 'vertical')
-    || game.checkWin(pos, 'diagonal')) {
+    || game.checkWin(pos, 'diagonal')
+    || game.checkFull()) {
       endGame();
   }
   // if not, switch the counter to the next player
@@ -91,12 +93,16 @@ function endGame() {
       winner = 'YELLOW';
       break;
   }
-  winnerText.innerText = `${winner} is the winner!`;
+  const resultContainer = document.createElement('div');
+  resultContainer.id = 'results';
+  if (game.checkFull()) {
+    winnerText.innerText = 'The game is a draw!';
+  } else {
+    winnerText.innerText = `${winner} is the winner!`;
+  }
   const resetText = document.createElement('p');
   resetText.id = 'reset-text';
   resetText.innerText = 'Press any key to reset the game.';
-  const resultContainer = document.createElement('div');
-  resultContainer.id = 'results';
   resultContainer.append(winnerText);
   resultContainer.append(resetText);
   main.append(resultContainer);
