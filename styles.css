@@ -33,6 +33,13 @@ main {
     border-radius: 3%;
 }
 
+@media (orientation: portrait) {
+    .game-board {
+        height: auto;
+        width: 90vw;
+    }
+}
+
 .game-col {
     display: flex;
     flex-grow: 1;
@@ -57,4 +64,5 @@ main {
 
 .results {
     text-align: center;
+    font-size: 2vh;
 }
