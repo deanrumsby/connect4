@@ -75,17 +75,21 @@ function updateCell(pos) {
 }
 
 function endGame() {
-  // halts the game and resets the board once a key has been pressed
+  // halts the game and adds key down event listener to reset the board
   gameOn = false;
-  document.addEventListener('keydown', () => {
-    game.reset();
-    for (column of gameArray) {
-      for (cell of column) {
-        cell.style.backgroundColor = 'transparent';
-      }
+  document.addEventListener('keydown', reset);
+}
+
+function reset() {
+  // resets the board and continues play
+  game.reset();
+  for (column of gameArray) {
+    for (cell of column) {
+      cell.style.backgroundColor = 'transparent';
     }
-    gameOn = true;
-  });
+  }
+  gameOn = true;
+  document.removeEventListener('keydown', reset);
 }
 
 const gameArray = createBoard(game.numCols, game.numRows, main);
