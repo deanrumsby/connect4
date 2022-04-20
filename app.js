@@ -89,6 +89,10 @@ function endGame() {
   }
   winnerText.innerText = `${winner} is the winner!`;
   main.append(winnerText);
+  const resetText = document.createElement('p');
+  resetText.id = 'reset-text';
+  resetText.innerText = 'Press any key to reset the game.';
+  main.append(resetText);
 }
 
 function reset() {
@@ -103,6 +107,8 @@ function reset() {
   document.removeEventListener('keydown', reset);
   const winnerText = document.querySelector('#winner-text');
   winnerText.remove();
+  const resetText = document.querySelector('#reset-text');
+  resetText.remove();
 }
 
 let counter = 'x';
