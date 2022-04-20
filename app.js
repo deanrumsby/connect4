@@ -83,6 +83,9 @@ function endGame() {
   // declares the winner underneath the game
   gameOn = false;
   document.addEventListener('keydown', reset);
+  setTimeout(() => {
+    document.addEventListener('click', reset);
+  }, 200);
   const winnerText = document.createElement('p');
   winnerText.id = 'winner-text';
   let winner
@@ -120,6 +123,7 @@ function reset() {
   }
   gameOn = true;
   document.removeEventListener('keydown', reset);
+  document.removeEventListener('click', reset);
   const resultContainer = document.querySelector('#results');
   resultContainer.remove(); 
 }
