@@ -95,6 +95,7 @@ function endGame() {
   }
   const resultContainer = document.createElement('div');
   resultContainer.id = 'results';
+  resultContainer.classList.add('results');
   if (game.checkFull()) {
     winnerText.innerText = 'The game is a draw!';
   } else {
