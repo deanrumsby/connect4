@@ -1,14 +1,13 @@
 :root {
     --body-bgcolor: white;
-    --cell-size: 60px;
     font-family: 'Roboto Mono', monospace;
 }
 
 body {
     display: flex;
     flex-direction: column;
-    height: 100vh;
     background-color: var(--body-bgcolor);
+    height: 95vh;
 }
 
 main {
@@ -20,9 +19,12 @@ main {
 .title {
     text-align: center;
     font-weight: 300;
+    font-size: 5vh;
 }
 
 .game-board {
+    aspect-ratio: 7 / 6;
+    height: 65vh;
     margin-top: 0.5em;
     margin-bottom: 1em;
     background-color: blue;
@@ -34,32 +36,26 @@ main {
 
 .game-col {
     display: flex;
+    flex-grow: 1;
     flex-direction: column-reverse;
+    justify-content: flex-end;
 }
 
 .cell {
+    aspect-ratio: 1 / 1;
+    flex-grow: 1;
     padding: 0.3em;
-    width: var(--cell-size);
-    height: var(--cell-size);
     background-color: blue;
 }
 
 .hole {
+    aspect-ratio: 1 / 1;
+    flex-grow: 1;
     background-color: var(--body-bgcolor);
-    width: var(--cell-size);
-    height: var(--cell-size);
     border-radius: 50%;
     border: 1px solid black;
 }
 
 .results {
     text-align: center;
-}
-
-.red {
-    background-color: red;
-}
-
-.yellow {
-    background-color: yellow;
 }
