@@ -115,7 +115,7 @@ describe('checkWin', () => {
     expect(game.checkWin([4, 3], 'diagonal')).toBeTruthy();
   }); 
 
-  // following tests use the same game board as the above test
+// following tests use the same game board as the above test
   test('correctly identifies a horizontal non-win', () => {
     expect(game.checkWin([0, 0], 'horizontal')).toBeFalsy();
   });
@@ -126,5 +126,20 @@ describe('checkWin', () => {
 
   test('correctly identifies a diagonal non-win', () => {
     expect(game.checkWin([1, 2], 'diagonal')).toBeFalsy();
+  });
+});
+
+describe('reset', () => {
+  test('the board resets correctly', () => {
+    game.reset();
+    expect(game.board).toEqual([
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+    ]);
   });
 });

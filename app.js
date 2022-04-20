@@ -68,14 +68,24 @@ function updateCell(pos) {
   [j, i] = pos;
   cellCounter = game.board[j][i];
   if (cellCounter === 'x') {
-    gameArray[j][i].classList.add('red');
+    gameArray[j][i].style.backgroundColor = 'red';
   } else if (cellCounter === 'o') {
-    gameArray[j][i].classList.add('yellow');
+    gameArray[j][i].style.backgroundColor = 'yellow';
   }
 }
 
 function endGame() {
+  // halts the game and resets the board once a key has been pressed
   gameOn = false;
+  document.addEventListener('keydown', () => {
+    game.reset();
+    for (column of gameArray) {
+      for (cell of column) {
+        cell.style.backgroundColor = 'transparent';
+      }
+    }
+    gameOn = true;
+  });
 }
 
 const gameArray = createBoard(game.numCols, game.numRows, main);

@@ -87,7 +87,7 @@ class Connect4 {
   }
 
   reset() {
-
+    this.createBoard();
   }
 }
 
