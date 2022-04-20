@@ -4,6 +4,7 @@ function createBoard(parent) {
   const gameArray = [];
   const gameBoard = document.createElement('div');
   gameBoard.classList.add('game-board');
+  gameBoard.style.aspectRatio = `${game.numCols} / ${game.numRows}`;
 
   // create each column and add classes
   for (let j = 0; j < game.numCols; j++) {
