@@ -23,9 +23,13 @@ function createBoard(parent) {
     // for each column create each cell and add classes
     for (let i = 0; i < game.numRows; i++) {
       const cell = document.createElement('div');
+      const hole = document.createElement('div');
       cell.classList.add('cell');
+      hole.classList.add('hole');
+      cell.append(hole);
       column.append(cell);
-      gameArray[j][i] = cell;
+
+      gameArray[j][i] = hole;
     }
   }
   parent.append(gameBoard);
@@ -102,8 +106,8 @@ function reset() {
   // resets the board, removes the winner declaration and continues play
   game.reset();
   for (column of gameArray) {
-    for (cell of column) {
-      cell.style.backgroundColor = 'transparent';
+    for (hole of column) {
+      hole.style.backgroundColor = 'var(--body-bgcolor)';
     }
   }
   gameOn = true;
