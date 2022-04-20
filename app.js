@@ -1,9 +1,4 @@
-const game = new Connect4();
-const main = document.querySelector('main');
-let counter = 'x';
-let gameOn = true;
-
-function createBoard(numCols, numRows, parent) {
+function createBoard(parent) {
   // creates the visual game board and returns gameArray - a 2D array that contains
   // a div representing each cell of our game.board attribute
   const gameArray = [];
@@ -11,7 +6,7 @@ function createBoard(numCols, numRows, parent) {
   gameBoard.classList.add('game-board');
 
   // create each column and add classes
-  for (let j = 0; j < numCols; j++) {
+  for (let j = 0; j < game.numCols; j++) {
     gameArray[j] = [];
     const column = document.createElement('div');
     column.classList.add('game-col');
@@ -26,7 +21,7 @@ function createBoard(numCols, numRows, parent) {
     gameBoard.append(column);
 
     // for each column create each cell and add classes
-    for (let i = 0; i < numRows; i++) {
+    for (let i = 0; i < game.numRows; i++) {
       const cell = document.createElement('div');
       cell.classList.add('cell');
       column.append(cell);
@@ -55,10 +50,12 @@ function clickColumn(j) {
       endGame();
   }
   // if not, switch the counter to the next player
-  if (counter === 'x') {
-    counter = 'o';
-  } else if (counter === 'o') {
-    counter = 'x';
+  switch (counter) {
+    case 'x':
+      counter = 'o';
+      break;
+    case 'o':
+      counter = 'x';
   }
 
 }
@@ -76,12 +73,26 @@ function updateCell(pos) {
 
 function endGame() {
   // halts the game and adds key down event listener to reset the board
+  // declares the winner underneath the game
   gameOn = false;
   document.addEventListener('keydown', reset);
+  const winnerText = document.createElement('p');
+  winnerText.id = 'winner-text';
+  let winner
+  switch (counter) {
+    case 'x':
+      winner = 'RED';
+      break;
+    case 'o':
+      winner = 'YELLOW';
+      break;
+  }
+  winnerText.innerText = `${winner} is the winner!`;
+  main.append(winnerText);
 }
 
 function reset() {
-  // resets the board and continues play
+  // resets the board, removes the winner declaration and continues play
   game.reset();
   for (column of gameArray) {
     for (cell of column) {
@@ -90,6 +101,12 @@ function reset() {
   }
   gameOn = true;
   document.removeEventListener('keydown', reset);
+  const winnerText = document.querySelector('#winner-text');
+  winnerText.remove();
 }
 
-const gameArray = createBoard(game.numCols, game.numRows, main);
+let counter = 'x';
+let gameOn = true;
+const game = new Connect4();
+const main = document.querySelector('main');
+const gameArray = createBoard(main);
