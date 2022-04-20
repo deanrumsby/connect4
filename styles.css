@@ -2,6 +2,10 @@
     --body-bgcolor: white;
 }
 
+body {
+    background-color: var(--body-bgcolor);
+}
+
 .game-col {
     display: flex;
     flex-direction: column-reverse;

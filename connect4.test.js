@@ -58,8 +58,35 @@ describe('addCounter', () => {
   });
 });
 
-describe('checkWin', () => {
-  game = new Connect4(); 
+describe('checkFull', () => {
+  test('correctly asserts when the board is full', () => {
+    game.board = [
+      ['x' , 'x' , 'o' , 'x' , 'o' , 'x' ],
+      ['x' , 'o' , 'o' , 'x' , 'x' , 'x' ],
+      ['o' , 'x' , 'x' , 'o' , 'x' , 'o' ],
+      ['x' , 'x' , 'o' , 'o' , 'o' , 'o' ],
+      ['x' , 'x' , 'o' , 'x' , 'o' , 'o' ],
+      ['o' , 'x' , 'o' , 'x' , 'x' , 'x' ],
+      ['x' , 'x' , 'o' , 'o' , 'o' , 'x' ],
+    ];
+    expect(game.checkFull()).toBeTruthy();
+  });
+
+  test('correctly asserts when the board is not full', () => {
+    game.board = [
+      ['x' , 'x' , 'o' , 'x' , 'o' , 'x' ],
+      ['x' , 'o' , 'o' , 'x' , 'x' , 'x' ],
+      ['o' , 'x' , 'x' , 'o' , 'x' , null],
+      ['x' , 'x' , 'o' , 'o' , 'o' , 'o' ],
+      ['x' , 'x' , 'o' , 'x' , 'o' , 'o' ],
+      ['o' , 'x' , 'o' , 'x' , 'x' , 'x' ],
+      ['x' , 'x' , 'o' , 'o' , 'o' , 'x' ],
+    ];
+    expect(game.checkFull()).toBeFalsy();
+  });
+});
+
+describe('checkWin', () => { 
   test('correctly identifies a horizontal win', () => {
     game.board = [
       ['x' , null, null, null, null, null],
@@ -73,7 +100,6 @@ describe('checkWin', () => {
     expect(game.checkWin([4, 0], 'horizontal')).toBeTruthy();
   });
 
-  game = new Connect4();
   test('correctly identifies a vertical win', () => {
     game.board = [
       ['o' , null, null, null, null, null],
@@ -87,7 +113,6 @@ describe('checkWin', () => {
     expect(game.checkWin([2, 3], 'vertical')).toBeTruthy();
   });
 
-  game = new Connect4();
   test('correctly identifies a diagonal win', () => {
     game.board = [
       ['x' , null, null, null, null, null],
@@ -101,7 +126,6 @@ describe('checkWin', () => {
     expect(game.checkWin([5, 0], 'diagonal')).toBeTruthy();
   });  
 
-  game = new Connect4();
   test('correctly identifies a diagonal win in the other direction', () => {
     game.board = [
       ['x' , null, null, null, null, null],

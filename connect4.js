@@ -29,6 +29,17 @@ class Connect4 {
     return 1;
   }
 
+  checkFull() {
+    // returns true if the game board is full
+    // else returns false
+    for (let j = 0; j < this.numCols; j++) {
+      if (this.board[j][this.numRows - 1] === null) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   checkWin(pos, direction) {
     // checks for win at position [j, i] for a given direction (horizontal/vertical/diagonal)
     // returns true if win
