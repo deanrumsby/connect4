@@ -3,10 +3,12 @@ class Connect4 {
     this.numCols = numCols;
     this.numRows = numRows;
     this.board = [];
-    // Creating the game board
-    // our coordinates for the game board will be (j, i) ie. (col, row)
-    // this may seem strange but it is more useful to work with when building a UI
-    // as keeping each columns data in a single array is more natural for this game
+  }
+
+  createBoard() {
+    // creates a logical game board 
+    // game board will appear rotated by 90deg when printed
+    // coordinates are given (col, row) or (j,i)
     for (let j = 0; j < this.numCols; j++) {
       this.board[j] = [];
       for (let i = 0; i < this.numRows; i++) {
@@ -82,6 +84,10 @@ class Connect4 {
       }
     }
     return false;
+  }
+
+  reset() {
+
   }
 }
 

@@ -3,6 +3,21 @@
 const Connect4 = require('./connect4');
 let game = new Connect4();
 
+describe('createBoard', () => {
+  test('can create default board of 7x6 in size', () =>{
+    game.createBoard();
+    expect(game.board).toEqual([
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+    ]);
+  });
+});
+
 describe('addCounter', () => {
   test('can add a counter to each column', () => {
     for (let j = 0; j < game.numCols; j++) {
