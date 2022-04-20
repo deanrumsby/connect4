@@ -3,11 +3,11 @@ class Connect4 {
     this.numCols = numCols;
     this.numRows = numRows;
     this.board = [];
+    this.createBoard();
   }
 
   createBoard() {
     // creates a logical game board 
-    // game board will appear rotated by 90deg when printed
     // coordinates are given (col, row) or (j,i)
     for (let j = 0; j < this.numCols; j++) {
       this.board[j] = [];
