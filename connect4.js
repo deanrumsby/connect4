@@ -12,7 +12,7 @@ class Connect4 {
     this.board = [];
     this.createBoard();
   }
-
+  
   /**
    * Creates a 2D array that serves as our game's board.
    * Our first index j corresponds to the column number of the board.
@@ -45,6 +45,7 @@ class Connect4 {
     }
     return 1;
   }
+
   /**
    * Checks if the board is full with player counters.
    * @returns {boolean}
@@ -57,60 +58,57 @@ class Connect4 {
     }
     return true;
   }
+
   /**
    * Checks the possible win lines for a given board position and direction.
-   * @param {Array<number>} pos An array [j, i] of board coordinates. 
+   * @param {Array<number>} position An array [j, i] of board coordinates. 
    * @param {string} direction A direction - either 'horizontal', 'vertical', or 'diagonal'. 
    * @returns {number|boolean} 1 if the position checked contains a null counter, otherwise a 
    *  boolean, if there is a win or not.
    */
-  checkWin(pos, direction) {
-    const [j, i] = pos;
+  checkWin(position) {
+    const [j, i] = position;
 
     if (this.board[j][i] === null) {
       return 1;
     }
 
     const counter = this.board[j][i];
-    let connected = 0;
-    let alt_diag_connected = 0;
+    const connected = {horiz: 0, vert: 0, posDiag: 0, negDiag: 0};
 
     for (let t = -3; t < 4; t++) {
-      switch (direction) {
-        case 'horizontal':
-          if (j + t < 0 || j + t > 6) {
-            break;
-          } else if (this.board[j + t][i] === counter) {
-            connected++;
-          } else {
-            connected = 0;
-          }
-          break;
-        case 'vertical':
-          if (this.board[j][i + t] === counter) {
-            connected++;
-          } else {
-            connected = 0;
-          }
-          break;
-        case 'diagonal':
-          if (j + t < 0 || j + t > 6) {
-            break;
-          }
-          if (this.board[j + t][i + t] === counter) {
-            connected++;
-          } else {
-            connected = 0;
-          }
-          if (this.board[j + t][i - t] === counter) {
-            alt_diag_connected++;
-          } else {
-            alt_diag_connected = 0;
-          }
-          break;
+      if (this.board[j][i + t] === counter) {
+        connected.vert++;
+      } else {
+        connected.vert = 0;
       }
-      if (connected === 4 || alt_diag_connected === 4) {
-        return true;
+
+      if (this.board[j + t] === undefined) {
+        continue;
+      }
+
+      if (this.board[j + t][i] === counter) {
+        connected.horiz++;
+      } else {
+        connected.horiz = 0;
+      }
+
+      if (this.board[j + t][i - t] === counter) {
+        connected.posDiag++;
+      } else {
+        connected.posDiag = 0;
+      }
+
+      if (this.board[j + t][i + t] === counter) {
+        connected.negDiag++;
+      } else {
+        connected.negDiag = 0;
+      }
+
+      for (let direction in connected) {
+        if (connected[direction] === 4) {
+          return true;
+        }
       }
     }
     return false;
