@@ -1,4 +1,11 @@
+/**
+ * All the main logic for playing a game of Connect4
+ */
 class Connect4 {
+  /**
+   * @param {number} numCols The number of columns of our game's board
+   * @param {number} numRows The number of rows of our game's board
+   */
   constructor(numCols = 7, numRows = 6) {
     this.numCols = numCols;
     this.numRows = numRows;
@@ -6,9 +13,14 @@ class Connect4 {
     this.createBoard();
   }
 
+  /**
+   * Creates a 2D array that serves as our game's board.
+   * Our first index j corresponds to the column number of the board.
+   * The second index i corresponds to the row number of the board.
+   * For example - this.board[3][4] represents the cell on the fourth column and 
+   *  fifth row of the board (we start counting at 0).
+   */
   createBoard() {
-    // creates a logical game board 
-    // coordinates are given (col, row) or (j,i)
     for (let j = 0; j < this.numCols; j++) {
       this.board[j] = [];
       for (let i = 0; i < this.numRows; i++) {
@@ -17,9 +29,14 @@ class Connect4 {
     }
   }
 
+  /**
+   * Adds a player counter to a given column on the board.
+   * @param {string} counter The player counter: must be 'x' or 'o'.
+   * @param {number} j The column number to which we are adding a counter. 
+   * @returns {Array<number>|number} The coordinates of the placed counter or 1 if the 
+   *  column is full.
+   */
   addCounter(counter, j) {
-    // returns counter position if successful
-    // returns 1 if column is full
     for (let i = 0; i < this.numRows; i++) {
       if (this.board[j][i] === null) {
         this.board[j][i] = counter;
@@ -28,10 +45,11 @@ class Connect4 {
     }
     return 1;
   }
-
+  /**
+   * Checks if the board is full with player counters.
+   * @returns {boolean}
+   */
   checkFull() {
-    // returns true if the game board is full
-    // else returns false
     for (let j = 0; j < this.numCols; j++) {
       if (this.board[j][this.numRows - 1] === null) {
         return false;
@@ -39,13 +57,14 @@ class Connect4 {
     }
     return true;
   }
-
+  /**
+   * Checks the possible win lines for a given board position and direction.
+   * @param {Array<number>} pos An array [j, i] of board coordinates. 
+   * @param {string} direction A direction - either 'horizontal', 'vertical', or 'diagonal'. 
+   * @returns {number|boolean} 1 if the position checked contains a null counter, otherwise a 
+   *  boolean, if there is a win or not.
+   */
   checkWin(pos, direction) {
-    // checks for win at position [j, i] for a given direction (horizontal/vertical/diagonal)
-    // returns true if win
-    // returns false if no win
-    // returns 1 if provided with a null counter position
-   
     const [j, i] = pos;
 
     if (this.board[j][i] === null) {
@@ -97,6 +116,9 @@ class Connect4 {
     return false;
   }
 
+  /**
+   * Resets the board.
+   */
   reset() {
     this.createBoard();
   }
