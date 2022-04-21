@@ -49,11 +49,7 @@ function clickColumn(j) {
   updateCell(pos);
   // check if there are any successful win lines
   // or if the board is full
-  if (
-    game.checkWin(pos, 'horizontal')
-    || game.checkWin(pos, 'vertical')
-    || game.checkWin(pos, 'diagonal')
-    || game.checkFull()) {
+  if (game.checkWin(pos)) {
       endGame();
   }
   // if not, switch the counter to the next player
