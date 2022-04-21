@@ -1,15 +1,43 @@
 /**
- * All the main logic for playing a game of Connect4
+ * All the main logic for playing a game of Connect4.
  */
 class Connect4 {
   /**
-   * @param {number} numCols The number of columns of our game's board
-   * @param {number} numRows The number of rows of our game's board
+   * @param {number} numCols The number of columns of our game's board.
+   * @param {number} numRows The number of rows of our game's board.
    */
   constructor(numCols = 7, numRows = 6) {
+    /**
+     * The number of columns of our game's board.
+     * @type {number}
+     */
     this.numCols = numCols;
+
+    /**
+     * The number of rows of our game's board.
+     * @type {number}
+     */
     this.numRows = numRows;
+    
+    /**
+     * The current player's counter.
+     * @type {string}
+     */ 
+    this.counter = 'x';
+
+    /**
+     * Describes if the game is still in play.
+     * @type {boolean}
+     */
+    this.playing = true;
+  
+    /**
+     * Holds the state of the game's board.
+     * @type {Array}
+     */
     this.board = [];
+
+    // populate the game board
     this.createBoard();
   }
   
@@ -33,7 +61,7 @@ class Connect4 {
    * Adds a player counter to a given column on the board.
    * @param {string} counter The player counter: must be 'x' or 'o'.
    * @param {number} j The column number to which we are adding a counter. 
-   * @returns {Array<number>|number} The coordinates of the placed counter or 1 if the 
+   * @returns {Array<number>|number} The coordinates of the placed counter [j, i]; or 1 if the 
    *  column is full.
    */
   addCounter(counter, j) {
@@ -60,9 +88,8 @@ class Connect4 {
   }
 
   /**
-   * Checks the possible win lines for a given board position and direction.
-   * @param {Array<number>} position An array [j, i] of board coordinates. 
-   * @param {string} direction A direction - either 'horizontal', 'vertical', or 'diagonal'. 
+   * Checks for a win on all possible win lines, given some position on the board.
+   * @param {Array<number>} position An array [j, i] of board coordinates.  
    * @returns {number|boolean} 1 if the position checked contains a null counter, otherwise a 
    *  boolean, if there is a win or not.
    */
@@ -77,34 +104,40 @@ class Connect4 {
     const connected = {horiz: 0, vert: 0, posDiag: 0, negDiag: 0};
 
     for (let t = -3; t < 4; t++) {
+      // vertical win line
       if (this.board[j][i + t] === counter) {
         connected.vert++;
       } else {
         connected.vert = 0;
       }
 
+      // guards against trying to access a non-existant column
       if (this.board[j + t] === undefined) {
         continue;
       }
 
+      // horizontal win line
       if (this.board[j + t][i] === counter) {
         connected.horiz++;
       } else {
         connected.horiz = 0;
       }
 
+      // positive diagonal win line
       if (this.board[j + t][i - t] === counter) {
         connected.posDiag++;
       } else {
         connected.posDiag = 0;
       }
 
+      // negative diagonal win line
       if (this.board[j + t][i + t] === counter) {
         connected.negDiag++;
       } else {
         connected.negDiag = 0;
       }
 
+      // checking if any win line has won
       for (let direction in connected) {
         if (connected[direction] === 4) {
           return true;

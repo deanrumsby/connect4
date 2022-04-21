@@ -1,4 +1,4 @@
-// Note - the game's board state appears rotated by 90deg when printing to the screen
+/* Note - the game's board state appears rotated by 90deg when printing to the screen */
 
 const Connect4 = require('./connect4');
 let game = new Connect4();

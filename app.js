@@ -14,7 +14,7 @@ function createBoard(parent) {
 
     // adding a click event listener to each column of the game board
     column.addEventListener('click', () => {
-      if (gameOn) {
+      if (game.playing) {
         clickColumn(j);
       }
     });
@@ -40,7 +40,7 @@ function createBoard(parent) {
 function clickColumn(j) {
   // when a column is clicked in game
   // first we add a counter to the column and store it's position
-  const pos = game.addCounter(counter, j);
+  const pos = game.addCounter(game.counter, j);
   // if the column is full we go no further
   if (pos === 1) {
     return;
@@ -53,12 +53,12 @@ function clickColumn(j) {
       endGame();
   }
   // if not, switch the counter to the next player
-  switch (counter) {
+  switch (game.counter) {
     case 'x':
-      counter = 'o';
+      game.counter = 'o';
       break;
     case 'o':
-      counter = 'x';
+      game.counter = 'x';
   }
 
 }
@@ -77,7 +77,7 @@ function updateCell(pos) {
 function endGame() {
   // halts the game and adds key down event listener to reset the board
   // declares the winner underneath the game
-  gameOn = false;
+  game.playing = false;
   document.addEventListener('keydown', reset);
   setTimeout(() => {
     document.addEventListener('click', reset);
@@ -85,7 +85,7 @@ function endGame() {
   const winnerText = document.createElement('p');
   winnerText.id = 'winner-text';
   let winner
-  switch (counter) {
+  switch (game.counter) {
     case 'x':
       winner = 'RED';
       break;
@@ -117,15 +117,13 @@ function reset() {
       hole.style.backgroundColor = 'var(--body-bgcolor)';
     }
   }
-  gameOn = true;
+  game.playing = true;
   document.removeEventListener('keydown', reset);
   document.removeEventListener('click', reset);
   const resultContainer = document.querySelector('#results');
   resultContainer.remove(); 
 }
 
-let counter = 'x';
-let gameOn = true;
 const game = new Connect4();
 const main = document.querySelector('main');
 const gameArray = createBoard(main);
