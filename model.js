@@ -37,7 +37,7 @@ class Connect4 {
      */
     this.board = [];
 
-    // populate the game board
+    /* populate the game board */
     this.createBoard();
   }
   
@@ -104,40 +104,40 @@ class Connect4 {
     const connected = {horiz: 0, vert: 0, posDiag: 0, negDiag: 0};
 
     for (let t = -3; t < 4; t++) {
-      // vertical win line
+      /* vertical win line */
       if (this.board[j][i + t] === counter) {
         connected.vert++;
       } else {
         connected.vert = 0;
       }
 
-      // guards against trying to access a non-existant column
+      /* guards against trying to access a non-existant column */
       if (this.board[j + t] === undefined) {
         continue;
       }
 
-      // horizontal win line
+      /* horizontal win line */
       if (this.board[j + t][i] === counter) {
         connected.horiz++;
       } else {
         connected.horiz = 0;
       }
 
-      // positive diagonal win line
+      /* positive diagonal win line */
       if (this.board[j + t][i - t] === counter) {
         connected.posDiag++;
       } else {
         connected.posDiag = 0;
       }
 
-      // negative diagonal win line
+      /* negative diagonal win line */
       if (this.board[j + t][i + t] === counter) {
         connected.negDiag++;
       } else {
         connected.negDiag = 0;
       }
 
-      // checking if any win line has won
+      /* checking if any win line has won */
       for (let direction in connected) {
         if (connected[direction] === 4) {
           return true;

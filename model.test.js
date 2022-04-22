@@ -1,6 +1,6 @@
 /* Note - the game's board state appears rotated by 90deg when printing to the screen */
 
-const Connect4 = require('./connect4');
+const Connect4 = require('./model');
 let game = new Connect4();
 
 describe('createBoard', () => {
