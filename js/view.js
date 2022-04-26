@@ -68,6 +68,14 @@ class View {
     }
     return board;
   }
-}
 
-const view = new View(7, 6);
+  bindAddCounter(handler) {
+    const columns = this.getAllElements('.board-col');
+    for (let j = 0; j < columns.length; j++) {
+      columns[j].addEventListener('click', () => {
+        handler(j);
+      });
+    }
+
+  }
+}

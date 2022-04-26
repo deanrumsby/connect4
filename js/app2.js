@@ -1,0 +1,1 @@
+const game = new Controller(new Connect4(), new View(7, 6));
