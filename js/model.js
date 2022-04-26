@@ -18,27 +18,24 @@ class Connect4 {
      * @type {number}
      */
     this.numRows = numRows;
+
+    /**
+     * The number of turns that have been played.
+     * @type {number}
+     */
+    this.turns = 0;
     
     /**
-     * The current player's counter.
-     * @type {string}
+     * The player counters.
+     * @type {Array<string>}
      */ 
-    this.counter = 'x';
-
-    /**
-     * Describes if the game is still in play.
-     * @type {boolean}
-     */
-    this.playing = true;
+    this.counters = ['x', 'o'];
   
     /**
-     * Holds the state of the game's board.
-     * @type {Array}
+     * Holds the state of the game's board. A 2D array.
+     * @type {Array<Array<null>>}
      */
-    this.board = [];
-
-    /* populate the game board */
-    this.createBoard();
+    this.board = this.createBoard();
   }
   
   /**
@@ -47,27 +44,44 @@ class Connect4 {
    * The second index i corresponds to the row number of the board.
    * For example - this.board[3][4] represents the cell on the fourth column and 
    *  fifth row of the board (we start counting at 0).
+   * @returns {Array<Array<null>>} Our 2D array, representing the game's empty board.
    */
   createBoard() {
+    const board = []
     for (let j = 0; j < this.numCols; j++) {
-      this.board[j] = [];
+      board[j] = [];
       for (let i = 0; i < this.numRows; i++) {
-        this.board[j][i] = null;
+        board[j][i] = null;
       }
     }
+    return board;
   }
 
   /**
-   * Adds a player counter to a given column on the board.
-   * @param {string} counter The player counter: must be 'x' or 'o'.
+   * Returns the current player's counter
+   * @returns {string} The current player's counter.
+   */
+  currentPlayer() {
+    return this.counters[this.turns % 2];
+  }
+
+  /**
+   * Ends the current turn (by incrementing the turn counter).
+   */
+  endTurn() {
+    this.turns++
+  }
+
+  /**
+   * Adds the current player's counter to a given column on the board.
    * @param {number} j The column number to which we are adding a counter. 
    * @returns {Array<number>|number} The coordinates of the placed counter [j, i]; or 1 if the 
    *  column is full.
    */
-  addCounter(counter, j) {
+  addCounter(j) {
     for (let i = 0; i < this.numRows; i++) {
       if (this.board[j][i] === null) {
-        this.board[j][i] = counter;
+        this.board[j][i] = this.currentPlayer();
         return [j, i];
       }
     }
@@ -76,9 +90,9 @@ class Connect4 {
 
   /**
    * Checks if the board is full with player counters.
-   * @returns {boolean}
+   * @returns {boolean} If the board is full, or not.
    */
-  checkFull() {
+   checkFull() {
     for (let j = 0; j < this.numCols; j++) {
       if (this.board[j][this.numRows - 1] === null) {
         return false;
@@ -88,7 +102,7 @@ class Connect4 {
   }
 
   /**
-   * Checks for a win on all possible win lines, given some position on the board.
+   * Checks for a win on all possible win lines simultaneously, given some position on the board.
    * @param {Array<number>} position An array [j, i] of board coordinates.  
    * @returns {number|boolean} 1 if the position checked contains a null counter, otherwise a 
    *  boolean, if there is a win or not.
@@ -151,7 +165,7 @@ class Connect4 {
    * Resets the board.
    */
   reset() {
-    this.createBoard();
+    this.board = this.createBoard();
   }
 }
 

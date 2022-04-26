@@ -1,10 +1,11 @@
-/* Note - the game's board state appears rotated by 90deg when printing to the screen */
+/* Note - the game's board state appears rotated by 90deg clockwise 
+ * when printing to the screen */
 
 const Connect4 = require('../js/model');
 let game = new Connect4();
 
 describe('createBoard', () => {
-  test('can create default board of 7x6 in size', () =>{
+  test('can create default board of 7x6 in size', () => {
     game.createBoard();
     expect(game.board).toEqual([
       [null, null, null, null, null, null],
@@ -18,10 +19,17 @@ describe('createBoard', () => {
   });
 });
 
+describe('currentPlayer', () => {
+  test('correctly identifies the current player', () => {
+    game.turns = 20; 
+    expect(game.currentPlayer()).toBe('x');
+  });
+});
+
 describe('addCounter', () => {
   test('can add a counter to each column', () => {
     for (let j = 0; j < game.numCols; j++) {
-      game.addCounter('x', j);
+      game.addCounter(j);
     }
     expect(game.board).toEqual([
       ['x' , null, null, null, null, null],
@@ -36,7 +44,7 @@ describe('addCounter', () => {
   
   test('can stack counters in a column', () => {
     for (let i = 0; i < 5; i++) {
-      game.addCounter('x', 2);
+      game.addCounter(2);
     }
     expect(game.board).toEqual([
       ['x' , null, null, null, null, null],
@@ -50,11 +58,11 @@ describe('addCounter', () => {
   });
   
   test('gets the right return code when trying to put a counter in a full column', () => {
-    expect(game.addCounter('x', 2)).toBe(1);
+    expect(game.addCounter(2)).toBe(1);
   });
 
   test('returns the correct position of latest placement', () => {
-    expect(game.addCounter('o', 4)).toEqual([4, 1]);
+    expect(game.addCounter(4)).toEqual([4, 1]);
   });
 });
 
@@ -97,7 +105,7 @@ describe('checkWin', () => {
       ['x' , null, null, null, null, null],
       ['x' , null, null, null, null, null],
     ];
-    expect(game.checkWin([4, 0], 'horizontal')).toBeTruthy();
+    expect(game.checkWin([4, 0])).toBeTruthy();
   });
 
   test('correctly identifies a vertical win', () => {
@@ -110,7 +118,7 @@ describe('checkWin', () => {
       ['o' , null, null, null, null, null],
       ['x' , null, null, null, null, null],
     ];
-    expect(game.checkWin([2, 3], 'vertical')).toBeTruthy();
+    expect(game.checkWin([2, 3])).toBeTruthy();
   });
 
   test('correctly identifies a diagonal win', () => {
@@ -123,7 +131,7 @@ describe('checkWin', () => {
       ['o' , null, null, null, null, null],
       ['x' , null, null, null, null, null],
     ];
-    expect(game.checkWin([5, 0], 'diagonal')).toBeTruthy();
+    expect(game.checkWin([5, 0])).toBeTruthy();
   });  
 
   test('correctly identifies a diagonal win in the other direction', () => {
@@ -136,20 +144,27 @@ describe('checkWin', () => {
       ['o' , null, null, null, null, null],
       ['x' , null, null, null, null, null],
     ];
-    expect(game.checkWin([4, 3], 'diagonal')).toBeTruthy();
+    expect(game.checkWin([4, 3])).toBeTruthy();
   }); 
 
-// following tests use the same game board as the above test
-  test('correctly identifies a horizontal non-win', () => {
-    expect(game.checkWin([0, 0], 'horizontal')).toBeFalsy();
+  // following test uses the same game board as the above test
+  test('correctly identifies non-wins', () => {
+    const testPoints = [[0, 0], [2, 0], [2, 2], [2, 5]];
+    const results = [];
+    for (point of testPoints) {
+      results.push(game.checkWin(point));
+    }
+    expect(results).toEqual([false, false, false, false]);
   });
+});
 
-  test('correctly identifies a vertical non-win', () => {
-    expect(game.checkWin([2, 2], 'vertical')).toBeFalsy();
-  });
-
-  test('correctly identifies a diagonal non-win', () => {
-    expect(game.checkWin([1, 2], 'diagonal')).toBeFalsy();
+describe('endTurn', () => {
+  test('keeps the correct turn counter', () => {
+    game.turns = 0;
+    for (let i = 0; i < 6; i++) {
+      game.endTurn();
+    }
+    expect(game.turns).toBe(6);
   });
 });
 
