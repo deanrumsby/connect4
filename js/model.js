@@ -24,6 +24,12 @@ class Connect4 {
      * @type {number}
      */
     this.turns = 0;
+
+    /**
+     * The most recently occupied position on the board.
+     * @type {null|Array<number>}
+     */
+    this.lastPosPlayed = null
     
     /**
      * The player counters.
@@ -74,6 +80,7 @@ class Connect4 {
 
   /**
    * Adds the current player's counter to a given column on the board.
+   * Sets this.lastPosPlayed with the resulting coordinates.
    * @param {number} j The column number to which we are adding a counter. 
    * @returns {Array<number>|number} The coordinates of the placed counter [j, i]; or 1 if the 
    *  column is full.
@@ -82,6 +89,7 @@ class Connect4 {
     for (let i = 0; i < this.numRows; i++) {
       if (this.board[j][i] === null) {
         this.board[j][i] = this.currentPlayer();
+        this.lastPosPlayed = [j, i];
         return [j, i];
       }
     }
