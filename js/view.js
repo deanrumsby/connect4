@@ -1,5 +1,5 @@
 class View {
-  constructor(numCols, numRows) {
+  constructor(numCols = 7, numRows = 6) {
     // the root element
     this.root = this.getElement('#connect4');
 
@@ -67,6 +67,11 @@ class View {
       }
     }
     return board;
+  }
+
+  updateSlot(position, color) {
+    const [j, i] = position;
+    this.slots[j][i].classList.add(color);
   }
 
   bindAddCounter(handler) {

@@ -57,6 +57,14 @@ body {
     border: 1px solid black;
 }
 
+.red {
+    background-color: red;
+}
+
+.yellow {
+    background-color: yellow;
+}
+
 .results {
     text-align: center;
     font-size: 2vh;
