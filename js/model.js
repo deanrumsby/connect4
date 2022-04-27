@@ -75,7 +75,9 @@ class Connect4 {
    * Ends the current turn (by incrementing the turn counter).
    */
   endTurn() {
+
     this.turns++
+
   }
 
   /**
@@ -110,18 +112,11 @@ class Connect4 {
   }
 
   /**
-   * Checks for a win on all possible win lines simultaneously, given some position on the board.
-   * @param {Array<number>} position An array [j, i] of board coordinates.  
-   * @returns {number|boolean} 1 if the position checked contains a null counter, otherwise a 
-   *  boolean, if there is a win or not.
+   * Checks for a win on all possible win lines that pass through this.lastPosPlayed. 
+   * @returns {boolean} True if there is a win, false if not.
    */
-  checkWin(position) {
-    const [j, i] = position;
-
-    if (this.board[j][i] === null) {
-      return 1;
-    }
-
+  checkForWin() {
+    const [j, i] = this.lastPosPlayed;
     const counter = this.board[j][i];
     const connected = {horiz: 0, vert: 0, posDiag: 0, negDiag: 0};
 
@@ -146,14 +141,14 @@ class Connect4 {
       }
 
       /* positive diagonal win line */
-      if (this.board[j + t][i - t] === counter) {
+      if (this.board[j + t][i + t] === counter) {
         connected.posDiag++;
       } else {
         connected.posDiag = 0;
       }
 
       /* negative diagonal win line */
-      if (this.board[j + t][i + t] === counter) {
+      if (this.board[j + t][i - t] === counter) {
         connected.negDiag++;
       } else {
         connected.negDiag = 0;

@@ -94,7 +94,7 @@ describe('checkFull', () => {
   });
 });
 
-describe('checkWin', () => { 
+describe('checkForWin', () => { 
   test('correctly identifies a horizontal win', () => {
     game.board = [
       ['x' , null, null, null, null, null],
@@ -105,7 +105,8 @@ describe('checkWin', () => {
       ['x' , null, null, null, null, null],
       ['x' , null, null, null, null, null],
     ];
-    expect(game.checkWin([4, 0])).toBeTruthy();
+    game.lastPosPlayed = [4, 0];
+    expect(game.checkForWin()).toBeTruthy();
   });
 
   test('correctly identifies a vertical win', () => {
@@ -118,41 +119,45 @@ describe('checkWin', () => {
       ['o' , null, null, null, null, null],
       ['x' , null, null, null, null, null],
     ];
-    expect(game.checkWin([2, 3])).toBeTruthy();
+    game.lastPosPlayed = [2, 3];
+    expect(game.checkForWin()).toBeTruthy();
   });
 
-  test('correctly identifies a diagonal win', () => {
-    game.board = [
-      ['x' , null, null, null, null, null],
-      ['x' , 'o' , 'o' , null, null, null],
-      ['o' , 'x' , 'x' , 'o' , 'x' , 'o' ],
-      ['x' , 'x' , 'o' , null, null, null],
-      ['x' , 'o' , null, null, null, null],
-      ['o' , null, null, null, null, null],
-      ['x' , null, null, null, null, null],
-    ];
-    expect(game.checkWin([5, 0])).toBeTruthy();
-  });  
-
-  test('correctly identifies a diagonal win in the other direction', () => {
+  test('correctly identifies a positive diagonal win', () => {
     game.board = [
       ['x' , null, null, null, null, null],
       ['x' , 'o' , 'o' , null, null, null],
       ['o' , 'x' , 'x' , 'o' , 'x' , 'o' ],
       ['x' , 'x' , 'x' , null, null, null],
+      ['x' , 'o' , 'o' , 'x' , null, null],
+      ['o' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+    ];
+    game.lastPosPlayed = [3, 2];
+    expect(game.checkForWin()).toBeTruthy();
+  });  
+
+  test('correctly identifies a negative diagonal win', () => {
+    game.board = [
+      ['x' , null, null, null, null, null],
+      ['x' , 'o' , 'o' , 'x' , null, null],
+      ['o' , 'o' , 'x' , 'o' , 'x' , 'o' ],
+      ['x' , 'x' , 'x' , null, null, null],
       ['x' , 'x' , 'o' , 'x' , null, null],
       ['o' , null, null, null, null, null],
       ['x' , null, null, null, null, null],
     ];
-    expect(game.checkWin([4, 3])).toBeTruthy();
+    game.lastPosPlayed = [1, 3];
+    expect(game.checkForWin()).toBeTruthy();
   }); 
 
   // following test uses the same game board as the above test
   test('correctly identifies non-wins', () => {
-    const testPoints = [[0, 0], [2, 0], [2, 2], [2, 5]];
+    const testPoints = [[0, 0], [2, 0], [3, 2], [2, 5]];
     const results = [];
     for (point of testPoints) {
-      results.push(game.checkWin(point));
+      game.lastPosPlayed = point
+      results.push(game.checkForWin());
     }
     expect(results).toEqual([false, false, false, false]);
   });
