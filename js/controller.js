@@ -7,7 +7,10 @@ class Controller {
   }
 
   handleAddCounter = (column) => {
-    this.model.addCounter(column);
+    const position = this.model.addCounter(column);
+    const counter = this.model.currentPlayer();
+    this.view.updateSlot(position, counter);
+    this.model.endTurn();
   }
 
   handleReset = () => {
