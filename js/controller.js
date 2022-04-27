@@ -6,11 +6,18 @@ class Controller {
     this.view.bindAddCounter(this.handleAddCounter);
   }
 
+  endGame(winner) {
+    this.view.displayResults(winner);
+  }
+
   handleAddCounter = (column) => {
     const position = this.model.addCounter(column);
     const counter = this.model.currentPlayer();
     this.view.updateSlot(position, counter);
-    this.model.endTurn();
+    const winner = this.model.endTurn();
+    if (winner) {
+      this.endGame(winner);
+    }
   }
 
   handleReset = () => {

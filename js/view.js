@@ -74,6 +74,18 @@ class View {
     this.slots[j][i].classList.add(color);
   }
 
+  displayResults(winner) {
+    const winnerText = this.createElement('p');
+    const resetText = this.createElement('p');
+    if (winner === 'draw') {
+      winnerText.innerText = 'The game is a draw!';
+    } else {
+      winnerText.innerText = `${winner.toUpperCase()} is the winner!`;
+    }
+    resetText.innerText = 'Press any key to reset the game.';
+    this.results.append(winnerText, resetText);
+  }
+
   bindAddCounter(handler) {
     const columns = this.getAllElements('.board-col');
     for (let j = 0; j < columns.length; j++) {
