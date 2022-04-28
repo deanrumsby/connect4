@@ -69,11 +69,13 @@ class View {
     return board;
   }
 
-  updateSlot(position, color) {
+  // gives a slot a given color styling class
+  updateSlot(position, colorClass) {
     const [j, i] = position;
-    this.slots[j][i].classList.add(color);
+    this.slots[j][i].classList.add(colorClass);
   }
 
+  // displays a results message underneath the game board
   displayResults(winner) {
     const winnerText = this.createElement('p');
     const resetText = this.createElement('p');
@@ -86,6 +88,7 @@ class View {
     this.results.append(winnerText, resetText);
   }
 
+  // binds our click events to a handler in the controller
   bindAddCounter(handler) {
     const columns = this.getAllElements('.board-col');
     for (let j = 0; j < columns.length; j++) {

@@ -12,6 +12,9 @@ class Controller {
 
   handleAddCounter = (column) => {
     const position = this.model.addCounter(column);
+    if (!position || !this.model.stillPlaying) {
+      return;
+    }
     const counter = this.model.currentPlayer();
     this.view.updateSlot(position, counter);
     const winner = this.model.endTurn();

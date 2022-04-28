@@ -20,6 +20,12 @@ class Connect4 {
     this.numRows = numRows;
 
     /**
+     * Describes if the game has reached it's end.
+     * @type {boolean}
+     */
+    this.stillPlaying = true;
+
+    /**
      * The number of turns that have been played.
      * @type {number}
      */
@@ -74,14 +80,17 @@ class Connect4 {
   /**
    * Ends the current turn - checks for a winner or if the board is full.
    * Then increments the turn counter by one.
+   * If an endgame condition is met, will set this.stillPlaying to false.
    * @returns {string|null} The winner, or null if no winner found.
    */
   endTurn() {
     let winner = null;
     if (this.checkForWin()) {
       winner = this.currentPlayer();
+      this.stillPlaying = false;
     } else if (this.checkIfFull()) {
       winner = 'draw';
+      this.stillPlaying = false;
     }
     this.turns++;
     return winner;
@@ -119,7 +128,7 @@ class Connect4 {
   }
 
   /**
-   * Checks for a win on all possible win lines that pass through this.lastPosPlayed. 
+   * Checks for a win on all possible win lines that pass through this.lastPosPlayed.
    * @returns {boolean} True if there is a win, false if not.
    */
   checkForWin() {
