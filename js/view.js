@@ -21,7 +21,7 @@ class View {
     this.message = this.createElement('div', 'message');
 
     // append to the root element
-    this.root.append(this.title, this.board, this.results);
+    this.root.append(this.title, this.board, this.message);
   }
 
   // creates DOM element with optional class
@@ -153,6 +153,6 @@ class View {
         slot.style.backgroundColor = 'var(--body-bgcolor)';
       }
     }
-    this.results.replaceChildren();
+    this.message.replaceChildren();
   }
 }
