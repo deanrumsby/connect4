@@ -70,9 +70,9 @@ class View {
   }
 
   // gives a slot a given color styling class
-  updateSlot(position, colorClass) {
+  updateSlot(position, color) {
     const [j, i] = position;
-    this.slots[j][i].classList.add(colorClass);
+    this.slots[j][i].style.backgroundColor = color;
   }
 
   // displays a results message underneath the game board
@@ -88,6 +88,15 @@ class View {
     this.results.append(winnerText, resetText);
   }
 
+  reset() {
+    for (let column of this.slots) {
+      for (let slot of column) {
+        slot.style.backgroundColor = 'var(--body-bgcolor)';
+      }
+    }
+    this.results.replaceChildren();
+  }
+
   // binds our click events to a handler in the controller
   bindAddCounter(handler) {
     const columns = this.getAllElements('.board-col');
@@ -96,6 +105,16 @@ class View {
         handler(j);
       });
     }
+  }
 
+  // binds our reset event listeners to our handler in the controller
+  bindReset(handler) {
+    document.addEventListener('keydown', handler);
+    document.addEventListener('click', handler);
+  }
+
+  unbindReset(handler) {
+    document.removeEventListener('keydown', handler);
+    document.removeEventListener('click', handler);
   }
 }

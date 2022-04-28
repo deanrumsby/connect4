@@ -8,6 +8,9 @@ class Controller {
 
   endGame(winner) {
     this.view.displayResults(winner);
+    setTimeout(() => {
+      this.view.bindReset(this.handleReset);
+    }, 200);
   }
 
   handleAddCounter = (column) => {
@@ -15,7 +18,12 @@ class Controller {
     if (!position || !this.model.stillPlaying) {
       return;
     }
-    const counter = this.model.currentPlayer();
+    let counter;
+    if (this.model.currentPlayer() === 'x') {
+      counter = 'red';
+    } else {
+      counter = 'yellow'
+    }
     this.view.updateSlot(position, counter);
     const winner = this.model.endTurn();
     if (winner) {
@@ -24,6 +32,8 @@ class Controller {
   }
 
   handleReset = () => {
+    this.view.reset();
     this.model.reset();
+    this.view.unbindReset(this.handleReset);
   }
 }

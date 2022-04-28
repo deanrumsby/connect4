@@ -185,6 +185,7 @@ class Connect4 {
    */
   reset() {
     this.board = this.createBoard();
+    this.stillPlaying = true;
   }
 }
 
