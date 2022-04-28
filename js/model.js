@@ -74,15 +74,17 @@ class Connect4 {
   /**
    * Ends the current turn - checks for a winner or if the board is full.
    * Then increments the turn counter by one.
-   * @returns {string} The winner.
+   * @returns {string|null} The winner, or null if no winner found.
    */
   endTurn() {
+    let winner = null;
     if (this.checkForWin()) {
-      return this.currentPlayer();
+      winner = this.currentPlayer();
     } else if (this.checkIfFull()) {
-      return 'draw';
+      winner = 'draw';
     }
     this.turns++;
+    return winner;
   }
 
   /**
