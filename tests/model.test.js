@@ -58,7 +58,7 @@ describe('addCounter', () => {
   });
   
   test('gets the right return code when trying to put a counter in a full column', () => {
-    expect(game.addCounter(2)).toBe(1);
+    expect(game.addCounter(2)).toBe(null);
   });
 
   test('returns the correct position of latest placement', () => {
@@ -77,7 +77,7 @@ describe('checkFull', () => {
       ['o' , 'x' , 'o' , 'x' , 'x' , 'x' ],
       ['x' , 'x' , 'o' , 'o' , 'o' , 'x' ],
     ];
-    expect(game.checkFull()).toBeTruthy();
+    expect(game.checkIfFull()).toBeTruthy();
   });
 
   test('correctly asserts when the board is not full', () => {
@@ -90,7 +90,7 @@ describe('checkFull', () => {
       ['o' , 'x' , 'o' , 'x' , 'x' , 'x' ],
       ['x' , 'x' , 'o' , 'o' , 'o' , 'x' ],
     ];
-    expect(game.checkFull()).toBeFalsy();
+    expect(game.checkIfFull()).toBeFalsy();
   });
 });
 

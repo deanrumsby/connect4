@@ -89,7 +89,7 @@ class Connect4 {
    * Adds the current player's counter to a given column on the board.
    * Sets this.lastPosPlayed with the resulting coordinates.
    * @param {number} j The column number to which we are adding a counter. 
-   * @returns {Array<number>|number} The coordinates of the placed counter [j, i]; or 1 if the 
+   * @returns {Array<number>|null} The coordinates of the placed counter [j, i]; or null if the 
    *  column is full.
    */
   addCounter(j) {
@@ -100,7 +100,7 @@ class Connect4 {
         return [j, i];
       }
     }
-    return 1;
+    return null;
   }
 
   /**
