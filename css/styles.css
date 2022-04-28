@@ -6,14 +6,9 @@
 body {
     display: flex;
     flex-direction: column;
+    align-items: center;
     background-color: var(--body-bgcolor);
     height: 95vh;
-}
-
-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
 .title {
@@ -22,7 +17,7 @@ main {
     font-size: 5vh;
 }
 
-.game-board {
+.board {
     height: 65vh;
     margin-top: 0.5em;
     margin-bottom: 1em;
@@ -34,13 +29,13 @@ main {
 }
 
 @media (orientation: portrait) {
-    .game-board {
+    .board {
         height: auto;
         width: 90vw;
     }
 }
 
-.game-col {
+.board-col {
     display: flex;
     flex-grow: 1;
     flex-direction: column-reverse;
@@ -50,16 +45,24 @@ main {
 .cell {
     aspect-ratio: 1 / 1;
     flex-grow: 1;
-    padding: 0.3em;
+    padding: 7%;
     background-color: blue;
 }
 
-.hole {
+.slot {
     aspect-ratio: 1 / 1;
     flex-grow: 1;
     background-color: var(--body-bgcolor);
     border-radius: 50%;
     border: 1px solid black;
+}
+
+.x {
+    background-color: red;
+}
+
+.o {
+    background-color: yellow;
 }
 
 .results {
