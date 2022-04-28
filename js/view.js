@@ -7,6 +7,9 @@ class View {
     this.title = this.createElement('h1', 'title');
     this.title.innerText = "Connect4";
 
+    // tracks if the game is over
+    this.gameEnd = false;
+
     // the game's slots, in a 2D array
     // populated by this.createBoard
     this.slots = [];
@@ -14,8 +17,8 @@ class View {
     // the visual game board
     this.board = this.createBoard(numCols, numRows);
 
-    // results container
-    this.results = this.createElement('div', 'results');
+    // message container
+    this.message = this.createElement('div', 'message');
 
     // append to the root element
     this.root.append(this.title, this.board, this.results);
@@ -69,36 +72,12 @@ class View {
     return board;
   }
 
-  // gives a slot a given color styling class
-  updateSlot(position, color) {
-    const [j, i] = position;
-    this.slots[j][i].style.backgroundColor = color;
-  }
-
-  // displays a results message underneath the game board
-  displayResults(winner) {
-    const winnerText = this.createElement('p');
-    const resetText = this.createElement('p');
-    if (winner === 'draw') {
-      winnerText.innerText = 'The game is a draw!';
-    } else {
-      winnerText.innerText = `${winner.toUpperCase()} is the winner!`;
-    }
-    resetText.innerText = 'Press any key to reset the game.';
-    this.results.append(winnerText, resetText);
-  }
-
-  reset() {
-    for (let column of this.slots) {
-      for (let slot of column) {
-        slot.style.backgroundColor = 'var(--body-bgcolor)';
-      }
-    }
-    this.results.replaceChildren();
-  }
-
-  // binds our click events to a handler in the controller
+  // creates and binds our click event listeners to a handler in the controller
+  // will only activate whilst the game is in it's main phase
   bindAddCounter(handler) {
+    if (this.gameEnd) {
+      return;
+    }
     const columns = this.getAllElements('.board-col');
     for (let j = 0; j < columns.length; j++) {
       columns[j].addEventListener('click', () => {
@@ -107,14 +86,73 @@ class View {
     }
   }
 
-  // binds our reset event listeners to our handler in the controller
-  bindReset(handler) {
-    document.addEventListener('keydown', handler);
-    document.addEventListener('click', handler);
+  // given coordinates [j, i], update it's slot with the color provided
+  updateSlot(coordinates, color) {
+    const [j, i] = coordinates;
+    this.slots[j][i].style.backgroundColor = color;
   }
 
-  unbindReset(handler) {
-    document.removeEventListener('keydown', handler);
-    document.removeEventListener('click', handler);
+  // displays a message underneath the game board
+  displayMessage(code) {
+    const lineOne = this.createElement('p');
+    const lineTwo = this.createElement('p');
+    switch (code) {
+      case 0:
+        lineOne.innerText = 'RED is the winner!';
+        lineTwo.innerText = 'Press any key to reset the game.';
+        break;
+      case 1:
+        lineOne.innerText = 'YELLOW is the winner!';
+        lineTwo.innerText = 'Press any key to reset the game.';
+        break;
+      case 2:
+        lineOne.innerText = 'The game is a draw!';
+        lineTwo.innerText = 'Press any key to reset the game.';
+        break;
+      case 3:
+        lineOne.innerText = 'Sorry, that column is full!';
+        lineTwo.innerText = 'Please choose another column.';
+        break;
+    }
+    this.message.append(lineOne, lineTwo);
+  }
+
+  // clears the currently displayed message
+  clearMessage() {
+    this.message.replaceChildren();
+  }
+
+  // depending on the condition, calls to display the appropriate message
+  endGame(condition) {
+    switch (condition) {
+      case 'red':
+        this.displayMessage(0);
+        break;
+      case 'yellow':
+        this.displayMessage(1);
+        break;
+      case 'draw':
+        this.displayMessage(2);
+        break;
+    }
+  }
+
+  // allows for controller to bind to this reset function
+  bindReset(handler) {
+    if (!this.gameEnd) {
+      return;
+    }
+    document.addEventListener('click', handler);
+    document.addEventListener('keydown', handler);
+  }
+
+  // resets the appearance of the board
+  reset() {
+    for (let column of this.slots) {
+      for (let slot of column) {
+        slot.style.backgroundColor = 'var(--body-bgcolor)';
+      }
+    }
+    this.results.replaceChildren();
   }
 }
