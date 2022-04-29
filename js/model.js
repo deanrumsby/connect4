@@ -74,8 +74,7 @@ class Connect4 {
   /**
    * Ends the current turn - checks for a winner or if the board is full.
    * Then increments the turn counter by one.
-   * If an endgame condition is met, will set this.stillPlaying to false.
-   * @returns {string|null} The winner, or null if no winner found.
+   * If an endgame condition is met, will signal the Controller.
    */
   endTurn() {
     const currentPlayer = this.currentPlayer();
@@ -87,6 +86,11 @@ class Connect4 {
     this.turns++;
   }
 
+  /**
+   * Allows us to signal the Controller that the game has met an 
+   *   endgame condition and to respond accordingly.
+   * @param {function} callback Provided by the Controller.
+   */
   bindEndGame(callback) {
     this.endGame = callback;
   }

@@ -92,7 +92,7 @@ class View {
    *   the board. 
    * Used to bind the listeners to a method in the Controller.
    * Will only fire when this.gameOver is false.
-   * @param {function} handler A handler method used in the Controller.
+   * @param {function} handler Provided by the Controller to handle the event.
    */
   bindAddCounter(handler) {
     const columns = document.querySelectorAll('.board-col');
@@ -154,7 +154,7 @@ class View {
   /**
    * Creates the event listeners used to reset the board.
    * Used to bind the listeners to a method in the Controller.
-   * @param {function} handler 
+   * @param {function} handler Provided by the Controller to handle the event.
    */
   bindReset(handler) {
     for (let event of ['click', 'keydown']) {
