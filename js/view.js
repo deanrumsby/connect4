@@ -1,14 +1,15 @@
 class View {
   constructor(numCols = 7, numRows = 6) {
     // the root element
-    this.root = this.getElement('#connect4');
+    this.root = document.querySelector('#connect4');
 
     // the title of the app
-    this.title = this.createElement('h1', 'title');
+    this.title = document.createElement('h1');
+    this.title.classList.add('title');
     this.title.innerText = "Connect4";
 
     // tracks if the game is over
-    this.gameEnd = false;
+    this.gameOver = false;
 
     // the game's slots, in a 2D array
     // populated by this.createBoard
@@ -18,50 +19,36 @@ class View {
     this.board = this.createBoard(numCols, numRows);
 
     // message container
-    this.message = this.createElement('div', 'message');
+    this.message = document.createElement('div');
+    this.message.classList.add('message');
 
     // append to the root element
     this.root.append(this.title, this.board, this.message);
-  }
-
-  // creates DOM element with optional class
-  createElement(tag, className) {
-    const element = document.createElement(tag);
-    if (className) {
-      element.classList.add(className);
-    }
-    return element;
-  }
-
-  // retrieves an element from the DOM
-  getElement(selector) {
-    return document.querySelector(selector);
-  }
-
-  // retrieves all elements from the DOM with specified selector
-  getAllElements(selector) {
-    return document.querySelectorAll(selector);
   }
 
   // creates and returns the game's board element
   // populates this.slots 
   createBoard(numCols, numRows) {
     // creating the visual board
-    const board = this.createElement('div', 'board');
+    const board = document.createElement('div');
+    board.classList.add('board');
     board.style.aspectRatio = `${numCols} / ${numRows}`;
 
     // creating each column of the board
     for (let j = 0; j < numCols; j++) {
       this.slots[j] = [];
-      const column = this.createElement('div', 'board-col');
+      const column = document.createElement('div');
+      column.classList.add('board-col');
 
       // append it to the grid
       board.append(column);
 
       // create each cell and slot within each column
       for (let i = 0; i < numRows; i++) {
-        const cell = this.createElement('div', 'cell');
-        const slot = this.createElement('div', 'slot');
+        const cell = document.createElement('div');
+        const slot = document.createElement('div');
+        cell.classList.add('cell');
+        slot.classList.add('slot');
         cell.append(slot);
         column.append(cell);
 
@@ -75,13 +62,12 @@ class View {
   // creates and binds our click event listeners to a handler in the controller
   // will only activate whilst the game is in it's main phase
   bindAddCounter(handler) {
-    if (this.gameEnd) {
-      return;
-    }
-    const columns = this.getAllElements('.board-col');
+    const columns = document.querySelectorAll('.board-col');
     for (let j = 0; j < columns.length; j++) {
       columns[j].addEventListener('click', () => {
-        handler(j);
+        if (!this.gameOver) {
+          handler(j);
+        }
       });
     }
   }
@@ -94,8 +80,8 @@ class View {
 
   // displays a message underneath the game board
   displayMessage(code) {
-    const lineOne = this.createElement('p');
-    const lineTwo = this.createElement('p');
+    const lineOne = document.createElement('p');
+    const lineTwo = document.createElement('p');
     switch (code) {
       case 0:
         lineOne.innerText = 'RED is the winner!';
@@ -139,11 +125,16 @@ class View {
 
   // allows for controller to bind to this reset function
   bindReset(handler) {
-    if (!this.gameEnd) {
-      return;
-    }
-    document.addEventListener('click', handler);
-    document.addEventListener('keydown', handler);
+    document.addEventListener('click', () => {
+      if (this.gameOver) {
+        handler();
+      }
+    });
+    document.addEventListener('keydown', () => {
+      if (this.gameOver) {
+        handler();
+      }
+    });
   }
 
   // resets the appearance of the board
@@ -153,6 +144,6 @@ class View {
         slot.style.backgroundColor = 'var(--body-bgcolor)';
       }
     }
-    this.message.replaceChildren();
+    this.clearMessage();
   }
 }

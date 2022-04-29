@@ -84,16 +84,17 @@ class Connect4 {
    * @returns {string|null} The winner, or null if no winner found.
    */
   endTurn() {
-    let winner = null;
+    const currentPlayer = this.currentPlayer();
     if (this.checkForWin()) {
-      winner = this.currentPlayer();
-      this.stillPlaying = false;
+      this.endGame(currentPlayer)
     } else if (this.checkIfFull()) {
-      winner = 'draw';
-      this.stillPlaying = false;
+      this.endGame();
     }
     this.turns++;
-    return winner;
+  }
+
+  bindEndGame(callback) {
+    this.endGame = callback;
   }
 
   /**
