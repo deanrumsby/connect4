@@ -125,16 +125,13 @@ class View {
 
   // allows for controller to bind to this reset function
   bindReset(handler) {
-    document.addEventListener('click', () => {
-      if (this.gameOver) {
-        handler();
-      }
-    });
-    document.addEventListener('keydown', () => {
-      if (this.gameOver) {
-        handler();
-      }
-    });
+    for (let event of ['click', 'keydown']) {
+      document.addEventListener(event, () => {
+        if (this.gameOver) {
+          handler();
+        }
+      });
+    }
   }
 
   // resets the appearance of the board

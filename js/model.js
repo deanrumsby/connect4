@@ -20,12 +20,6 @@ class Connect4 {
     this.numRows = numRows;
 
     /**
-     * Describes if the game has reached it's end.
-     * @type {boolean}
-     */
-    this.stillPlaying = true;
-
-    /**
      * The number of turns that have been played.
      * @type {number}
      */
@@ -186,7 +180,6 @@ class Connect4 {
    */
   reset() {
     this.board = this.createBoard();
-    this.stillPlaying = true;
   }
 }
 
