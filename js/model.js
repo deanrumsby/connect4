@@ -185,6 +185,19 @@ class Connect4 {
   reset() {
     this.board = this.createBoard();
   }
+
+  availableMoves() {
+    const moves = [];
+    for (let j = 0; j < this.numCols; j++) {
+      for (let i = 0; i < this.numRows; i++) {
+        if (!this.board[j][i]) {
+          moves.push([j, i]);
+          break;
+        }
+      }
+    }
+    return moves;
+  }
 }
 
 module.exports = Connect4;
