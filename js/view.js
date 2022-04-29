@@ -1,49 +1,77 @@
+/**
+ * All the DOM related logic for playing a game of Connect4.
+ */
 class View {
+  /**
+   * @param {number} numCols The number of columns of our game's board.
+   * @param {number} numRows The number of rows of our game's board.
+   */
   constructor(numCols = 7, numRows = 6) {
-    // the root element
+    /**
+     * The root element, to which the app will be a descendant of.
+     * @type {HTMLDivElement}
+     */
     this.root = document.querySelector('#connect4');
 
-    // the title of the app
+    /**
+     * The main heading of the game.
+     * @type {HTMLHeadingElement}
+     */
     this.title = document.createElement('h1');
     this.title.classList.add('title');
     this.title.innerText = "Connect4";
 
-    // tracks if the game is over
+    /**
+     * Flag that lets us know if the game has finished.
+     * @type {boolean}
+     */
     this.gameOver = false;
 
-    // the game's slots, in a 2D array
-    // populated by this.createBoard
+    /**
+     * A 2D array containing div elements for each slot on the game's board.
+     * @type {Array<Array<HTMLDivElement>>} 
+     */
     this.slots = [];
 
-    // the visual game board
+    /**
+     * A collection divs that represents the game's board.
+     * @type {HTMLDivElement}
+     */
     this.board = this.createBoard(numCols, numRows);
 
-    // message container
+    /**
+     * A container that holds any messages we wish to display.
+     * @type {HTMLDivElement}
+     */
     this.message = document.createElement('div');
     this.message.classList.add('message');
 
-    // append to the root element
+    /* Appending title, board and message container to the root element */
     this.root.append(this.title, this.board, this.message);
   }
 
-  // creates and returns the game's board element
-  // populates this.slots 
+  /**
+   * Creates the collection of divs that represents our board and
+   *   populates this.slots.
+   * @param {number} numCols The number of columns of our game's board.
+   * @param {number} numRows The number of rows of our game's board.
+   * @returns {HTMLDivElement} The representation of our board.
+   */ 
   createBoard(numCols, numRows) {
-    // creating the visual board
+    /* Creating the board element */
     const board = document.createElement('div');
     board.classList.add('board');
     board.style.aspectRatio = `${numCols} / ${numRows}`;
 
-    // creating each column of the board
+    /* Creating each column of the board
+     * and creates a column within this.slots */
     for (let j = 0; j < numCols; j++) {
       this.slots[j] = [];
       const column = document.createElement('div');
       column.classList.add('board-col');
-
-      // append it to the grid
       board.append(column);
 
-      // create each cell and slot within each column
+      /* Creating each cell and slot of our column */
       for (let i = 0; i < numRows; i++) {
         const cell = document.createElement('div');
         const slot = document.createElement('div');
@@ -52,15 +80,20 @@ class View {
         cell.append(slot);
         column.append(cell);
 
-        // add the slot to the 2D slots array
+        /* Adds the slot to our 2D array this.slots */
         this.slots[j][i] = slot;
       }
     }
     return board;
   }
 
-  // creates and binds our click event listeners to a handler in the controller
-  // will only activate whilst the game is in it's main phase
+  /**
+   * Creates the event listeners used to add a counter to each column on 
+   *   the board. 
+   * Used to bind the listeners to a method in the Controller.
+   * Will only fire when this.gameOver is false.
+   * @param {function} handler A handler method used in the Controller.
+   */
   bindAddCounter(handler) {
     const columns = document.querySelectorAll('.board-col');
     for (let j = 0; j < columns.length; j++) {
@@ -72,13 +105,21 @@ class View {
     }
   }
 
-  // given coordinates [j, i], update it's slot with the color provided
+  /**
+   * Updates a given slot with the color provided.
+   * @param {Array<number>} coordinates In the form [j, i], where j is the 
+   *   column coordinate and i is the row coordinate.  
+   * @param {string} color A color to use - Usually 'red' or 'yellow'. 
+   */
   updateSlot(coordinates, color) {
     const [j, i] = coordinates;
     this.slots[j][i].style.backgroundColor = color;
   }
 
-  // displays a message underneath the game board
+  /**
+   * Displays a message underneath the game's board.
+   * @param {number} code Code used to select the desired message.
+   */
   displayMessage(code) {
     const lineOne = document.createElement('p');
     const lineTwo = document.createElement('p');
@@ -103,27 +144,18 @@ class View {
     this.message.append(lineOne, lineTwo);
   }
 
-  // clears the currently displayed message
+  /**
+   * Clears any messages currently displayed under the game's board.
+   */
   clearMessage() {
     this.message.replaceChildren();
   }
 
-  // depending on the condition, calls to display the appropriate message
-  endGame(condition) {
-    switch (condition) {
-      case 'red':
-        this.displayMessage(0);
-        break;
-      case 'yellow':
-        this.displayMessage(1);
-        break;
-      case 'draw':
-        this.displayMessage(2);
-        break;
-    }
-  }
-
-  // allows for controller to bind to this reset function
+  /**
+   * Creates the event listeners used to reset the board.
+   * Used to bind the listeners to a method in the Controller.
+   * @param {function} handler 
+   */
   bindReset(handler) {
     for (let event of ['click', 'keydown']) {
       document.addEventListener(event, () => {
@@ -134,7 +166,10 @@ class View {
     }
   }
 
-  // resets the appearance of the board
+  /**
+   * Resets the appearance of the board.
+   * Clears any messages displayed under the board.
+   */
   reset() {
     for (let column of this.slots) {
       for (let slot of column) {
