@@ -187,3 +187,20 @@ describe('reset', () => {
     ]);
   });
 });
+
+describe('availableMoves', () => {
+  test('provides the correct results', () => {
+    game.board = [
+      ['x' , null, null, null, null, null],
+      ['o' , 'x' , 'o' , null, null, null],
+      ['x' , null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      ['o' , 'x' , null, null, null, null],
+      [null, null, null, null, null, null],
+    ]
+    expect(game.availableMoves()).toEqual([
+      [0, 1], [1, 3], [2, 1], [3, 0], [4, 0], [5, 2], [6, 0]
+    ]);
+  });
+});
