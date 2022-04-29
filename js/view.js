@@ -166,6 +166,19 @@ class View {
     }
   }
 
+  slotHighlighting(availableMoves) {
+    const columns = document.querySelectorAll('.board-col');
+    for (let n = 0; n < this.numCols; n++) {
+      [j, i] = availableMoves[n]
+      columns[n].addEventListener('mouseenter', () => {
+        this.slots[j][i].classList.add('slot-highlighting');
+      });
+      columns[n].addEventListener('mouseleave', () => {
+        this.slots[j][i].classList.remove('slot-highlighting');
+      });
+    }
+  }
+
   /**
    * Resets the appearance of the board.
    * Clears any messages displayed under the board.
