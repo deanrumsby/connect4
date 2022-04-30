@@ -3,18 +3,18 @@
  */
 class View {
   /**
-   * @param {number} numCols The number of columns of our board.
-   * @param {number} numRows The number of rows of our board.
+   * @param {number} numCols The number of columns in our board.
+   * @param {number} numRows The number of rows in our board.
    */
   constructor(numCols = 7, numRows = 6) {
     /**
-     * The number of columns of our board.
+     * The number of columns in our board.
      * @type {number}
      */
     this.numCols = numCols;
 
     /**
-     * The number of rows of our board.
+     * The number of rows in our board.
      * @type {number}
      */
     this.numRows = numRows;
@@ -55,6 +55,8 @@ class View {
      */
     this.availableMoves = [];
 
+    this.colors = ['red', 'yellow'];
+
     /**
      * A collection of divs that create the visual structure of the game's board.
      * @type {HTMLDivElement}
@@ -80,7 +82,6 @@ class View {
    * @returns {HTMLDivElement} The representation of our board.
    */ 
   createBoard(numCols, numRows) {
-    // Creating the board element
     const board = document.createElement('div');
     board.classList.add('board');
     board.style.aspectRatio = `${numCols} / ${numRows}`;
@@ -132,9 +133,9 @@ class View {
    *   column coordinate and i is the row coordinate.  
    * @param {string} color A color to use - Usually 'red' or 'yellow'. 
    */
-  updateSlot(coordinates, color) {
+  updateSlot(coordinates) {
     const [j, i] = coordinates;
-    this.slots[j][i].style.backgroundColor = color;
+    this.slots[j][i].style.backgroundColor = this.currentColor();
   }
 
   /**
@@ -173,6 +174,21 @@ class View {
   }
 
   /**
+   * Returns the next color to be placed.
+   * @returns {string} The next color to be placed
+   */
+  currentColor() {
+    return this.colors[0];
+  }
+
+  /**
+   * Cycles the color queue.
+   */
+  cycleColors() {
+    this.colors.push(this.colors.shift());
+  }
+
+  /**
    * Creates the event listener used to reset the board.
    * Used to bind the listener to a method in the Controller.
    * @param {function} handler Provided by the Controller to handle the event.
@@ -190,7 +206,6 @@ class View {
    *   highlighting of any possible moves. 
    */
   slotHighlighting() {
-    // Collecting the columns
     const columns = document.querySelectorAll('.board-col');
     for (let j = 0; j < this.numCols; j++) {
       // Add highlighting to the next available move within the column

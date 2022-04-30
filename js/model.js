@@ -20,12 +20,6 @@ class Connect4 {
     this.numRows = numRows;
 
     /**
-     * The number of turns that have been played.
-     * @type {number}
-     */
-    this.turns = 0;
-
-    /**
      * The most recently occupied position on the board.
      * @type {null|Array<number>}
      */
@@ -68,22 +62,22 @@ class Connect4 {
    * @returns {string} The current player's counter.
    */
   currentPlayer() {
-    return this.counters[this.turns % 2];
+    return this.counters[0];
   }
 
   /**
    * Ends the current turn - checks for a winner or if the board is full.
-   * Then increments the turn counter by one.
+   * Then rotates the couter queue by one. 
    * If an endgame condition is met, will signal the Controller.
    */
   endTurn() {
-    const currentPlayer = this.currentPlayer();
+    const currentPlayer = this.counters.shift();
     if (this.checkForWin()) {
       this.endGame(currentPlayer)
     } else if (this.checkIfFull()) {
       this.endGame();
     }
-    this.turns++;
+    this.counters.push(currentPlayer);
   }
 
   /**

@@ -50,23 +50,16 @@ class Controller {
 
     // Updates the slot given by the coordinates with the color
     // of the current player
-    const currentPlayer = this.model.currentPlayer();
-    const [player1, player2] = this.model.counters;
-    
-    switch (currentPlayer) {
-      case player1:
-        this.view.updateSlot(coordinates, 'red');
-        break;
-      case player2:
-        this.view.updateSlot(coordinates, 'yellow');
-        break;
-    }
+    this.view.updateSlot(coordinates);
 
     // Updates the available moves in the view
     this.view.availableMoves = this.model.availableMoves();
 
     // Signals the model to end the turn
     this.model.endTurn();
+
+    // Cycles the current color in the view
+    this.view.cycleColors();
   }
 
   /**

@@ -19,13 +19,6 @@ describe('createBoard', () => {
   });
 });
 
-describe('currentPlayer', () => {
-  test('correctly identifies the current player', () => {
-    game.turns = 20; 
-    expect(game.currentPlayer()).toBe('x');
-  });
-});
-
 describe('addCounter', () => {
   test('can add a counter to each column', () => {
     for (let j = 0; j < game.numCols; j++) {
@@ -164,12 +157,11 @@ describe('checkForWin', () => {
 });
 
 describe('endTurn', () => {
-  test('keeps the correct turn counter', () => {
-    game.turns = 0;
+  test('keeps the correct current player', () => {
     for (let i = 0; i < 6; i++) {
       game.endTurn();
     }
-    expect(game.turns).toBe(6);
+    expect(game.currentPlayer()).toBe('x');
   });
 });
 
@@ -199,8 +191,6 @@ describe('availableMoves', () => {
       ['o' , 'x' , null, null, null, null],
       [null, null, null, null, null, null],
     ]
-    expect(game.availableMoves()).toEqual([
-      [0, 1], [1, 3], [2, 1], [3, 0], [4, 0], [5, 2], [6, 0]
-    ]);
+    expect(game.availableMoves()).toEqual([1, 3, 1, 0, 0, 2, 0]);
   });
 });
