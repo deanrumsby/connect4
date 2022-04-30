@@ -182,6 +182,14 @@ class View {
   }
 
   /**
+   * Returns the color after next to be placed.
+   * @returns {string} The color after next, to be placed.
+   */
+  nextColor() {
+    return this.colors[1];
+  }
+
+  /**
    * Cycles the color queue.
    */
   cycleColors() {
@@ -207,6 +215,8 @@ class View {
    */
   slotHighlighting() {
     const columns = document.querySelectorAll('.board-col');
+    const currColorHighlightClass = `slot-highlight-${this.currentColor()}`;
+    const nextColorHighlightClass = `slot-highlight-${this.nextColor()}`;
     for (let j = 0; j < this.numCols; j++) {
       // Add highlighting to the next available move within the column
       columns[j].addEventListener('mouseenter', () => {
@@ -215,7 +225,7 @@ class View {
         if (i === null) {
           return;
         }
-        this.slots[j][i].classList.add('slot-highlight');
+        this.slots[j][i].classList.add(`slot-highlight-${this.currentColor()}`);
       });
 
       // Remove highlighting when cursor leaves the column
@@ -225,7 +235,7 @@ class View {
         if (i === null) {
           return;
         }
-        this.slots[j][i].classList.remove('slot-highlight');
+        this.slots[j][i].classList.remove(`slot-highlight-${this.currentColor()}`);
       });
 
       // Updates the highlighting when a player adds a counter 
@@ -242,16 +252,16 @@ class View {
           return;
         }
         // Else add the highlighting to the next available slot
-        this.slots[j][i].classList.add('slot-highlight');
+        this.slots[j][i].classList.add(`slot-highlight-${this.currentColor()}`);
         // If the game is over, the next click will remove the highlighting
         // and begin highlighting from the bottom row again
         if (this.gameOver) {
-          this.slots[j][i].classList.remove('slot-highlight');
-          this.slots[j][0].classList.add('slot-highlight');
+          this.slots[j][i].classList.remove(`slot-highlight-${this.currentColor()}`);
+          this.slots[j][0].classList.add(`slot-highlight-${this.currentColor()}`);
           return;
         }
         // Removing the highlighting from the previously highlighted slot
-        this.slots[j][i - 1].classList.remove('slot-highlight');
+        this.slots[j][i - 1].classList.remove(`slot-highlight-${this.nextColor()}`);
       });
     }
   }

@@ -57,9 +57,14 @@ body {
     border: 1px solid black;
 }
 
-.slot-highlight {
+.slot-highlight-red {
     border: none;
-    outline: 4px solid pink;
+    outline: 4px solid red;
+}
+
+.slot-highlight-yellow {
+    border: none;
+    outline: 4px solid yellow;
 }
 
 .message {
