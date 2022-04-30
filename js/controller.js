@@ -19,10 +19,14 @@ class Controller {
      */
     this.view = view;
 
-    /* Binding our event handlers and callbacks */
+    // Binding our event handlers and callbacks
     this.view.bindAddCounter(this.handleAddCounter);
     this.view.bindReset(this.handleReset);
     this.model.bindEndGame(this.endGame);
+
+    // Initialising slot highlighting.
+    this.view.availableMoves = this.model.availableMoves();
+    this.view.slotHighlighting();
   }
 
   /**
@@ -33,19 +37,19 @@ class Controller {
    * @returns {undefined} Returns if no coordinates were given to update.
    */
   handleAddCounter = (column) => {
-    /* Clears messages, adds counter to model and receives 
-     * the coordinates for the newly placed piece */
+    // Clears messages, adds counter to model and receives 
+    // the coordinates for the newly placed piece
     this.view.clearMessage();
     const coordinates = this.model.addCounter(column);
     
-    /* If no coordinates, will ask the view to display a column full message */
+    // If no coordinates, will ask the view to display a column full message
     if (!coordinates) {
       this.view.displayMessage(3);
       return;
     }
 
-    /* Updates the slot given by the coordinates with the color
-     * of the current player */
+    // Updates the slot given by the coordinates with the color
+    // of the current player
     const currentPlayer = this.model.currentPlayer();
     const [player1, player2] = this.model.counters;
     
@@ -57,16 +61,23 @@ class Controller {
         this.view.updateSlot(coordinates, 'yellow');
         break;
     }
-    /* Signals the model to end the turn */
+
+    // Updates the available moves in the view
+    this.view.availableMoves = this.model.availableMoves();
+
+    // Signals the model to end the turn
     this.model.endTurn();
   }
 
   /**
    * Handles the resetting of the view and model.
+   * Resets the available moves in the view.
+   * Resets the gameOver flag.
    */
   handleReset = () => {
     this.view.reset();
     this.model.reset();
+    this.view.availableMoves = this.model.availableMoves();
     this.view.gameOver = false;
   }
 
@@ -89,8 +100,8 @@ class Controller {
         this.view.displayMessage(2);
         break;
     }
-    /* Timeout given so that the reset events aren't unintentionally
-     * fired by a game ending keypress */
+    // Timeout given so that the reset events aren't unintentionally
+    // fired by a game ending keypress
     setTimeout(() => {
       this.view.gameOver = true;
     }, 200);

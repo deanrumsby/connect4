@@ -1,14 +1,26 @@
 /**
- * All the DOM related logic for playing a game of Connect4.
+ * Visual component of our Connect4 application.
  */
 class View {
   /**
-   * @param {number} numCols The number of columns of our game's board.
-   * @param {number} numRows The number of rows of our game's board.
+   * @param {number} numCols The number of columns of our board.
+   * @param {number} numRows The number of rows of our board.
    */
   constructor(numCols = 7, numRows = 6) {
     /**
-     * The root element, to which the app will be a descendant of.
+     * The number of columns of our board.
+     * @type {number}
+     */
+    this.numCols = numCols;
+
+    /**
+     * The number of rows of our board.
+     * @type {number}
+     */
+    this.numRows = numRows;
+
+    /**
+     * The container of the app.
      * @type {HTMLDivElement}
      */
     this.root = document.querySelector('#connect4');
@@ -22,19 +34,29 @@ class View {
     this.title.innerText = "Connect4";
 
     /**
-     * Flag that lets us know if the game has finished.
+     * Signals whether an end-game condition has been reached.
      * @type {boolean}
      */
     this.gameOver = false;
 
     /**
-     * A 2D array containing div elements for each slot on the game's board.
+     * A 2D array containing a div element for each slot on the game's board.
+     * We use coordinates [j, i], such that j is the column index of the board
+     *   and i is the row index.
+     * It is populated by the method View.createBoard.
      * @type {Array<Array<HTMLDivElement>>} 
      */
     this.slots = [];
 
     /**
-     * A collection divs that represents the game's board.
+     * An array of this.numCols length, that holds the row index of the next available
+     *   slot in each column. Populated by the Controller.
+     * @type {Array<number>}
+     */
+    this.availableMoves = [];
+
+    /**
+     * A collection of divs that create the visual structure of the game's board.
      * @type {HTMLDivElement}
      */
     this.board = this.createBoard(numCols, numRows);
@@ -46,32 +68,31 @@ class View {
     this.message = document.createElement('div');
     this.message.classList.add('message');
 
-    /* Appending title, board and message container to the root element */
+    // Appending to the root element
     this.root.append(this.title, this.board, this.message);
   }
 
   /**
-   * Creates the collection of divs that represents our board and
-   *   populates this.slots.
-   * @param {number} numCols The number of columns of our game's board.
-   * @param {number} numRows The number of rows of our game's board.
+   * Creates a collection of divs that represents the structure of our game's
+   *   board.
+   * @param {number} numCols The number of columns of our board.
+   * @param {number} numRows The number of rows of our board.
    * @returns {HTMLDivElement} The representation of our board.
    */ 
   createBoard(numCols, numRows) {
-    /* Creating the board element */
+    // Creating the board element
     const board = document.createElement('div');
     board.classList.add('board');
     board.style.aspectRatio = `${numCols} / ${numRows}`;
 
-    /* Creating each column of the board
-     * and creates a column within this.slots */
+    // Creating each column for this.board and this.slots
     for (let j = 0; j < numCols; j++) {
       this.slots[j] = [];
       const column = document.createElement('div');
       column.classList.add('board-col');
       board.append(column);
 
-      /* Creating each cell and slot of our column */
+      // Creating each cell and slot of our column for this.board
       for (let i = 0; i < numRows; i++) {
         const cell = document.createElement('div');
         const slot = document.createElement('div');
@@ -80,7 +101,7 @@ class View {
         cell.append(slot);
         column.append(cell);
 
-        /* Adds the slot to our 2D array this.slots */
+        // Assigns the slot to our 2D array this.slots
         this.slots[j][i] = slot;
       }
     }
@@ -88,15 +109,15 @@ class View {
   }
 
   /**
-   * Creates the event listeners used to add a counter to each column on 
-   *   the board. 
+   * Attaches a listener to each column of our board, for adding counters
+   *   to the game.
    * Used to bind the listeners to a method in the Controller.
-   * Will only fire when this.gameOver is false.
+   * The listeners will only fire when this.gameOver is false.
    * @param {function} handler Provided by the Controller to handle the event.
    */
   bindAddCounter(handler) {
     const columns = document.querySelectorAll('.board-col');
-    for (let j = 0; j < columns.length; j++) {
+    for (let j = 0; j < this.numCols; j++) {
       columns[j].addEventListener('click', () => {
         if (!this.gameOver) {
           handler(j);
@@ -117,7 +138,7 @@ class View {
   }
 
   /**
-   * Displays a message underneath the game's board.
+   * Displays a message underneath the board.
    * @param {number} code Code used to select the desired message.
    */
   displayMessage(code) {
@@ -145,36 +166,77 @@ class View {
   }
 
   /**
-   * Clears any messages currently displayed under the game's board.
+   * Clears any messages currently displayed under the board.
    */
   clearMessage() {
     this.message.replaceChildren();
   }
 
   /**
-   * Creates the event listeners used to reset the board.
-   * Used to bind the listeners to a method in the Controller.
+   * Creates the event listener used to reset the board.
+   * Used to bind the listener to a method in the Controller.
    * @param {function} handler Provided by the Controller to handle the event.
    */
   bindReset(handler) {
-    for (let event of ['click', 'keydown']) {
-      document.addEventListener(event, () => {
-        if (this.gameOver) {
-          handler();
-        }
-      });
-    }
+    document.addEventListener('click', () => {
+      if (this.gameOver) {
+        handler();
+      }
+    });
   }
 
-  slotHighlighting(availableMoves) {
+  /**
+   * Attaches listeners to each column of the board that will handle the
+   *   highlighting of any possible moves. 
+   */
+  slotHighlighting() {
+    // Collecting the columns
     const columns = document.querySelectorAll('.board-col');
-    for (let n = 0; n < this.numCols; n++) {
-      [j, i] = availableMoves[n]
-      columns[n].addEventListener('mouseenter', () => {
-        this.slots[j][i].classList.add('slot-highlighting');
+    for (let j = 0; j < this.numCols; j++) {
+      // Add highlighting to the next available move within the column
+      columns[j].addEventListener('mouseenter', () => {
+        const i = this.availableMoves[j];
+        // If the column is full, no highlighting occurs
+        if (i === null) {
+          return;
+        }
+        this.slots[j][i].classList.add('slot-highlight');
       });
-      columns[n].addEventListener('mouseleave', () => {
-        this.slots[j][i].classList.remove('slot-highlighting');
+
+      // Remove highlighting when cursor leaves the column
+      columns[j].addEventListener('mouseleave', () => {
+        const i = this.availableMoves[j];
+        // If the column is full, no removal occurs
+        if (i === null) {
+          return;
+        }
+        this.slots[j][i].classList.remove('slot-highlight');
+      });
+
+      // Updates the highlighting when a player adds a counter 
+      // to the column.
+      // Because the addCounter event listener is attached first
+      // this.availableMoves will contain the moves available after 
+      // the next counter is dropped - since both listeners will fire in
+      // the event of a click.
+      columns[j].addEventListener('click', () => {
+        const i = this.availableMoves[j];
+        // If the last row has just been filled, remove the highlighting
+        if (i === null) {
+          this.slots[j][this.numRows - 1].classList.remove('slot-highlight');
+          return;
+        }
+        // Else add the highlighting to the next available slot
+        this.slots[j][i].classList.add('slot-highlight');
+        // If the game is over, the next click will remove the highlighting
+        // and begin highlighting from the bottom row again
+        if (this.gameOver) {
+          this.slots[j][i].classList.remove('slot-highlight');
+          this.slots[j][0].classList.add('slot-highlight');
+          return;
+        }
+        // Removing the highlighting from the previously highlighted slot
+        this.slots[j][i - 1].classList.remove('slot-highlight');
       });
     }
   }

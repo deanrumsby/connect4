@@ -3,18 +3,18 @@
  */
 class Connect4 {
   /**
-   * @param {number} numCols The number of columns of our game's board.
-   * @param {number} numRows The number of rows of our game's board.
+   * @param {number} numCols The number of columns in our board.
+   * @param {number} numRows The number of rows in our board.
    */
   constructor(numCols = 7, numRows = 6) {
     /**
-     * The number of columns of our game's board.
+     * The number of columns in our board.
      * @type {number}
      */
     this.numCols = numCols;
 
     /**
-     * The number of rows of our game's board.
+     * The number of rows in our board.
      * @type {number}
      */
     this.numRows = numRows;
@@ -136,40 +136,40 @@ class Connect4 {
     const connected = {horiz: 0, vert: 0, posDiag: 0, negDiag: 0};
 
     for (let t = -3; t < 4; t++) {
-      /* vertical win line */
+      // Vertical win line
       if (this.board[j][i + t] === counter) {
         connected.vert++;
       } else {
         connected.vert = 0;
       }
 
-      /* guards against trying to access a non-existant column */
+      // Guards against trying to access a non-existant column
       if (this.board[j + t] === undefined) {
         continue;
       }
 
-      /* horizontal win line */
+      // Horizontal win line
       if (this.board[j + t][i] === counter) {
         connected.horiz++;
       } else {
         connected.horiz = 0;
       }
 
-      /* positive diagonal win line */
+      // Positive diagonal win line
       if (this.board[j + t][i + t] === counter) {
         connected.posDiag++;
       } else {
         connected.posDiag = 0;
       }
 
-      /* negative diagonal win line */
+      // Negative diagonal win line
       if (this.board[j + t][i - t] === counter) {
         connected.negDiag++;
       } else {
         connected.negDiag = 0;
       }
 
-      /* checking if any win line has won */
+      // Checking if any win line has won
       for (let direction in connected) {
         if (connected[direction] === 4) {
           return true;
@@ -186,13 +186,23 @@ class Connect4 {
     this.board = this.createBoard();
   }
 
+  /**
+   * Determines the row index of each column's next available slot.
+   * @returns {Array<number|null>} The row indices of each available slot,
+   *  or null if no slot is available.
+   */
   availableMoves() {
     const moves = [];
     for (let j = 0; j < this.numCols; j++) {
       for (let i = 0; i < this.numRows; i++) {
+        // checking if slot is empty
         if (!this.board[j][i]) {
-          moves.push([j, i]);
+          moves.push(i);
           break;
+        }
+        // if all slots are taken then push null
+        if (i === this.numRows - 1) {
+          moves.push(null);
         }
       }
     }
