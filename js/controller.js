@@ -19,14 +19,15 @@ class Controller {
      */
     this.view = view;
 
-    // Binding our event handlers and callbacks
-    this.view.bindAddCounter(this.handleAddCounter);
-    this.view.bindReset(this.handleReset);
-    this.model.bindEndGame(this.endGame);
-
     // Initialising slot highlighting.
     this.view.availableMoves = this.model.availableMoves();
     this.view.slotHighlighting();
+
+    // Binding our event handlers and callbacks
+    this.view.bindReset(this.handleReset);
+    this.view.bindAddCounter(this.handleAddCounter);
+    this.model.bindEndGame(this.endGame);
+
   }
 
   /**
@@ -44,7 +45,7 @@ class Controller {
     
     // If no coordinates, will ask the view to display a column full message
     if (!coordinates) {
-      this.view.displayMessage(3);
+      this.view.displayMessage('COLUMN_FULL', 'TRY_AGAIN');
       return;
     }
 
@@ -81,22 +82,19 @@ class Controller {
    *   or undefined if the game is a draw. 
    */
   endGame = (winner) => {
-    const [player1, player2] = this.model.counters;
     switch (winner) {
-      case player1:
-        this.view.displayMessage(0);
+      case 'x':
+        this.view.displayMessage('RED_WIN', 'RESET');
         break;
-      case player2:
-        this.view.displayMessage(1);
+      case 'o':
+        this.view.displayMessage('YELLOW_WIN', 'RESET');
         break;
       default:
-        this.view.displayMessage(2);
+        this.view.displayMessage('DRAW', 'RESET');
         break;
     }
     // Timeout given so that the reset events aren't unintentionally
     // fired by a game ending keypress
-    setTimeout(() => {
-      this.view.gameOver = true;
-    }, 200);
+    this.view.gameOver = true;
   }
 }

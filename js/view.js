@@ -71,11 +71,24 @@ class View {
      * A container that holds any messages we wish to display.
      * @type {HTMLDivElement}
      */
-    this.message = document.createElement('div');
-    this.message.classList.add('message');
+    this.messageDiv = document.createElement('div');
+    this.messageDiv.classList.add('message');
+
+    /**
+     * Holds all the messages we can choose to display under
+     *   the board.
+     */
+    this.messages = {
+      RED_WIN: 'RED is the winner!',
+      YELLOW_WIN: 'YELLOW is the winner!',
+      DRAW: 'The game is a draw!',
+      RESET: 'Please click / touch the screen to restart.',
+      COLUMN_FULL: 'Sorry, that column is full!',
+      TRY_AGAIN: 'Please try again.'
+    }
 
     // Appending to the root element
-    this.root.append(this.title, this.board, this.message);
+    this.root.append(this.title, this.board, this.messageDiv);
   }
 
   /**
@@ -123,8 +136,11 @@ class View {
   bindAddCounter(handler) {
     const columns = document.querySelectorAll('.board-col');
     for (let j = 0; j < this.numCols; j++) {
-      columns[j].addEventListener('click', () => {
+      columns[j].addEventListener('click', (e) => {
         if (!this.gameOver) {
+          // we stop event bubbling so that a reset event isn't 
+          // immediately and unintentionally triggered on a winning move.
+          e.stopPropagation();
           handler(j);
         }
       });
@@ -142,38 +158,23 @@ class View {
   }
 
   /**
-   * Displays a message underneath the board.
-   * @param {number} code Code used to select the desired message.
+   * Displays messages underneath the board.
+   * @param {Array<string>} messages Keys used to display message from 
+   *   this.messages.
    */
-  displayMessage(code) {
-    const lineOne = document.createElement('p');
-    const lineTwo = document.createElement('p');
-    switch (code) {
-      case 0:
-        lineOne.innerText = 'RED is the winner!';
-        lineTwo.innerText = 'Press any key to reset the game.';
-        break;
-      case 1:
-        lineOne.innerText = 'YELLOW is the winner!';
-        lineTwo.innerText = 'Press any key to reset the game.';
-        break;
-      case 2:
-        lineOne.innerText = 'The game is a draw!';
-        lineTwo.innerText = 'Press any key to reset the game.';
-        break;
-      case 3:
-        lineOne.innerText = 'Sorry, that column is full!';
-        lineTwo.innerText = 'Please choose another column.';
-        break;
+  displayMessage(...messages) {
+    for (let message of messages) {
+      const p = document.createElement('p');
+      p.innerText = this.messages[message];
+      this.messageDiv.append(p);
     }
-    this.message.append(lineOne, lineTwo);
   }
 
   /**
    * Clears any messages currently displayed under the board.
    */
   clearMessage() {
-    this.message.replaceChildren();
+    this.messageDiv.replaceChildren();
   }
 
   /**
@@ -216,6 +217,9 @@ class View {
    * Attaches listeners to each column of the board that will handle the
    *   highlighting of any possible moves. 
    * Highlighting changes color depending on the next player to move.
+   * Highlighting does not occur during the game over screen.
+   * NOTE: This must be initialised in the controller before the addCounter
+   *   method has been bound to get the event firing order correct.
    */
   slotHighlighting() {
     const columns = document.querySelectorAll('.board-col');
@@ -223,8 +227,8 @@ class View {
       // Add highlighting to the next available move within the column
       columns[j].addEventListener('mouseenter', () => {
         const i = this.availableMoves[j];
-        // If the column is full, no highlighting occurs
-        if (i === null) {
+        // If the column is full or the game is over, no highlighting occurs
+        if (i === null || this.gameOver) {
           return;
         }
         this.slots[j][i].classList.add(`slot-highlight-${this.currentColor()}`);
@@ -242,29 +246,36 @@ class View {
 
       // Updates the highlighting when a player adds a counter 
       // to the column.
-      // Because the addCounter event listener is attached first
-      // this.availableMoves will contain the moves available after 
-      // the next counter is dropped - since both listeners will fire in
-      // the event of a click.
+      // Because the available moves are refreshed before the counter is placed,
+      // this.slots[j][i] will be the position of the counter before the newly placed one.  
       columns[j].addEventListener('click', () => {
         const i = this.availableMoves[j];
-        // If the last row has just been filled, remove the highlighting
+        // If the column is full, do nothing.
         if (i === null) {
-          this.slots[j][this.numRows - 1]
-          .classList.remove(`slot-highlight-${this.nextColor()}`);
           return;
         }
-        // Else add the highlighting to the next available slot
-        this.slots[j][i].classList.add(`slot-highlight-${this.currentColor()}`);
-        // If the game is over, the next click will remove the highlighting
-        // and begin highlighting from the bottom row again
-        if (this.gameOver) {
+        // If on the last row, only remove the highlighting.
+        if (i === this.numRows - 1) {
           this.slots[j][i].classList.remove(`slot-highlight-${this.currentColor()}`);
+          return;
+        }
+        // If the game is over, begin highlighting from the bottom row again
+        if (this.gameOver) {
           this.slots[j][0].classList.add(`slot-highlight-${this.currentColor()}`);
           return;
         }
+        // Else add the highlighting to the next available slot
+        // The very small timeout is used to check if the move just made has
+        // triggered the game to end, in which case we do not want to highlight
+        // the slot above. 
+        setTimeout(() => {
+          if (this.gameOver) {
+            return;
+          }
+          this.slots[j][i + 1].classList.add(`slot-highlight-${this.currentColor()}`);
+        }, 5);
         // Removing the highlighting from the previously highlighted slot
-        this.slots[j][i - 1].classList.remove(`slot-highlight-${this.nextColor()}`);
+        this.slots[j][i].classList.remove(`slot-highlight-${this.currentColor()}`);
       });
     }
   }
