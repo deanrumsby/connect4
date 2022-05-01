@@ -55,6 +55,10 @@ class View {
      */
     this.availableMoves = [];
 
+    /**
+     * The color queue of the counters that can be placed on our board.
+     * @type {Array<string>}
+     */
     this.colors = ['red', 'yellow'];
 
     /**
@@ -128,10 +132,9 @@ class View {
   }
 
   /**
-   * Updates a given slot with the color provided.
+   * Updates a given slot with the color of the current player.
    * @param {Array<number>} coordinates In the form [j, i], where j is the 
-   *   column coordinate and i is the row coordinate.  
-   * @param {string} color A color to use - Usually 'red' or 'yellow'. 
+   *   column coordinate and i is the row coordinate.   
    */
   updateSlot(coordinates) {
     const [j, i] = coordinates;
@@ -212,11 +215,10 @@ class View {
   /**
    * Attaches listeners to each column of the board that will handle the
    *   highlighting of any possible moves. 
+   * Highlighting changes color depending on the next player to move.
    */
   slotHighlighting() {
     const columns = document.querySelectorAll('.board-col');
-    const currColorHighlightClass = `slot-highlight-${this.currentColor()}`;
-    const nextColorHighlightClass = `slot-highlight-${this.nextColor()}`;
     for (let j = 0; j < this.numCols; j++) {
       // Add highlighting to the next available move within the column
       columns[j].addEventListener('mouseenter', () => {
@@ -248,7 +250,8 @@ class View {
         const i = this.availableMoves[j];
         // If the last row has just been filled, remove the highlighting
         if (i === null) {
-          this.slots[j][this.numRows - 1].classList.remove('slot-highlight');
+          this.slots[j][this.numRows - 1]
+          .classList.remove(`slot-highlight-${this.nextColor()}`);
           return;
         }
         // Else add the highlighting to the next available slot
