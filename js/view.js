@@ -55,6 +55,8 @@ class View {
      */
     this.availableMoves = [];
 
+    this.winlines = [];
+
     /**
      * The color queue of the counters that can be placed on our board.
      * @type {Array<string>}
@@ -280,6 +282,38 @@ class View {
     }
   }
 
+  addWinLineHighlighting() {
+    //this.board.style.backgroundColor = 'rgba(0, 0, 255, 0.8)';
+    const slots = document.querySelectorAll('.slot');
+    for (let slot of slots) {
+      if (slot.style.backgroundColor) {
+        slot.style.opacity = '0.75';
+      }
+    }
+    for (let winline of this.winlines) {
+      for (let coordinates of winline) {
+        const [j, i] = coordinates;
+        this.slots[j][i].style.opacity = '1';
+        this.slots[j][i].classList.add('win-line-highlight');
+      }
+    }
+  }
+
+  removeWinLineHighlighting() {
+    const slots = document.querySelectorAll('.slot');
+    for (let slot of slots) {
+      if (slot.style.opacity) {
+        slot.style.opacity = "";
+      }
+    }
+    for (let winline of this.winlines) {
+      for (let coordinates of winline) {
+        const [j, i] = coordinates;
+        this.slots[j][i].classList.remove('win-line-highlight');
+      }
+    }
+  }
+
   /**
    * Resets the appearance of the board.
    * Clears any messages displayed under the board.
@@ -287,9 +321,11 @@ class View {
   reset() {
     for (let column of this.slots) {
       for (let slot of column) {
-        slot.style.backgroundColor = 'var(--body-bgcolor)';
+        slot.style.backgroundColor = '';
       }
     }
     this.clearMessage();
+    this.removeWinLineHighlighting();
+    this.winlines = [];
   }
 }

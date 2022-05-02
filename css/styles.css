@@ -22,7 +22,7 @@ body {
     height: 65vh;
     margin-top: 0.5em;
     margin-bottom: 1em;
-    background-color: blue;
+    background-color: rgba(0, 0, 255, 1);
     display: inline-flex;
     border: solid black 1px;
     padding: 0.5em;
@@ -47,7 +47,6 @@ body {
     aspect-ratio: 1 / 1;
     flex-grow: 1;
     padding: 7%;
-    background-color: blue;
 }
 
 .slot {
@@ -59,7 +58,8 @@ body {
 }
 
 .win-line-highlight {
-    animation: win-highlight 2s infinite;
+    animation: win-highlight 1.3s ease-in-out infinite;
+    opacity: 1;
 }
 
 @keyframes win-highlight {

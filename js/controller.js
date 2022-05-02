@@ -81,7 +81,7 @@ class Controller {
    * @param {string|undefined} winner The winner's counter, 
    *   or undefined if the game is a draw. 
    */
-  endGame = (winner) => {
+  endGame = (winner, winlines) => {
     switch (winner) {
       case 'x':
         this.view.displayMessage('RED_WIN', 'RESET');
@@ -93,8 +93,10 @@ class Controller {
         this.view.displayMessage('DRAW', 'RESET');
         break;
     }
-    // Timeout given so that the reset events aren't unintentionally
-    // fired by a game ending keypress
+    for (let winline of winlines) {
+      this.view.winlines.push(this.model.grabWinLine(winline));
+    }
+    this.view.addWinLineHighlighting();
     this.view.gameOver = true;
   }
 }

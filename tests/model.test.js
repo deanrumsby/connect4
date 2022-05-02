@@ -87,7 +87,7 @@ describe('checkFull', () => {
   });
 });
 
-describe('checkForWin', () => { 
+describe('checkForWinlines', () => { 
   test('correctly identifies a horizontal win', () => {
     game.board = [
       ['x' , null, null, null, null, null],
@@ -99,7 +99,7 @@ describe('checkForWin', () => {
       ['x' , null, null, null, null, null],
     ];
     game.lastPosPlayed = [4, 0];
-    expect(game.checkForWin()).toBeTruthy();
+    expect(game.checkForWin()).toEqual(['horiz']);
   });
 
   test('correctly identifies a vertical win', () => {
@@ -113,7 +113,7 @@ describe('checkForWin', () => {
       ['x' , null, null, null, null, null],
     ];
     game.lastPosPlayed = [2, 3];
-    expect(game.checkForWin()).toBe('vert');
+    expect(game.checkForWin()).toEqual(['vert']);
   });
 
   test('correctly identifies a positive diagonal win', () => {
@@ -127,7 +127,7 @@ describe('checkForWin', () => {
       ['x' , null, null, null, null, null],
     ];
     game.lastPosPlayed = [3, 2];
-    expect(game.checkForWin()).toBeTruthy();
+    expect(game.checkForWin()).toEqual(['posDiag']);
   });  
 
   test('correctly identifies a negative diagonal win', () => {
@@ -141,7 +141,7 @@ describe('checkForWin', () => {
       ['x' , null, null, null, null, null],
     ];
     game.lastPosPlayed = [1, 3];
-    expect(game.checkForWin()).toBeTruthy();
+    expect(game.checkForWin()).toEqual(['negDiag']);
   }); 
 
   // following test uses the same game board as the above test
@@ -152,7 +152,7 @@ describe('checkForWin', () => {
       game.lastPosPlayed = point
       results.push(game.checkForWin());
     }
-    expect(results).toEqual([false, false, false, false]);
+    expect(results).toEqual([[], [], [], []]);
   });
 });
 

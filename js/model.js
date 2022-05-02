@@ -66,14 +66,16 @@ class Connect4 {
   }
 
   /**
-   * Ends the current turn - checks for a winner or if the board is full.
+   * Ends the current turn - checks for any succesful winlines 
+   *   or if the board is full.
    * Then rotates the couter queue by one. 
-   * If an endgame condition is met, will signal the Controller.
+   * If an endgame condition is met, it will signal the Controller.
    */
   endTurn() {
     const currentPlayer = this.counters.shift();
-    if (this.checkForWin()) {
-      this.endGame(currentPlayer)
+    const winlines = this.checkForWinlines();
+    if (winlines.length > 0) {
+      this.endGame(currentPlayer, winlines);
     } else if (this.checkIfFull()) {
       this.endGame();
     }
@@ -121,13 +123,14 @@ class Connect4 {
   }
 
   /**
-   * Checks for a win on all possible win lines that pass through this.lastPosPlayed.
-   * @returns {boolean} True if there is a win, false if not.
+   * Checks for wins on all possible win lines that pass through this.lastPosPlayed.
+   * @returns {Array<string>} The directions of any successful winlines.
    */
-  checkForWin() {
+  checkForWinlines() {
     const [j, i] = this.lastPosPlayed;
     const counter = this.board[j][i];
     const connected = {horiz: 0, vert: 0, posDiag: 0, negDiag: 0};
+    const winlines = [];
 
     for (let t = -3; t < 4; t++) {
       // Vertical win line
@@ -162,15 +165,14 @@ class Connect4 {
       } else {
         connected.negDiag = 0;
       }
-
-      // Checking if any win line has won
+      // Checking if any win lines have won
       for (let direction in connected) {
         if (connected[direction] === 4) {
-          return direction;
+          winlines.push(direction);
         }
       }
     }
-    return false;
+    return winlines;
   }
 
   /**
@@ -206,7 +208,7 @@ class Connect4 {
   grabWinLine(direction) {
     const winLine = [];
     const [j, i] = this.lastPosPlayed;
-    const counter = this.currentPlayer();
+    const counter = this.board[j][i];
     winLine.push([j, i]);
     let t = 1;
     switch (direction) {
