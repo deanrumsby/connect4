@@ -67,14 +67,16 @@ body {
     100% {transform: scale(1);}
 }
 
-.slot-highlight-red {
-    border: none;
-    outline: 4px solid red;
-}
-
-.slot-highlight-yellow {
-    border: none;
-    outline: 4px solid yellow;
+@media (pointer: fine) {
+    .slot-highlight-red {
+        border: none;
+        outline: 4px solid red;
+    }
+    
+    .slot-highlight-yellow {
+        border: none;
+        outline: 4px solid yellow;
+    }   
 }
 
 .message {
