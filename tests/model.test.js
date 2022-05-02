@@ -113,7 +113,7 @@ describe('checkForWin', () => {
       ['x' , null, null, null, null, null],
     ];
     game.lastPosPlayed = [2, 3];
-    expect(game.checkForWin()).toBeTruthy();
+    expect(game.checkForWin()).toBe('vert');
   });
 
   test('correctly identifies a positive diagonal win', () => {
@@ -190,7 +190,73 @@ describe('availableMoves', () => {
       [null, null, null, null, null, null],
       ['o' , 'x' , null, null, null, null],
       [null, null, null, null, null, null],
-    ]
+    ];
     expect(game.availableMoves()).toEqual([1, 3, 1, 0, 0, 2, 0]);
+  });
+});
+
+describe('grabWinLine', () => {
+  test('correctly grabs the win line for a vertical win', () => {
+    game.board = [
+      ['x' , null, null, null, null, null],
+      ['o' , 'x' , 'o' , null, null, null],
+      ['x' , 'x' , 'x' , 'x' , null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      ['o' , 'x' , null, null, null, null],
+      [null, null, null, null, null, null],
+    ];
+    game.lastPosPlayed = [2, 3];
+    expect(game.grabWinLine('vert')).toEqual([
+      [2, 3], [2, 2], [2, 1], [2, 0]
+    ]);
+  });
+
+  test('correctly grabs the win line for a horizontal win', () => {
+    game.board = [
+      ['x' , null, null, null, null, null],
+      ['o' , 'x' , 'o' , null, null, null],
+      ['x' , 'x' , 'x' , 'o' , null, null],
+      ['o' , 'x' , null, null, null, null],
+      ['o' , 'x' , null, null, null, null],
+      ['o' , 'x' , null, null, null, null],
+      [null, null, null, null, null, null],
+    ];
+    game.lastPosPlayed = [5, 1];
+    expect(game.grabWinLine('horiz')).toEqual([
+      [5, 1], [4, 1], [3, 1], [2, 1], [1, 1]
+    ]);
+  });
+
+  test('correctly grabs the win line for a pos diagonal win', () => {
+    game.board = [
+      ['x' , null, null, null, null, null],
+      ['o' , 'x' , 'o' , null, null, null],
+      ['x' , 'x' , 'x' , 'o' , null, null],
+      ['o' , 'x' , null, null, null, null],
+      ['o' , 'o' , 'x' , null, null, null],
+      ['o' , 'x' , 'o' , 'x' , null, null],
+      [null, null, null, null, null, null],
+    ];
+    game.lastPosPlayed = [4, 2];
+    expect(game.grabWinLine('posDiag')).toEqual([
+      [4, 2], [5, 3], [3, 1], [2, 0]
+    ]);
+  });
+
+  test('correctly grabs the win line for a neg diagonal win', () => {
+    game.board = [
+      ['x' , null, null, null, null, null],
+      ['o' , 'x' , 'o' , 'x' , 'x' , 'x' ],
+      ['x' , 'x' , 'o' , 'o' , 'x' , null],
+      ['o' , 'o' , 'o' , 'x' , null, null],
+      ['o' , 'o' , 'x' , 'o' , 'x' , null],
+      ['o' , 'x' , 'o' , 'x' , null, null],
+      ['x' , null, null, null, null, null],
+    ];
+    game.lastPosPlayed = [3, 3];
+    expect(game.grabWinLine('negDiag')).toEqual([
+      [3, 3], [4, 2], [5, 1], [6, 0], [2, 4], [1, 5]
+    ]);
   });
 });

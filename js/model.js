@@ -166,7 +166,7 @@ class Connect4 {
       // Checking if any win line has won
       for (let direction in connected) {
         if (connected[direction] === 4) {
-          return true;
+          return direction;
         }
       }
     }
@@ -201,6 +201,83 @@ class Connect4 {
       }
     }
     return moves;
+  }
+
+  grabWinLine(direction) {
+    const winLine = [];
+    const [j, i] = this.lastPosPlayed;
+    const counter = this.currentPlayer();
+    winLine.push([j, i]);
+    let t = 1;
+    switch (direction) {
+      case 'vert':
+        while (this.board[j][i - t] === counter) {
+          winLine.push([j, i - t]);
+          t++;
+          if (this.board[j][i - t] === undefined) {
+            break;
+          }
+        }
+        break;
+      case 'horiz':
+        for (let m of [1, -1]) {
+          t = 1;
+          if (this.board[j + (m * t)] === undefined) {
+            continue;
+          }
+          while (this.board[j + (m * t)][i] === counter) {
+            winLine.push([j + (m * t), i]);
+            t++;
+            if (this.board[j + (m * t)] === undefined) {
+              break;
+            }
+          }
+        }
+        break;
+      case 'posDiag':
+        for (let m of [1, -1]) {
+          t = 1;
+          if (
+            this.board[j + (m * t)] === undefined
+            || this.board[j + (m * t)][i + (m * t)] === undefined
+            ) {
+            continue;
+          }
+          while (this.board[j + (m * t)][i + (m * t)] === counter) {
+            winLine.push([j + (m * t), i + (m * t)]);
+            t++;
+            if (
+              this.board[j + (m * t)] === undefined
+              || this.board[j + (m * t)][i + (m * t)] === undefined 
+              ) {
+              break;
+            }
+          }
+        }
+        break;
+      case 'negDiag':
+        for (let m of [1, -1]) {
+          t = 1;
+          if (
+            this.board[j + (m * t)] === undefined
+            || this.board[j + (m * t)][i - (m * t)] === undefined
+            ) {
+            continue;
+          }
+          while (this.board[j + (m * t)][i - (m * t)] === counter) {
+            winLine.push([j + (m * t), i - (m * t)]);
+            t++;
+            if (
+              this.board[j + (m * t)] === undefined
+              || this.board[j + (m * t)][i - (m * t)] === undefined 
+              ) {
+              break;
+            }
+          }
+        }
+        break;
+    }
+    return winLine;
   }
 }
 
