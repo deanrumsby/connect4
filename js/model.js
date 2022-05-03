@@ -122,8 +122,17 @@ class Connect4 {
     return true;
   }
 
+  /**
+   * Determines the next counter in a given direction by a number of steps.
+   * Relative to this.lastPosPlayed
+   * @param {string} direction The direction to check - can be
+   *   'vert', 'horiz', 'posDiag' or 'negDiag'.
+   * @param {number} steps The number of steps away to check.
+   * @returns {string} Counter - either 'x' or 'o'.
+   */
   nextCounter(direction, steps) { 
     const [j, i] = this.lastPosPlayed;
+    // checking the column we want to access exists
     const columnExists = (this.board[j + steps] !== undefined); 
     switch (direction) {
       case 'vert':
@@ -208,24 +217,50 @@ class Connect4 {
   getWinlines(directions) {
     const winlines = [];
     const [j, i] = this.lastPosPlayed;
+    const counter = this.board[j][i];
     for (let direction of directions) {
       const winline = [];
-      const counter = this.board[j][i];
       winline.push([j, i]);
       let t = 1;
-      let looping = true;
-      while (looping) {
-        switch (direction) {
-          case 'vert':
-
-
-      } 
-     
-
-
+      switch (direction) {
+        case 'vert':
+          while (this.nextCounter('vert', -t) === counter) {
+            winline.push([j, i - t])
+            t++;
+          }
+          break;
+        case 'horiz':
+          for (let m of [1, -1]) {
+            t = 1;
+            while (this.nextCounter('horiz', m * t) === counter) {
+              winline.push([j + (m * t), i]);
+              t++;
+            }
+          }
+          break;
+        case 'posDiag':
+          for (let m of [1, -1]) {
+            t = 1;
+            while (this.nextCounter('posDiag', m * t) === counter) {
+              winline.push([j + (m * t), i + (m * t)]);
+              t++;
+            }
+          }
+          break;
+        case 'negDiag':
+          for (let m of [1, -1]) {
+            t = 1;
+            while (this.nextCounter('negDiag', m * t) === counter) {
+              winline.push([j + (m * t), i - (m * t)]);
+              t++;
+            }
+          }
+          break;
       }
+      winlines.push(winline);
     }
-  }
+    return winlines; 
+  }   
 
   grabWinLine(direction) {
     const winline = [];
