@@ -93,9 +93,7 @@ class Controller {
         this.view.displayMessage('DRAW', 'RESET');
         break;
     }
-    for (let winline of winlines) {
-      this.view.winlines.push(this.model.grabWinLine(winline));
-    }
+    this.view.winlines = this.model.getWinlines(winlines);
     this.view.addWinLineHighlighting();
     this.view.gameOver = true;
   }

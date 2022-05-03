@@ -207,8 +207,8 @@ describe('grabWinLine', () => {
       [null, null, null, null, null, null],
     ];
     game.lastPosPlayed = [2, 3];
-    expect(game.grabWinLine('vert')).toEqual([
-      [2, 3], [2, 2], [2, 1], [2, 0]
+    expect(game.getWinlines(['vert'])).toEqual([
+      [[2, 3], [2, 2], [2, 1], [2, 0]]
     ]);
   });
 
@@ -223,8 +223,8 @@ describe('grabWinLine', () => {
       [null, null, null, null, null, null],
     ];
     game.lastPosPlayed = [5, 1];
-    expect(game.grabWinLine('horiz')).toEqual([
-      [5, 1], [4, 1], [3, 1], [2, 1], [1, 1]
+    expect(game.getWinlines(['horiz'])).toEqual([
+      [[5, 1], [4, 1], [3, 1], [2, 1], [1, 1]]
     ]);
   });
 
@@ -239,8 +239,8 @@ describe('grabWinLine', () => {
       [null, null, null, null, null, null],
     ];
     game.lastPosPlayed = [4, 2];
-    expect(game.grabWinLine('posDiag')).toEqual([
-      [4, 2], [5, 3], [3, 1], [2, 0]
+    expect(game.getWinlines(['posDiag'])).toEqual([
+      [[4, 2], [5, 3], [3, 1], [2, 0]]
     ]);
   });
 
@@ -255,8 +255,8 @@ describe('grabWinLine', () => {
       ['x' , null, null, null, null, null],
     ];
     game.lastPosPlayed = [3, 3];
-    expect(game.grabWinLine('negDiag')).toEqual([
-      [3, 3], [4, 2], [5, 1], [6, 0], [2, 4], [1, 5]
+    expect(game.getWinlines(['negDiag'])).toEqual([
+      [[3, 3], [4, 2], [5, 1], [6, 0], [2, 4], [1, 5]]
     ]);
   });
 });
