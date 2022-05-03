@@ -86,7 +86,7 @@ class View {
       DRAW: 'The game is a draw!',
       RESET: 'Please click / touch the screen to restart.',
       COLUMN_FULL: 'Sorry, that column is full!',
-      TRY_AGAIN: 'Please try again.'
+      TRY_AGAIN: 'Please try another column.'
     }
 
     // Appending to the root element

@@ -122,6 +122,30 @@ class Connect4 {
     return true;
   }
 
+  nextCounter(direction, steps) { 
+    const [j, i] = this.lastPosPlayed;
+    const columnExists = (this.board[j + steps] !== undefined); 
+    switch (direction) {
+      case 'vert':
+        return this.board[j][i + steps];
+      case 'horiz':
+        if (columnExists) {
+          return this.board[j + steps][i];
+        }
+        break;
+      case 'posDiag':
+        if (columnExists) {
+          return this.board[j + steps][i + steps];
+        }
+        break;
+      case 'negDiag':
+        if (columnExists) {
+          return this.board[j + steps][i - steps];
+        }
+        break;
+    }
+  }
+
   /**
    * Checks for wins on all possible win lines that pass through this.lastPosPlayed.
    * @returns {Array<string>} The directions of any successful winlines.
@@ -130,7 +154,7 @@ class Connect4 {
     const [j, i] = this.lastPosPlayed;
     const counter = this.board[j][i];
     const connected = {horiz: 0, vert: 0, posDiag: 0, negDiag: 0};
-    const winlines = [];
+    const winDirections = [];
 
     for (let t = -3; t < 4; t++) {
       // Vertical win line
@@ -168,11 +192,11 @@ class Connect4 {
       // Checking if any win lines have won
       for (let direction in connected) {
         if (connected[direction] === 4) {
-          winlines.push(direction);
+          winDirections.push(direction);
         }
       }
     }
-    return winlines;
+    return winDirections;
   }
 
   /**
@@ -205,16 +229,38 @@ class Connect4 {
     return moves;
   }
 
+  getWinlines(directions) {
+    const winlines = [];
+    const [j, i] = this.lastPosPlayed;
+    for (let direction of directions) {
+      const winline = [];
+      const counter = this.board[j][i];
+      winline.push([j, i]);
+      let t = 1;
+      let looping = true;
+      while (looping) {
+        switch (direction) {
+          case 'vert':
+
+
+      } 
+     
+
+
+      }
+    }
+  }
+
   grabWinLine(direction) {
-    const winLine = [];
+    const winline = [];
     const [j, i] = this.lastPosPlayed;
     const counter = this.board[j][i];
-    winLine.push([j, i]);
+    winline.push([j, i]);
     let t = 1;
     switch (direction) {
       case 'vert':
         while (this.board[j][i - t] === counter) {
-          winLine.push([j, i - t]);
+          winline.push([j, i - t]);
           t++;
           if (this.board[j][i - t] === undefined) {
             break;
@@ -228,7 +274,7 @@ class Connect4 {
             continue;
           }
           while (this.board[j + (m * t)][i] === counter) {
-            winLine.push([j + (m * t), i]);
+            winline.push([j + (m * t), i]);
             t++;
             if (this.board[j + (m * t)] === undefined) {
               break;
@@ -246,7 +292,7 @@ class Connect4 {
             continue;
           }
           while (this.board[j + (m * t)][i + (m * t)] === counter) {
-            winLine.push([j + (m * t), i + (m * t)]);
+            winline.push([j + (m * t), i + (m * t)]);
             t++;
             if (
               this.board[j + (m * t)] === undefined
@@ -267,7 +313,7 @@ class Connect4 {
             continue;
           }
           while (this.board[j + (m * t)][i - (m * t)] === counter) {
-            winLine.push([j + (m * t), i - (m * t)]);
+            winline.push([j + (m * t), i - (m * t)]);
             t++;
             if (
               this.board[j + (m * t)] === undefined
@@ -279,7 +325,7 @@ class Connect4 {
         }
         break;
     }
-    return winLine;
+    return winline;
   }
 }
 

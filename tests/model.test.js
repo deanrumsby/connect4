@@ -99,7 +99,7 @@ describe('checkForWinlines', () => {
       ['x' , null, null, null, null, null],
     ];
     game.lastPosPlayed = [4, 0];
-    expect(game.checkForWin()).toEqual(['horiz']);
+    expect(game.checkForWinlines()).toEqual(['horiz']);
   });
 
   test('correctly identifies a vertical win', () => {
@@ -113,7 +113,7 @@ describe('checkForWinlines', () => {
       ['x' , null, null, null, null, null],
     ];
     game.lastPosPlayed = [2, 3];
-    expect(game.checkForWin()).toEqual(['vert']);
+    expect(game.checkForWinlines()).toEqual(['vert']);
   });
 
   test('correctly identifies a positive diagonal win', () => {
@@ -127,7 +127,7 @@ describe('checkForWinlines', () => {
       ['x' , null, null, null, null, null],
     ];
     game.lastPosPlayed = [3, 2];
-    expect(game.checkForWin()).toEqual(['posDiag']);
+    expect(game.checkForWinlines()).toEqual(['posDiag']);
   });  
 
   test('correctly identifies a negative diagonal win', () => {
@@ -141,7 +141,7 @@ describe('checkForWinlines', () => {
       ['x' , null, null, null, null, null],
     ];
     game.lastPosPlayed = [1, 3];
-    expect(game.checkForWin()).toEqual(['negDiag']);
+    expect(game.checkForWinlines()).toEqual(['negDiag']);
   }); 
 
   // following test uses the same game board as the above test
@@ -150,7 +150,7 @@ describe('checkForWinlines', () => {
     const results = [];
     for (point of testPoints) {
       game.lastPosPlayed = point
-      results.push(game.checkForWin());
+      results.push(game.checkForWinlines());
     }
     expect(results).toEqual([[], [], [], []]);
   });
@@ -258,5 +258,46 @@ describe('grabWinLine', () => {
     expect(game.grabWinLine('negDiag')).toEqual([
       [3, 3], [4, 2], [5, 1], [6, 0], [2, 4], [1, 5]
     ]);
+  });
+});
+
+describe('nextCounter', () => {
+  test('vertical step of one correct', () => {
+    game.board = [
+      ['x' , null, null, null, null, null],
+      ['o' , 'x' , 'o' , 'x' , 'x' , 'x' ],
+      ['x' , 'x' , 'o' , 'o' , 'x' , null],
+      ['o' , 'o' , 'o' , 'x' , null, null],
+      ['o' , 'o' , 'x' , 'o' , 'x' , null],
+      ['o' , 'x' , 'o' , 'x' , null, null],
+      ['x' , null, null, null, null, null],
+    ];
+    game.lastPosPlayed = [2, 2];
+    expect(game.nextCounter('vert', 1)).toBe('o');
+  });
+
+  test('horizontal step of one correct', () => {
+    // using same setup as above
+    expect(game.nextCounter('horiz', 1)).toBe('o');
+  });
+
+  test('Pos diag step of one correct', () => {
+    // using same setup as above
+    expect(game.nextCounter('posDiag', 1)).toBe('x');
+  });
+
+  test('Neg diag step of one correct', () => {
+    // using same setup as above
+    expect(game.nextCounter('negDiag', 1)).toBe('o');
+  });
+
+  test('Vert step outside boundaries correct', () => {
+    // using same setup as above
+    expect(game.nextCounter('vert', 5)).toBe(undefined);
+  });
+
+  test('Horizontal step out of boundaries correct', () => {
+    // using same setup as above
+    expect(game.nextCounter('horiz', 5)).toBe(undefined);
   });
 });
