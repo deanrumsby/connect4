@@ -157,37 +157,13 @@ class Connect4 {
     const winDirections = [];
 
     for (let t = -3; t < 4; t++) {
-      // Vertical win line
-      if (this.board[j][i + t] === counter) {
-        connected.vert++;
-      } else {
-        connected.vert = 0;
-      }
-
-      // Guards against trying to access a non-existant column
-      if (this.board[j + t] === undefined) {
-        continue;
-      }
-
-      // Horizontal win line
-      if (this.board[j + t][i] === counter) {
-        connected.horiz++;
-      } else {
-        connected.horiz = 0;
-      }
-
-      // Positive diagonal win line
-      if (this.board[j + t][i + t] === counter) {
-        connected.posDiag++;
-      } else {
-        connected.posDiag = 0;
-      }
-
-      // Negative diagonal win line
-      if (this.board[j + t][i - t] === counter) {
-        connected.negDiag++;
-      } else {
-        connected.negDiag = 0;
+      // Checking the next counter in each direction
+      for (let direction in connected) {
+        if (this.nextCounter(direction, t) === counter) {
+          connected[direction]++;
+        } else {
+          connected[direction] = 0;
+        }
       }
       // Checking if any win lines have won
       for (let direction in connected) {
