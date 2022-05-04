@@ -221,21 +221,26 @@ class Connect4 {
    * @returns {Array<Array<Array<number>>>} The winlines and their coordinates.
    */
   getWinlines(directions) {
+    // Determine starting position and counter
     const winlines = [];
     const [j, i] = this.lastPosPlayed;
     const counter = this.board[j][i];
+    // Loop over each win direction provided
     for (let direction of directions) {
       const winline = [];
       winline.push([j, i]);
       let t = 1;
       switch (direction) {
         case 'vert':
+          // We only look at counters below when considering vertical wins
           while (this.nextCounter('vert', -t) === counter) {
             winline.push([j, i - t])
             t++;
           }
           break;
         case 'horiz':
+          // We check from the last move going right to begin with ie. m = 1
+          //   so that we only check until hitting a counter that isn't ours.
           for (let m of [1, -1]) {
             t = 1;
             while (this.nextCounter('horiz', m * t) === counter) {
@@ -245,6 +250,7 @@ class Connect4 {
           }
           break;
         case 'posDiag':
+          // Same idea as the comment for horizontal case.
           for (let m of [1, -1]) {
             t = 1;
             while (this.nextCounter('posDiag', m * t) === counter) {
@@ -254,6 +260,7 @@ class Connect4 {
           }
           break;
         case 'negDiag':
+          // Same idea as the comment for horizontal case.
           for (let m of [1, -1]) {
             t = 1;
             while (this.nextCounter('negDiag', m * t) === counter) {
@@ -263,7 +270,10 @@ class Connect4 {
           }
           break;
       }
-      winlines.push(winline);
+      // Only add line if it contains at least 4 counters
+      if (winline.length >= 4) {
+        winlines.push(winline);
+      }
     }
     return winlines; 
   }
