@@ -34,7 +34,7 @@ class View {
     this.title.innerText = "Connect4";
 
     /**
-     * Signals whether an end-game condition has been reached.
+     * Flags whether an end-game condition has been reached.
      * @type {boolean}
      */
     this.gameOver = false;
@@ -50,11 +50,16 @@ class View {
 
     /**
      * An array of this.numCols length, that holds the row index of the next available
-     *   slot in each column. Populated by the Controller.
+     *   slot in each column. Populated by the Controller class.
      * @type {Array<number>}
      */
     this.availableMoves = [];
 
+    /**
+     * Any successful winlines are stored here, consisting of all the coordinates of
+     *   the respective lines.
+     * @type {Array<Array<Array<number>>>}
+     */
     this.winlines = [];
 
     /**
@@ -79,6 +84,7 @@ class View {
     /**
      * Holds all the messages we can choose to display under
      *   the board.
+     * @type {Object<string>}
      */
     this.messages = {
       RED_WIN: 'RED is the winner!',
@@ -89,7 +95,7 @@ class View {
       TRY_AGAIN: 'Please try another column.'
     }
 
-    // Appending to the root element
+    // Appending visual elements to the root element
     this.root.append(this.title, this.board, this.messageDiv);
   }
 
@@ -101,18 +107,19 @@ class View {
    * @returns {HTMLDivElement} The representation of our board.
    */ 
   createBoard(numCols, numRows) {
+    // Creating the board element
     const board = document.createElement('div');
     board.classList.add('board');
     board.style.aspectRatio = `${numCols} / ${numRows}`;
 
-    // Creating each column for this.board and this.slots
+    // Creating each column for the board and this.slots
     for (let j = 0; j < numCols; j++) {
       this.slots[j] = [];
       const column = document.createElement('div');
       column.classList.add('board-col');
       board.append(column);
 
-      // Creating each cell and slot of our column for this.board
+      // Creating each cell and slot of our board's column
       for (let i = 0; i < numRows; i++) {
         const cell = document.createElement('div');
         const slot = document.createElement('div');
@@ -180,7 +187,7 @@ class View {
   }
 
   /**
-   * Returns the next color to be placed.
+   * Returns the current color to be placed.
    * @returns {string} The next color to be placed
    */
   currentColor() {
@@ -188,7 +195,7 @@ class View {
   }
 
   /**
-   * Returns the color after next to be placed.
+   * Returns the color after the current color to be placed.
    * @returns {string} The color after next, to be placed.
    */
   nextColor() {
@@ -282,14 +289,19 @@ class View {
     }
   }
 
-  addWinLineHighlighting() {
-    //this.board.style.backgroundColor = 'rgba(0, 0, 255, 0.8)';
+  /**
+   * Highlights all the succesful winlines from this.winlines.
+   */
+  addWinlineHighlighting() {
     const slots = document.querySelectorAll('.slot');
+    // reduces opacity of all slots that have been taken by a counter
     for (let slot of slots) {
       if (slot.style.backgroundColor) {
         slot.style.opacity = '0.75';
       }
     }
+    // for all winning positions, we raise the opacity back to 1 and
+    // add highlighting animation
     for (let winline of this.winlines) {
       for (let coordinates of winline) {
         const [j, i] = coordinates;
@@ -299,13 +311,19 @@ class View {
     }
   }
 
-  removeWinLineHighlighting() {
+  /**
+   * Removes the highlighting from the winlines in this.winlines.
+   */
+  removeWinlineHighlighting() {
+    // Resetting the opacities of every slot on the board
     const slots = document.querySelectorAll('.slot');
     for (let slot of slots) {
       if (slot.style.opacity) {
         slot.style.opacity = "";
       }
     }
+    // Removing the highlighting animation from the winning
+    // positions
     for (let winline of this.winlines) {
       for (let coordinates of winline) {
         const [j, i] = coordinates;
@@ -325,7 +343,7 @@ class View {
       }
     }
     this.clearMessage();
-    this.removeWinLineHighlighting();
+    this.removeWinlineHighlighting();
     this.winlines = [];
   }
 }

@@ -94,7 +94,7 @@ class Controller {
         break;
     }
     this.view.winlines = this.model.getWinlines(winlines);
-    this.view.addWinLineHighlighting();
+    this.view.addWinlineHighlighting();
     this.view.gameOver = true;
   }
 }

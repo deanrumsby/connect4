@@ -214,6 +214,12 @@ class Connect4 {
     return moves;
   }
 
+  /**
+   * Creates an array of winlines, each containing all of the coordinates
+   *   on the board that belong to that winline.
+   * @param {*} directions An array of directions to check
+   * @returns {Array<Array<Array<number>>>} The winlines and their coordinates.
+   */
   getWinlines(directions) {
     const winlines = [];
     const [j, i] = this.lastPosPlayed;
