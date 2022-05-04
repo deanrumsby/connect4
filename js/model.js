@@ -217,7 +217,7 @@ class Connect4 {
   /**
    * Creates an array of winlines, each containing all of the coordinates
    *   on the board that belong to that winline.
-   * @param {*} directions An array of directions to check
+   * @param {Array<string>} directions An array of directions to check
    * @returns {Array<Array<Array<number>>>} The winlines and their coordinates.
    */
   getWinlines(directions) {
