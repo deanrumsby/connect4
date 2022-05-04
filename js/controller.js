@@ -79,7 +79,9 @@ class Controller {
    * Updates the view when signalled by the model that the
    *   game has ended.
    * @param {string|undefined} winner The winner's counter, 
-   *   or undefined if the game is a draw. 
+   *   or null if the game is a draw. 
+   * @param {Array<string>} winlines The directions a win has been found on.
+   *   Can be empty or contain 'vert', 'horiz', 'posDiag' and 'negDiag'.
    */
   endGame = (winner, winlines) => {
     // Displaying winner message

@@ -300,6 +300,10 @@ class View {
         slot.style.opacity = '0.75';
       }
     }
+    // If the game is a draw, no extra highlighting added
+    if (this.winlines.length === 0) {
+      return;
+    }
     // for all winning positions, we raise the opacity back to 1 and
     // add highlighting animation
     for (let winline of this.winlines) {
@@ -321,6 +325,10 @@ class View {
       if (slot.style.opacity) {
         slot.style.opacity = "";
       }
+    }
+    // If the game is a draw, no extra highlighting needs to be removed
+    if (this.winlines.length === 0) {
+      return;
     }
     // Removing the highlighting animation from the winning
     // positions

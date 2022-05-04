@@ -77,7 +77,7 @@ class Connect4 {
     if (winlines.length > 0) {
       this.endGame(currentPlayer, winlines);
     } else if (this.checkIfFull()) {
-      this.endGame();
+      this.endGame(null, winlines);
     }
     this.counters.push(currentPlayer);
   }
@@ -221,6 +221,10 @@ class Connect4 {
    * @returns {Array<Array<Array<number>>>} The winlines and their coordinates.
    */
   getWinlines(directions) {
+    // If no directions are provided, don't proceed.
+    if (!directions) {
+      return;
+    }
     // Determine starting position and counter
     const winlines = [];
     const [j, i] = this.lastPosPlayed;
@@ -270,10 +274,7 @@ class Connect4 {
           }
           break;
       }
-      // Only add line if it contains at least 4 counters
-      if (winline.length >= 4) {
-        winlines.push(winline);
-      }
+      winlines.push(winline);
     }
     return winlines; 
   }
