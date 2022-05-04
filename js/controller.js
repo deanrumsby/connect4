@@ -82,6 +82,7 @@ class Controller {
    *   or undefined if the game is a draw. 
    */
   endGame = (winner, winlines) => {
+    // Displaying winner message
     switch (winner) {
       case 'x':
         this.view.displayMessage('RED_WIN', 'RESET');
@@ -93,8 +94,10 @@ class Controller {
         this.view.displayMessage('DRAW', 'RESET');
         break;
     }
+    // Add highlighting to winning counters
     this.view.winlines = this.model.getWinlines(winlines);
     this.view.addWinlineHighlighting();
+    // Mark the game as over
     this.view.gameOver = true;
   }
 }
