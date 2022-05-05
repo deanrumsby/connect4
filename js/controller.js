@@ -19,6 +19,17 @@ class Controller {
      */
     this.view = view;
 
+    /**
+     * The message keys used by this.view.displayMessage for the winning
+     *   counters.
+     * @type {Object<Array<string>>}
+     */
+    this.winnerMessageKeys = {
+      x: ['RED_WIN', 'RESET'],
+      o: ['YELLOW_WIN', 'RESET'],
+      null: ['DRAW', 'RESET'],
+    }
+
     // Initialising slot highlighting.
     this.view.availableMoves = this.model.availableMoves();
     this.view.slotHighlighting();
@@ -88,17 +99,8 @@ class Controller {
    */
   endGame = (winner, winlines) => {
     // Displaying winner message
-    switch (winner) {
-      case 'x':
-        this.view.displayMessage('RED_WIN', 'RESET');
-        break;
-      case 'o':
-        this.view.displayMessage('YELLOW_WIN', 'RESET');
-        break;
-      default:
-        this.view.displayMessage('DRAW', 'RESET');
-        break;
-    }
+    this.view.displayMessage(...this.winnerMessageKeys[winner]);
+
     // Add highlighting to winning counters
     this.view.winlines = this.model.getWinlines(winlines);
     this.view.addWinlineHighlighting();
