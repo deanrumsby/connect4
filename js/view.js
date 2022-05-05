@@ -100,6 +100,12 @@ class View {
 
     // Ensuring our player visual in the heading remains circular
     this.fixPlayerVisualWidth();
+
+    // Letting the player visual start with it's introductory colors
+    // for 2 seconds
+    setTimeout(() => {
+      this.updatePlayerVisual();
+    }, 2000);
   }
 
   /**
@@ -138,10 +144,41 @@ class View {
     return board;
   }
 
+  /**
+   * Ensures the player visual in the heading remains circular
+   */
   fixPlayerVisualWidth() {
     const playerVisual = document.querySelector('.player-visual');
     const height = window.getComputedStyle(playerVisual).height;
     playerVisual.style.width = height;
+  }
+
+  /**
+   * Updates the player visual in the heading
+   */
+  updatePlayerVisual() {
+    const playerVisual = document.querySelector('.player-visual');
+    const counterColor = this.currentColor();
+    playerVisual.style.background = "none";
+    switch (counterColor) {
+      case 'red':
+        playerVisual.style.backgroundColor = 'red';
+        playerVisual.style.color = 'white';
+        break;
+      case 'yellow':
+        playerVisual.style.backgroundColor = 'yellow';
+        playerVisual.style.color = 'black';
+        break;
+    }
+  }
+
+  /**
+   * Resets the player visual in the heading
+   */
+  resetPlayerVisual() {
+    const playerVisual = document.querySelector('.player-visual');
+    playerVisual.style.background = 'linear-gradient(45deg, rgba(255,0,0,0.5) 50%, rgba(255,255,0,0.5) 50%)';
+    playerVisual.style.color = 'black';
   }
 
   /**
@@ -352,6 +389,7 @@ class View {
   /**
    * Resets the appearance of the board.
    * Clears any messages displayed under the board.
+   * Resets the player visual in the heading.
    */
   reset() {
     for (let column of this.slots) {
@@ -360,6 +398,7 @@ class View {
       }
     }
     this.clearMessage();
+    this.updatePlayerVisual();
     this.removeWinlineHighlighting();
     this.winlines = [];
   }

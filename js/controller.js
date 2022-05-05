@@ -56,11 +56,14 @@ class Controller {
     // Updates the available moves in the view
     this.view.availableMoves = this.model.availableMoves();
 
-    // Signals the model to end the turn
-    this.model.endTurn();
-
     // Cycles the current color in the view
     this.view.cycleColors();
+
+    // Updates the color of the player visual in the heading
+    this.view.updatePlayerVisual();
+
+    // Signals the model to end the turn
+    this.model.endTurn();
   }
 
   /**
@@ -99,6 +102,10 @@ class Controller {
     // Add highlighting to winning counters
     this.view.winlines = this.model.getWinlines(winlines);
     this.view.addWinlineHighlighting();
+
+    // Reset the player visual aid
+    this.view.resetPlayerVisual();
+
     // Mark the game as over
     this.view.gameOver = true;
   }
