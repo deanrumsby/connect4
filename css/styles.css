@@ -17,6 +17,14 @@ body {
     font-size: 5vh;
 }
 
+.player-visual {
+    display: inline-block;
+    border: 1px solid black;
+    color: var(--body-bgcolor);
+    border-radius: 50%;
+    background-color: red;
+}
+
 .board {
     cursor: pointer;
     height: 65vh;

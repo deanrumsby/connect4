@@ -31,7 +31,7 @@ class View {
      */
     this.title = document.createElement('h1');
     this.title.classList.add('title');
-    this.title.innerText = "Connect4";
+    this.title.innerHTML = "Connect<span class='player-visual'>4</span>";
 
     /**
      * Flags whether an end-game condition has been reached.
@@ -97,6 +97,9 @@ class View {
 
     // Appending visual elements to the root element
     this.root.append(this.title, this.board, this.messageDiv);
+
+    // Ensuring our player visual in the heading remains circular
+    this.fixPlayerVisualWidth();
   }
 
   /**
@@ -133,6 +136,12 @@ class View {
       }
     }
     return board;
+  }
+
+  fixPlayerVisualWidth() {
+    const playerVisual = document.querySelector('.player-visual');
+    const height = window.getComputedStyle(playerVisual).height;
+    playerVisual.style.width = height;
   }
 
   /**
