@@ -38,7 +38,6 @@ class Controller {
     this.view.bindReset(this.handleReset);
     this.view.bindAddCounter(this.handleAddCounter);
     this.model.bindEndGame(this.endGame);
-
   }
 
   /**
