@@ -159,15 +159,14 @@ class View {
   updatePlayerVisual() {
     const playerVisual = document.querySelector('.player-visual');
     const counterColor = this.currentColor();
-    playerVisual.style.background = "none";
     switch (counterColor) {
       case 'red':
-        playerVisual.style.backgroundColor = 'red';
-        playerVisual.style.color = 'white';
+        playerVisual.classList.remove('player-visual-yellow');
+        playerVisual.classList.add('player-visual-red');
         break;
       case 'yellow':
-        playerVisual.style.backgroundColor = 'yellow';
-        playerVisual.style.color = 'black';
+        playerVisual.classList.remove('player-visual-red');
+        playerVisual.classList.add('player-visual-yellow');
         break;
     }
   }
@@ -177,8 +176,8 @@ class View {
    */
   resetPlayerVisual() {
     const playerVisual = document.querySelector('.player-visual');
-    playerVisual.style.background = 'linear-gradient(45deg, rgba(255,0,0,0.5) 50%, rgba(255,255,0,0.5) 50%)';
-    playerVisual.style.color = 'black';
+    playerVisual.classList.remove('player-visual-red');
+    playerVisual.classList.remove('player-visual-yellow');
   }
 
   /**

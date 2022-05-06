@@ -17,25 +17,26 @@ body {
     font-size: 5vh;
 }
 
-.player-visual {
-    display: inline-block;
-    border: 1px solid black;
-    background: linear-gradient(45deg, rgba(255,0,0,0.5) 50%, rgba(255,255,0,0.5) 50%);
-    border-radius: 50%;
-    transition: background 1s, color 1s;
-}
+@media (pointer: coarse) {
+    .player-visual {
+        display: inline-block;
+        border: 1px solid black;
+        color: black;
+        background: linear-gradient(45deg, rgba(255,0,0,0.5) 50%, rgba(255,255,0,0.5) 50%);
+        border-radius: 50%;
+        transition: background 1s, color 1s;
+    }
 
-/*.player-visual-red {
-    transition: background-color 1s, color 1s;
-    color: white;
-    background-color: red;
-}
+    .player-visual-red {
+        background: red;
+        color: white;
+    }
 
-.player-visual-yellow {
-    transition: background-color 1s, color 1s;
-    color: black;
-    background-color: yellow;
-}*/
+    .player-visual-yellow {
+        background: yellow;
+        color: black;
+    }
+}
 
 .board {
     cursor: pointer;
