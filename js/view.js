@@ -1,5 +1,5 @@
 /**
- * Holds the styling information of our Connect4 counter
+ * The styling information of our Connect4 counters
  */
 class Counter {
   /**
@@ -7,7 +7,7 @@ class Counter {
    */
   constructor(color) {
     this.color = color
-    this.playerVisualClass = `player-visual-${color}`;
+    this.playerIndicatorClass = `player-indicator-${color}`;
     this.slotHighlightingClass = `slot-highlight-${color}`;
   }
 }
@@ -17,40 +17,35 @@ class Counter {
  */
 class View {
   /**
-   * @param {number} numCols The number of columns in our board.
-   * @param {number} numRows The number of rows in our board.
+   * @param {number} numCols
+   * @param {number} numRows
    */
   constructor(numCols = 7, numRows = 6) {
     /**
-     * The number of columns in our board.
      * @type {number}
      */
     this.numCols = numCols;
 
     /**
-     * The number of rows in our board.
      * @type {number}
      */
     this.numRows = numRows;
 
     /**
-     * The container element of the app.
      * @type {HTMLDivElement}
      */
     this.root = document.querySelector('#connect4');
 
     /**
-     * The main heading of the game.
-     * When playing on mobile devices, will contain a visual aid 
-     *   to help determine the current player
      * @type {HTMLHeadingElement}
      */
     this.title = document.createElement('h1');
     this.title.classList.add('title');
-    this.title.innerHTML = "Connect<span class='player-visual'>4</span>";
+
+    // contains styling class for player indicator used on touch devices
+    this.title.innerHTML = "Connect<span class='player-indicator'>4</span>";
 
     /**
-     * Flags whether an end-game condition has been reached.
      * @type {boolean}
      */
     this.gameOver = false;
@@ -80,27 +75,22 @@ class View {
     this.winlines = [];
 
     /**
-     * A queue of the counters that can be placed on our board.
      * @type {Array<Counter>}
      */
     this.counters = [new Counter('red'), new Counter('yellow')];
 
     /**
-     * A collection of divs that create the visual structure of the game's board.
      * @type {HTMLDivElement}
      */
     this.board = this.createBoard(numCols, numRows);
 
     /**
-     * A container that holds any messages we wish to display.
      * @type {HTMLDivElement}
      */
     this.messageDiv = document.createElement('div');
-    this.messageDiv.classList.add('message');
+    this.messageDiv.classList.add('message-div');
 
     /**
-     * Holds all the messages we can choose to display under
-     *   the board.
      * @type {Object<string>}
      */
     this.messages = {
@@ -112,18 +102,16 @@ class View {
       TRY_AGAIN: 'Please try another column.'
     }
 
-    // Appending visual elements to the root element
     this.root.append(this.title, this.board, this.messageDiv);
 
-    // EXTRA INITIALISATIONS FOR TOUCH DEVICES FOLLOW
+    // INITIALISATIONS FOR TOUCH DEVICES FOLLOW
 
-    // Ensuring our player visual in the heading remains circular
-    this.fixPlayerVisualWidth();
+    this.fixPlayerIndicatorWidth();
 
     // Letting the player visual start with it's introductory colors
     // for 2 seconds 
     setTimeout(() => {
-      this.updatePlayerVisual();
+      this.updatePlayerIndicator();
     }, 2000);
   }
 
@@ -164,33 +152,33 @@ class View {
   }
 
   /**
-   * Ensures the player visual in the heading remains circular
+   * Ensures the player indicator in the heading remains circular
    * (APPEARS ON TOUCH DEVICES ONLY)
    */
-  fixPlayerVisualWidth() {
-    const playerVisual = document.querySelector('.player-visual');
-    const height = window.getComputedStyle(playerVisual).height;
-    playerVisual.style.width = height;
+  fixPlayerIndicatorWidth() {
+    const playerIndicator = document.querySelector('.player-indicator');
+    const height = window.getComputedStyle(playerIndicator).height;
+    playerIndicator.style.width = height;
   }
 
   /**
-   * Updates the player visual in the heading
+   * Updates the player indicator in the heading
    * (APPEARS ON TOUCH DEVICES ONLY)
    */
-  updatePlayerVisual() {
-    const playerVisual = document.querySelector('.player-visual');
-    playerVisual.classList.remove(this.nextCounter().playerVisualClass);
-    playerVisual.classList.add(this.currentCounter().playerVisualClass);
+  updatePlayerIndicator() {
+    const playerIndicator = document.querySelector('.player-indicator');
+    playerIndicator.classList.remove(this.nextCounter().playerIndicatorClass);
+    playerIndicator.classList.add(this.currentCounter().playerIndicatorClass);
   }
 
   /**
-   * Resets the player visual in the heading
+   * Resets the player indicator in the heading
    * (APPEARS ON TOUCH DEVICES ONLY)
    */
-  resetPlayerVisual() {
-    const playerVisual = document.querySelector('.player-visual');
-    playerVisual.classList.remove(this.currentCounter().playerVisualClass);
-    playerVisual.classList.remove(this.nextCounter().playerVisualClass);
+  resetPlayerIndicator() {
+    const playerIndicator = document.querySelector('.player-indicator');
+    playerIndicator.classList.remove(this.currentCounter().playerIndicatorClass);
+    playerIndicator.classList.remove(this.nextCounter().playerIndicatorClass);
   }
 
   /**
@@ -412,7 +400,7 @@ class View {
       }
     }
     this.clearMessage();
-    this.updatePlayerVisual();
+    this.updatePlayerIndicator();
     this.removeWinlineHighlighting();
     this.winlines = [];
   }

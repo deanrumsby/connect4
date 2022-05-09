@@ -70,7 +70,7 @@ class Controller {
     this.view.cycleCounters();
 
     // Updates the color of the player visual in the heading
-    this.view.updatePlayerVisual();
+    this.view.updatePlayerIndicator();
 
     // Signals the model to end the turn
     this.model.endTurn();
@@ -105,7 +105,7 @@ class Controller {
     this.view.addWinlineHighlighting();
 
     // Reset the player visual aid
-    this.view.resetPlayerVisual();
+    this.view.resetPlayerIndicator();
 
     // Mark the game as over
     this.view.gameOver = true;
