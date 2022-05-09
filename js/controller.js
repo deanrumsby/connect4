@@ -67,7 +67,7 @@ class Controller {
     this.view.availableMoves = this.model.availableMoves();
 
     // Cycles the current color in the view
-    this.view.cycleColors();
+    this.view.cycleCounters();
 
     // Updates the color of the player visual in the heading
     this.view.updatePlayerVisual();

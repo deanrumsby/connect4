@@ -1,4 +1,18 @@
 /**
+ * Holds the styling information of our Connect4 counter
+ */
+class Counter {
+  /**
+   * @param {string} color
+   */
+  constructor(color) {
+    this.color = color
+    this.playerVisualClass = `player-visual-${color}`;
+    this.slotHighlightingClass = `slot-highlight-${color}`;
+  }
+}
+
+/**
  * Visual component of our Connect4 application.
  */
 class View {
@@ -20,13 +34,15 @@ class View {
     this.numRows = numRows;
 
     /**
-     * The container of the app.
+     * The container element of the app.
      * @type {HTMLDivElement}
      */
     this.root = document.querySelector('#connect4');
 
     /**
      * The main heading of the game.
+     * When playing on mobile devices, will contain a visual aid 
+     *   to help determine the current player
      * @type {HTMLHeadingElement}
      */
     this.title = document.createElement('h1');
@@ -42,7 +58,8 @@ class View {
     /**
      * A 2D array containing a div element for each slot on the game's board.
      * We use coordinates [j, i], such that j is the column index of the board
-     *   and i is the row index.
+     *   and i is the row index. Eg this.slots[2][3] represents the slot on the
+     *   third column and fourth row of the board (since we start counting at 0).
      * It is populated by the method View.createBoard.
      * @type {Array<Array<HTMLDivElement>>} 
      */
@@ -56,17 +73,17 @@ class View {
     this.availableMoves = [];
 
     /**
-     * Any successful winlines are stored here, consisting of all the coordinates of
+     * Any successful winlines are stored here, consisting of all the coordinates [j, i] of
      *   the respective lines.
      * @type {Array<Array<Array<number>>>}
      */
     this.winlines = [];
 
     /**
-     * The color queue of the counters that can be placed on our board.
-     * @type {Array<string>}
+     * A queue of the counters that can be placed on our board.
+     * @type {Array<Counter>}
      */
-    this.colors = ['red', 'yellow'];
+    this.counters = [new Counter('red'), new Counter('yellow')];
 
     /**
      * A collection of divs that create the visual structure of the game's board.
@@ -98,11 +115,13 @@ class View {
     // Appending visual elements to the root element
     this.root.append(this.title, this.board, this.messageDiv);
 
+    // EXTRA INITIALISATIONS FOR TOUCH DEVICES FOLLOW
+
     // Ensuring our player visual in the heading remains circular
     this.fixPlayerVisualWidth();
 
     // Letting the player visual start with it's introductory colors
-    // for 2 seconds
+    // for 2 seconds 
     setTimeout(() => {
       this.updatePlayerVisual();
     }, 2000);
@@ -146,6 +165,7 @@ class View {
 
   /**
    * Ensures the player visual in the heading remains circular
+   * (APPEARS ON TOUCH DEVICES ONLY)
    */
   fixPlayerVisualWidth() {
     const playerVisual = document.querySelector('.player-visual');
@@ -155,29 +175,22 @@ class View {
 
   /**
    * Updates the player visual in the heading
+   * (APPEARS ON TOUCH DEVICES ONLY)
    */
   updatePlayerVisual() {
     const playerVisual = document.querySelector('.player-visual');
-    const counterColor = this.currentColor();
-    switch (counterColor) {
-      case 'red':
-        playerVisual.classList.remove('player-visual-yellow');
-        playerVisual.classList.add('player-visual-red');
-        break;
-      case 'yellow':
-        playerVisual.classList.remove('player-visual-red');
-        playerVisual.classList.add('player-visual-yellow');
-        break;
-    }
+    playerVisual.classList.remove(this.nextCounter().playerVisualClass);
+    playerVisual.classList.add(this.currentCounter().playerVisualClass);
   }
 
   /**
    * Resets the player visual in the heading
+   * (APPEARS ON TOUCH DEVICES ONLY)
    */
   resetPlayerVisual() {
     const playerVisual = document.querySelector('.player-visual');
-    playerVisual.classList.remove('player-visual-red');
-    playerVisual.classList.remove('player-visual-yellow');
+    playerVisual.classList.remove(this.currentCounter().playerVisualClass);
+    playerVisual.classList.remove(this.nextCounter().playerVisualClass);
   }
 
   /**
@@ -208,7 +221,7 @@ class View {
    */
   updateSlot(coordinates) {
     const [j, i] = coordinates;
-    this.slots[j][i].style.backgroundColor = this.currentColor();
+    this.slots[j][i].style.backgroundColor = this.currentCounter().color;
   }
 
   /**
@@ -232,31 +245,32 @@ class View {
   }
 
   /**
-   * Returns the current color to be placed.
-   * @returns {string} The next color to be placed
+   * Returns the current counter type to be placed.
+   * @returns {Object<Counter>} The current counter type to be placed
    */
-  currentColor() {
-    return this.colors[0];
+  currentCounter() {
+    return this.counters[0];
   }
 
   /**
-   * Returns the color after the current color to be placed.
-   * @returns {string} The color after next, to be placed.
+   * Returns the counter type after the current counter type to be placed.
+   * @returns {Object<Counter>} The counter type after next, to be placed.
    */
-  nextColor() {
-    return this.colors[1];
+  nextCounter() {
+    return this.counters[1];
   }
 
   /**
-   * Cycles the color queue.
+   * Cycles the counter queue.
    */
-  cycleColors() {
-    this.colors.push(this.colors.shift());
+  cycleCounters() {
+    this.counters.push(this.counters.shift());
   }
 
   /**
    * Creates the event listener used to reset the board.
    * Used to bind the listener to a method in the Controller.
+   * Will only fire when this.gameOver is true.
    * @param {function} handler Provided by the Controller to handle the event.
    */
   bindReset(handler) {
@@ -274,6 +288,7 @@ class View {
    * Highlighting does not occur during the game over screen.
    * NOTE: This must be initialised in the controller before the addCounter
    *   method has been bound to get the event firing order correct.
+   * Highlighting will only appear on devices using a mouse pointer.
    */
   slotHighlighting() {
     const columns = document.querySelectorAll('.board-col');
@@ -285,7 +300,7 @@ class View {
         if (i === null || this.gameOver) {
           return;
         }
-        this.slots[j][i].classList.add(`slot-highlight-${this.currentColor()}`);
+        this.slots[j][i].classList.add(this.currentCounter().slotHighlightingClass);
       });
 
       // Remove highlighting when cursor leaves the column
@@ -295,7 +310,7 @@ class View {
         if (i === null) {
           return;
         }
-        this.slots[j][i].classList.remove(`slot-highlight-${this.currentColor()}`);
+        this.slots[j][i].classList.remove(this.currentCounter().slotHighlightingClass);
       });
 
       // Updates the highlighting when a player adds a counter 
@@ -310,12 +325,12 @@ class View {
         }
         // If on the last row, only remove the highlighting.
         if (i === this.numRows - 1) {
-          this.slots[j][i].classList.remove(`slot-highlight-${this.currentColor()}`);
+          this.slots[j][i].classList.remove(this.currentCounter().slotHighlightingClass);
           return;
         }
         // If the game is over, begin highlighting from the bottom row again
         if (this.gameOver) {
-          this.slots[j][0].classList.add(`slot-highlight-${this.currentColor()}`);
+          this.slots[j][0].classList.add(this.currentCounter().slotHighlightingClass);
           return;
         }
         // Else add the highlighting to the next available slot
@@ -326,10 +341,10 @@ class View {
           if (this.gameOver) {
             return;
           }
-          this.slots[j][i + 1].classList.add(`slot-highlight-${this.currentColor()}`);
+          this.slots[j][i + 1].classList.add(this.currentCounter().slotHighlightingClass);
         }, 5);
         // Removing the highlighting from the previously highlighted slot
-        this.slots[j][i].classList.remove(`slot-highlight-${this.currentColor()}`);
+        this.slots[j][i].classList.remove(this.currentCounter().slotHighlightingClass);
       });
     }
   }
@@ -388,7 +403,7 @@ class View {
   /**
    * Resets the appearance of the board.
    * Clears any messages displayed under the board.
-   * Resets the player visual in the heading.
+   * Resets the player visual in the heading for touch devices.
    */
   reset() {
     for (let column of this.slots) {
