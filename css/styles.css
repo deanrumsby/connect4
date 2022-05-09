@@ -84,12 +84,12 @@ body {
 }
 
 @media (pointer: fine) {
-    .slot-highlight-red {
+    .cell-highlight-red {
         border: none;
         outline: 4px solid red;
     }
     
-    .slot-highlight-yellow {
+    .cell-highlight-yellow {
         border: none;
         outline: 4px solid yellow;
     }   

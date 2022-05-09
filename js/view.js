@@ -8,7 +8,7 @@ class Counter {
   constructor(color) {
     this.color = color
     this.playerIndicatorClass = `player-indicator-${color}`;
-    this.slotHighlightingClass = `slot-highlight-${color}`;
+    this.cellHighlightingClass = `cell-highlight-${color}`;
   }
 }
 
@@ -280,7 +280,7 @@ class View {
         if (i === null || this.gameOver) {
           return;
         }
-        this.cells[j][i].classList.add(this.currentCounter().slotHighlightingClass);
+        this.cells[j][i].classList.add(this.currentCounter().cellHighlightingClass);
       });
 
       // Remove highlighting when cursor leaves the column
@@ -290,7 +290,7 @@ class View {
         if (i === null) {
           return;
         }
-        this.cells[j][i].classList.remove(this.currentCounter().slotHighlightingClass);
+        this.cells[j][i].classList.remove(this.currentCounter().cellHighlightingClass);
       });
 
       // Updates the highlighting when a player adds a counter 
@@ -305,12 +305,12 @@ class View {
         }
         // If on the last row, only remove the highlighting.
         if (i === this.numRows - 1) {
-          this.cells[j][i].classList.remove(this.currentCounter().slotHighlightingClass);
+          this.cells[j][i].classList.remove(this.currentCounter().cellHighlightingClass);
           return;
         }
         // If the game is over, begin highlighting from the bottom row again
         if (this.gameOver) {
-          this.cells[j][0].classList.add(this.currentCounter().slotHighlightingClass);
+          this.cells[j][0].classList.add(this.currentCounter().cellHighlightingClass);
           return;
         }
         // Else add the highlighting to the next available slot
@@ -321,10 +321,10 @@ class View {
           if (this.gameOver) {
             return;
           }
-          this.cells[j][i + 1].classList.add(this.currentCounter().slotHighlightingClass);
+          this.cells[j][i + 1].classList.add(this.currentCounter().cellHighlightingClass);
         }, 5);
         // Removing the highlighting from the previously highlighted slot
-        this.cells[j][i].classList.remove(this.currentCounter().slotHighlightingClass);
+        this.cells[j][i].classList.remove(this.currentCounter().cellHighlightingClass);
       });
     }
   }
