@@ -55,13 +55,13 @@ class Controller {
     
     // If no coordinates, will ask the view to display a column full message
     if (!coordinates) {
-      this.view.displayMessage('COLUMN_FULL', 'TRY_AGAIN');
+      this.view.displayMessages('COLUMN_FULL', 'TRY_AGAIN');
       return;
     }
 
     // Updates the slot given by the coordinates with the color
     // of the current player
-    this.view.updateSlot(coordinates);
+    this.view.updateCell(coordinates);
 
     // Updates the available moves in the view
     this.view.availableMoves = this.model.availableMoves();
@@ -98,7 +98,7 @@ class Controller {
    */
   endGame = (winner, winlines) => {
     // Displaying winner message
-    this.view.displayMessage(...this.winnerMessageKeys[winner]);
+    this.view.displayMessages(...this.winnerMessageKeys[winner]);
 
     // Add highlighting to winning counters
     this.view.winlines = this.model.getWinlines(winlines);

@@ -116,6 +116,8 @@ class View {
     }, 2000);
   }
 
+  // METHODS USED BY CONSTRUCTOR
+
   /**
    * @returns {HTMLDivElement}
    */ 
@@ -149,19 +151,15 @@ class View {
     return cellsArray;
   }
 
+  // METHODS TO BIND WITH CONTROLLER
+
   /**
-   * Attaches a listener to each column of our board, for adding counters
-   *   to the game.
-   * Used to bind the listeners to a method in the Controller.
-   * The listeners will only fire when this.gameOver is false.
-   * @param {function} handler Provided by the Controller to handle the event.
+   * @param {function} handler
    */
   bindAddCounter(handler) {
     for (let j = 0; j < this.numCols; j++) {
       this.columns[j].addEventListener('click', (e) => {
         if (!this.gameOver) {
-          // we stop event bubbling so that a reset event isn't 
-          // immediately and unintentionally triggered on a winning move.
           e.stopPropagation();
           handler(j);
         }
@@ -170,24 +168,31 @@ class View {
   }
 
   /**
-   * Updates a given slot with the color of the current player.
-   * @param {Array<number>} coordinates In the form [j, i], where j is the 
-   *   column coordinate and i is the row coordinate.   
+   * @param {function} handler
    */
-  updateSlot(coordinates) {
+  bindReset(handler) {
+    document.addEventListener('click', () => {
+      if (this.gameOver) {
+        handler();
+      }
+    });
+  }
+
+  /**
+   * @param {Array<number>} coordinates 
+   */
+  updateCell(coordinates) {
     const [j, i] = coordinates;
     this.cells[j][i].style.backgroundColor = this.currentCounter().color;
   }
 
   /**
-   * Displays messages underneath the board.
-   * @param {Array<string>} messages Keys used to display message from 
-   *   this.messages.
+   * @param {Array<string>} messageKeys
    */
-  displayMessage(...messages) {
-    for (let message of messages) {
+  displayMessage(...messageKeys) {
+    for (let key of messageKeys) {
       const p = document.createElement('p');
-      p.innerText = this.messages[message];
+      p.innerText = this.messages[key];
       this.messageDiv.append(p);
     }
   }
@@ -220,20 +225,6 @@ class View {
    */
   cycleCounters() {
     this.counters.push(this.counters.shift());
-  }
-
-  /**
-   * Creates the event listener used to reset the board.
-   * Used to bind the listener to a method in the Controller.
-   * Will only fire when this.gameOver is true.
-   * @param {function} handler Provided by the Controller to handle the event.
-   */
-  bindReset(handler) {
-    document.addEventListener('click', () => {
-      if (this.gameOver) {
-        handler();
-      }
-    });
   }
 
   /**
