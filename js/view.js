@@ -41,8 +41,6 @@ class View {
      */
     this.title = document.createElement('h1');
     this.title.classList.add('title');
-
-    // contains styling class for player indicator used on touch devices
     this.title.innerHTML = "Connect<span class='player-indicator'>4</span>";
 
     /**
@@ -101,6 +99,11 @@ class View {
 
     // INITIALISATIONS FOR TOUCH DEVICES
 
+    /**
+     * @type {HTMLSpanElement}
+     */
+    this.playerIndicator = this.title.querySelector('.player-indicator');
+
     this.fixPlayerIndicatorWidth();
 
     setTimeout(() => {
@@ -131,7 +134,6 @@ class View {
   }
 
   /**
-   * 
    * @returns {Array<HTMLCollection>}
    */
   createCellsArray() {
@@ -141,36 +143,6 @@ class View {
       cellsArray.push(column.children);
     }
     return cellsArray;
-  }
-
-  /**
-   * Ensures the player indicator in the heading remains circular
-   * (APPEARS ON TOUCH DEVICES ONLY)
-   */
-  fixPlayerIndicatorWidth() {
-    const playerIndicator = document.querySelector('.player-indicator');
-    const indicatorHeight = window.getComputedStyle(playerIndicator).height;
-    playerIndicator.style.width = indicatorHeight;
-  }
-
-  /**
-   * Updates the player indicator in the heading
-   * (APPEARS ON TOUCH DEVICES ONLY)
-   */
-  updatePlayerIndicator() {
-    const playerIndicator = document.querySelector('.player-indicator');
-    playerIndicator.classList.remove(this.nextCounter().playerIndicatorClass);
-    playerIndicator.classList.add(this.currentCounter().playerIndicatorClass);
-  }
-
-  /**
-   * Resets the player indicator in the heading
-   * (APPEARS ON TOUCH DEVICES ONLY)
-   */
-  resetPlayerIndicator() {
-    const playerIndicator = document.querySelector('.player-indicator');
-    playerIndicator.classList.remove(this.currentCounter().playerIndicatorClass);
-    playerIndicator.classList.remove(this.nextCounter().playerIndicatorClass);
   }
 
   /**
@@ -395,5 +367,22 @@ class View {
     this.updatePlayerIndicator();
     this.removeWinlineHighlighting();
     this.winlines = [];
+  }
+
+  // METHODS FOR TOUCH DEVICES
+
+  fixPlayerIndicatorWidth() {
+    const indicatorHeight = window.getComputedStyle(this.playerIndicator).height;
+    this.playerIndicator.style.width = indicatorHeight;
+  }
+
+  updatePlayerIndicator() {
+    this.playerIndicator.classList.remove(this.nextCounter().playerIndicatorClass);
+    this.playerIndicator.classList.add(this.currentCounter().playerIndicatorClass);
+  }
+
+  resetPlayerIndicator() {
+    this.playerIndicator.classList.remove(this.currentCounter().playerIndicatorClass);
+    this.playerIndicator.classList.remove(this.nextCounter().playerIndicatorClass);
   }
 }
