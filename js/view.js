@@ -51,16 +51,6 @@ class View {
     this.gameOver = false;
 
     /**
-     * A 2D array containing a div element for each slot on the game's board.
-     * We use coordinates [j, i], such that j is the column index of the board
-     *   and i is the row index. Eg this.slots[2][3] represents the slot on the
-     *   third column and fourth row of the board (since we start counting at 0).
-     * It is populated by the method View.createBoard.
-     * @type {Array<Array<HTMLDivElement>>} 
-     */
-    this.slots = [];
-
-    /**
      * An array of this.numCols length, that holds the row index of the next available
      *   slot in each column. Populated by the Controller class.
      * @type {Array<number>}
@@ -82,7 +72,12 @@ class View {
     /**
      * @type {HTMLDivElement}
      */
-    this.board = this.createBoard(numCols, numRows);
+    this.board = this.createBoard();
+
+    /**
+     * @type {Array<HTMLCollection<HTMLDivElement>>}
+     */
+    this.slots = this.createSlotsArray();
 
     /**
      * @type {HTMLDivElement}
@@ -104,51 +99,50 @@ class View {
 
     this.root.append(this.title, this.board, this.messageDiv);
 
-    // INITIALISATIONS FOR TOUCH DEVICES FOLLOW
+    // INITIALISATIONS FOR TOUCH DEVICES
 
     this.fixPlayerIndicatorWidth();
 
-    // Letting the player visual start with it's introductory colors
-    // for 2 seconds 
     setTimeout(() => {
       this.updatePlayerIndicator();
     }, 2000);
   }
 
   /**
-   * Creates a collection of divs that represents the structure of our game's
-   *   board.
-   * @param {number} numCols The number of columns of our board.
-   * @param {number} numRows The number of rows of our board.
-   * @returns {HTMLDivElement} The representation of our board.
+   * @returns {HTMLDivElement}
    */ 
-  createBoard(numCols, numRows) {
-    // Creating the board element
+  createBoard() {
     const board = document.createElement('div');
     board.classList.add('board');
-    board.style.aspectRatio = `${numCols} / ${numRows}`;
+    board.style.aspectRatio = `${this.numCols} / ${this.numRows}`;
 
     // Creating each column for the board and this.slots
-    for (let j = 0; j < numCols; j++) {
-      this.slots[j] = [];
+    for (let j = 0; j < this.numCols; j++) {
       const column = document.createElement('div');
-      column.classList.add('board-col');
+      column.classList.add('column');
       board.append(column);
 
       // Creating each cell and slot of our board's column
-      for (let i = 0; i < numRows; i++) {
-        const cell = document.createElement('div');
+      for (let i = 0; i < this.numRows; i++) {
         const slot = document.createElement('div');
-        cell.classList.add('cell');
-        slot.classList.add('slot');
-        cell.append(slot);
-        column.append(cell);
-
-        // Assigns the slot to our 2D array this.slots
-        this.slots[j][i] = slot;
+        slot.classList.add('cell');
+        column.append(slot);
       }
     }
     return board;
+  }
+
+  /**
+   * 
+   * @returns {Array<HTMLCollection<HTMLDivElement>>}
+   */
+  createSlotsArray() {
+    const slotsArray = [];
+    const columns = this.board.querySelectorAll('.column');
+    for (let column of columns) {
+      slotsArray.push(column.children);
+    }
+    return slotsArray;
   }
 
   /**
@@ -189,7 +183,7 @@ class View {
    * @param {function} handler Provided by the Controller to handle the event.
    */
   bindAddCounter(handler) {
-    const columns = document.querySelectorAll('.board-col');
+    const columns = document.querySelectorAll('.column');
     for (let j = 0; j < this.numCols; j++) {
       columns[j].addEventListener('click', (e) => {
         if (!this.gameOver) {
@@ -279,7 +273,7 @@ class View {
    * Highlighting will only appear on devices using a mouse pointer.
    */
   slotHighlighting() {
-    const columns = document.querySelectorAll('.board-col');
+    const columns = document.querySelectorAll('.column');
     for (let j = 0; j < this.numCols; j++) {
       // Add highlighting to the next available move within the column
       columns[j].addEventListener('mouseenter', () => {
@@ -341,7 +335,7 @@ class View {
    * Highlights all the succesful winlines from this.winlines.
    */
   addWinlineHighlighting() {
-    const slots = document.querySelectorAll('.slot');
+    const slots = document.querySelectorAll('.cell');
     // reduces opacity of all slots that have been taken by a counter
     for (let slot of slots) {
       if (slot.style.backgroundColor) {
@@ -368,7 +362,7 @@ class View {
    */
   removeWinlineHighlighting() {
     // Resetting the opacities of every slot on the board
-    const slots = document.querySelectorAll('.slot');
+    const slots = document.querySelectorAll('.cell');
     for (let slot of slots) {
       if (slot.style.opacity) {
         slot.style.opacity = "";

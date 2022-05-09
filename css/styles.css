@@ -18,7 +18,7 @@ body {
 }
 
 @media (pointer: coarse) {
-    .player-visual {
+    .player-indicator {
         display: inline-block;
         border: 1px solid black;
         color: black;
@@ -27,12 +27,12 @@ body {
         transition: background 1s, color 1s;
     }
 
-    .player-visual-red {
+    .player-indicator-red {
         background: red;
         color: white;
     }
 
-    .player-visual-yellow {
+    .player-indicator-yellow {
         background: yellow;
         color: black;
     }
@@ -57,7 +57,7 @@ body {
     }
 }
 
-.board-col {
+.column {
     display: flex;
     flex-grow: 1;
     flex-direction: column-reverse;
@@ -66,12 +66,7 @@ body {
 
 .cell {
     aspect-ratio: 1 / 1;
-    flex-grow: 1;
-    padding: 7%;
-}
-
-.slot {
-    aspect-ratio: 1 / 1;
+    margin: 6%;
     flex-grow: 1;
     background-color: var(--body-bgcolor);
     border-radius: 50%;
