@@ -73,7 +73,12 @@ class View {
     this.board = this.createBoard();
 
     /**
-     * @type {Array<HTMLCollection>}
+     * @type {NodeListOf<HTMLDivElement>}
+     */
+    this.columns = this.board.querySelectorAll('.column');
+
+    /**
+     * @type {Array<HTMLCollectionOf<HTMLDivElement>>}
      */
     this.cells = this.createCellsArray();
 
@@ -134,12 +139,11 @@ class View {
   }
 
   /**
-   * @returns {Array<HTMLCollection>}
+   * @returns {Array<HTMLCollectionOf<HTMLDivElement>>}
    */
   createCellsArray() {
     const cellsArray = [];
-    const columns = this.board.querySelectorAll('.column');
-    for (let column of columns) {
+    for (let column of this.columns) {
       cellsArray.push(column.children);
     }
     return cellsArray;
@@ -153,9 +157,8 @@ class View {
    * @param {function} handler Provided by the Controller to handle the event.
    */
   bindAddCounter(handler) {
-    const columns = document.querySelectorAll('.column');
     for (let j = 0; j < this.numCols; j++) {
-      columns[j].addEventListener('click', (e) => {
+      this.columns[j].addEventListener('click', (e) => {
         if (!this.gameOver) {
           // we stop event bubbling so that a reset event isn't 
           // immediately and unintentionally triggered on a winning move.
@@ -243,10 +246,9 @@ class View {
    * Highlighting will only appear on devices using a mouse pointer.
    */
   slotHighlighting() {
-    const columns = document.querySelectorAll('.column');
     for (let j = 0; j < this.numCols; j++) {
       // Add highlighting to the next available move within the column
-      columns[j].addEventListener('mouseenter', () => {
+      this.columns[j].addEventListener('mouseenter', () => {
         const i = this.availableMoves[j];
         // If the column is full or the game is over, no highlighting occurs
         if (i === null || this.gameOver) {
@@ -256,7 +258,7 @@ class View {
       });
 
       // Remove highlighting when cursor leaves the column
-      columns[j].addEventListener('mouseleave', () => {
+      this.columns[j].addEventListener('mouseleave', () => {
         const i = this.availableMoves[j];
         // If the column is full, no removal occurs
         if (i === null) {
@@ -269,7 +271,7 @@ class View {
       // to the column.
       // Because the available moves are refreshed before the counter is placed,
       // this.slots[j][i] will be the position of the counter before the newly placed one.  
-      columns[j].addEventListener('click', () => {
+      this.columns[j].addEventListener('click', () => {
         const i = this.availableMoves[j];
         // If the column is full, do nothing.
         if (i === null) {
