@@ -49,11 +49,9 @@ class View {
     this.gameOver = false;
 
     /**
-     * An array of this.numCols length, that holds the row index of the next available
-     *   slot in each column. Populated by the Controller class.
      * @type {Array<number>}
      */
-    this.availableMoves = [];
+    this.playableRowIndices = [];
 
     /**
      * Any successful winlines are stored here, consisting of all the coordinates [j, i] of
@@ -197,32 +195,24 @@ class View {
     }
   }
 
-  /**
-   * Clears any messages currently displayed under the board.
-   */
   clearMessages() {
     this.messageDiv.replaceChildren();
   }
 
   /**
-   * Returns the current counter type to be placed.
-   * @returns {Object<Counter>} The current counter type to be placed
+   * @returns {Object<Counter>}
    */
   currentCounter() {
     return this.counters[0];
   }
 
   /**
-   * Returns the counter type after the current counter type to be placed.
-   * @returns {Object<Counter>} The counter type after next, to be placed.
+   * @returns {Object<Counter>}
    */
-  nextCounter() {
+  previousCounter() {
     return this.counters[1];
   }
 
-  /**
-   * Cycles the counter queue.
-   */
   cycleCounters() {
     this.counters.push(this.counters.shift());
   }
@@ -240,7 +230,7 @@ class View {
     for (let j = 0; j < this.numCols; j++) {
       // Add highlighting to the next available move within the column
       this.columns[j].addEventListener('mouseenter', () => {
-        const i = this.availableMoves[j];
+        const i = this.playableRowIndices[j];
         // If the column is full or the game is over, no highlighting occurs
         if (i === null || this.gameOver) {
           return;
@@ -250,7 +240,7 @@ class View {
 
       // Remove highlighting when cursor leaves the column
       this.columns[j].addEventListener('mouseleave', () => {
-        const i = this.availableMoves[j];
+        const i = this.playableRowIndices[j];
         // If the column is full, no removal occurs
         if (i === null) {
           return;
@@ -263,7 +253,7 @@ class View {
       // Because the available moves are refreshed before the counter is placed,
       // this.slots[j][i] will be the position of the counter before the newly placed one.  
       this.columns[j].addEventListener('click', () => {
-        const i = this.availableMoves[j];
+        const i = this.playableRowIndices[j];
         // If the column is full, do nothing.
         if (i === null) {
           return;
@@ -370,12 +360,12 @@ class View {
   }
 
   updatePlayerIndicator() {
-    this.playerIndicator.classList.remove(this.nextCounter().playerIndicatorClass);
+    this.playerIndicator.classList.remove(this.previousCounter().playerIndicatorClass);
     this.playerIndicator.classList.add(this.currentCounter().playerIndicatorClass);
   }
 
   resetPlayerIndicator() {
     this.playerIndicator.classList.remove(this.currentCounter().playerIndicatorClass);
-    this.playerIndicator.classList.remove(this.nextCounter().playerIndicatorClass);
+    this.playerIndicator.classList.remove(this.previousCounter().playerIndicatorClass);
   }
 }

@@ -31,7 +31,7 @@ class Controller {
     }
 
     // Initialising slot highlighting.
-    this.view.availableMoves = this.model.availableMoves();
+    this.view.playableRowIndices = this.model.playableRowIndices();
     this.view.slotHighlighting();
 
     // Binding our event handlers and callbacks
@@ -64,7 +64,7 @@ class Controller {
     this.view.updateCell(coordinates);
 
     // Updates the available moves in the view
-    this.view.availableMoves = this.model.availableMoves();
+    this.view.playableRowIndices = this.model.playableRowIndices();
 
     // Cycles the current color in the view
     this.view.cycleCounters();
@@ -84,7 +84,7 @@ class Controller {
   handleReset = () => {
     this.view.reset();
     this.model.reset();
-    this.view.availableMoves = this.model.availableMoves();
+    this.view.playableRowIndices = this.model.playableRowIndices();
     this.view.gameOver = false;
   }
 

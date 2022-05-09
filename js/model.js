@@ -196,22 +196,22 @@ class Connect4 {
    * @returns {Array<number|null>} The row indices of each available slot,
    *  or null if no slot is available.
    */
-  availableMoves() {
-    const moves = [];
+  playableRowIndices() {
+    const playableRowIndices = [];
     for (let j = 0; j < this.numCols; j++) {
       for (let i = 0; i < this.numRows; i++) {
         // checking if slot is empty
         if (!this.board[j][i]) {
-          moves.push(i);
+          playableRowIndices.push(i);
           break;
         }
         // if all slots are taken then push null
         if (i === this.numRows - 1) {
-          moves.push(null);
+          playableRowIndices.push(null);
         }
       }
     }
-    return moves;
+    return playableRowIndices;
   }
 
   /**

@@ -180,7 +180,7 @@ describe('reset', () => {
   });
 });
 
-describe('availableMoves', () => {
+describe('playableRowIndices', () => {
   test('provides the correct results', () => {
     game.board = [
       ['x' , null, null, null, null, null],
@@ -191,7 +191,7 @@ describe('availableMoves', () => {
       ['o' , 'x' , null, null, null, null],
       [null, null, null, null, null, null],
     ];
-    expect(game.availableMoves()).toEqual([1, 3, 1, 0, 0, 2, 0]);
+    expect(game.playableRowIndices()).toEqual([1, 3, 1, 0, 0, 2, 0]);
   });
 });
 
