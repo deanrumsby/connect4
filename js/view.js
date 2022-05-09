@@ -189,7 +189,7 @@ class View {
   /**
    * @param {Array<string>} messageKeys
    */
-  displayMessage(...messageKeys) {
+  displayMessages(...messageKeys) {
     for (let key of messageKeys) {
       const p = document.createElement('p');
       p.innerText = this.messages[key];
@@ -200,7 +200,7 @@ class View {
   /**
    * Clears any messages currently displayed under the board.
    */
-  clearMessage() {
+  clearMessages() {
     this.messageDiv.replaceChildren();
   }
 
@@ -356,7 +356,7 @@ class View {
         cell.style.backgroundColor = '';
       }
     }
-    this.clearMessage();
+    this.clearMessages();
     this.updatePlayerIndicator();
     this.removeWinlineHighlighting();
     this.winlines = [];

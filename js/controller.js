@@ -50,7 +50,7 @@ class Controller {
   handleAddCounter = (column) => {
     // Clears messages, adds counter to model and receives 
     // the coordinates for the newly placed piece
-    this.view.clearMessage();
+    this.view.clearMessages();
     const coordinates = this.model.addCounter(column);
     
     // If no coordinates, will ask the view to display a column full message
