@@ -75,9 +75,9 @@ class View {
     this.board = this.createBoard();
 
     /**
-     * @type {Array<HTMLCollection<HTMLDivElement>>}
+     * @type {Array<HTMLCollection>}
      */
-    this.slots = this.createSlotsArray();
+    this.cells = this.createCellsArray();
 
     /**
      * @type {HTMLDivElement}
@@ -116,17 +116,15 @@ class View {
     board.classList.add('board');
     board.style.aspectRatio = `${this.numCols} / ${this.numRows}`;
 
-    // Creating each column for the board and this.slots
     for (let j = 0; j < this.numCols; j++) {
       const column = document.createElement('div');
       column.classList.add('column');
       board.append(column);
 
-      // Creating each cell and slot of our board's column
       for (let i = 0; i < this.numRows; i++) {
-        const slot = document.createElement('div');
-        slot.classList.add('cell');
-        column.append(slot);
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        column.append(cell);
       }
     }
     return board;
@@ -134,15 +132,15 @@ class View {
 
   /**
    * 
-   * @returns {Array<HTMLCollection<HTMLDivElement>>}
+   * @returns {Array<HTMLCollection>}
    */
-  createSlotsArray() {
-    const slotsArray = [];
+  createCellsArray() {
+    const cellsArray = [];
     const columns = this.board.querySelectorAll('.column');
     for (let column of columns) {
-      slotsArray.push(column.children);
+      cellsArray.push(column.children);
     }
-    return slotsArray;
+    return cellsArray;
   }
 
   /**
@@ -151,8 +149,8 @@ class View {
    */
   fixPlayerIndicatorWidth() {
     const playerIndicator = document.querySelector('.player-indicator');
-    const height = window.getComputedStyle(playerIndicator).height;
-    playerIndicator.style.width = height;
+    const indicatorHeight = window.getComputedStyle(playerIndicator).height;
+    playerIndicator.style.width = indicatorHeight;
   }
 
   /**
@@ -203,7 +201,7 @@ class View {
    */
   updateSlot(coordinates) {
     const [j, i] = coordinates;
-    this.slots[j][i].style.backgroundColor = this.currentCounter().color;
+    this.cells[j][i].style.backgroundColor = this.currentCounter().color;
   }
 
   /**
@@ -282,7 +280,7 @@ class View {
         if (i === null || this.gameOver) {
           return;
         }
-        this.slots[j][i].classList.add(this.currentCounter().slotHighlightingClass);
+        this.cells[j][i].classList.add(this.currentCounter().slotHighlightingClass);
       });
 
       // Remove highlighting when cursor leaves the column
@@ -292,7 +290,7 @@ class View {
         if (i === null) {
           return;
         }
-        this.slots[j][i].classList.remove(this.currentCounter().slotHighlightingClass);
+        this.cells[j][i].classList.remove(this.currentCounter().slotHighlightingClass);
       });
 
       // Updates the highlighting when a player adds a counter 
@@ -307,12 +305,12 @@ class View {
         }
         // If on the last row, only remove the highlighting.
         if (i === this.numRows - 1) {
-          this.slots[j][i].classList.remove(this.currentCounter().slotHighlightingClass);
+          this.cells[j][i].classList.remove(this.currentCounter().slotHighlightingClass);
           return;
         }
         // If the game is over, begin highlighting from the bottom row again
         if (this.gameOver) {
-          this.slots[j][0].classList.add(this.currentCounter().slotHighlightingClass);
+          this.cells[j][0].classList.add(this.currentCounter().slotHighlightingClass);
           return;
         }
         // Else add the highlighting to the next available slot
@@ -323,10 +321,10 @@ class View {
           if (this.gameOver) {
             return;
           }
-          this.slots[j][i + 1].classList.add(this.currentCounter().slotHighlightingClass);
+          this.cells[j][i + 1].classList.add(this.currentCounter().slotHighlightingClass);
         }, 5);
         // Removing the highlighting from the previously highlighted slot
-        this.slots[j][i].classList.remove(this.currentCounter().slotHighlightingClass);
+        this.cells[j][i].classList.remove(this.currentCounter().slotHighlightingClass);
       });
     }
   }
@@ -335,11 +333,11 @@ class View {
    * Highlights all the succesful winlines from this.winlines.
    */
   addWinlineHighlighting() {
-    const slots = document.querySelectorAll('.cell');
+    const cells = document.querySelectorAll('.cell');
     // reduces opacity of all slots that have been taken by a counter
-    for (let slot of slots) {
-      if (slot.style.backgroundColor) {
-        slot.style.opacity = '0.75';
+    for (let cell of cells) {
+      if (cell.style.backgroundColor) {
+        cell.style.opacity = '0.75';
       }
     }
     // If the game is a draw, no extra highlighting added
@@ -351,8 +349,8 @@ class View {
     for (let winline of this.winlines) {
       for (let coordinates of winline) {
         const [j, i] = coordinates;
-        this.slots[j][i].style.opacity = '1';
-        this.slots[j][i].classList.add('win-line-highlight');
+        this.cells[j][i].style.opacity = '1';
+        this.cells[j][i].classList.add('win-line-highlight');
       }
     }
   }
@@ -362,10 +360,10 @@ class View {
    */
   removeWinlineHighlighting() {
     // Resetting the opacities of every slot on the board
-    const slots = document.querySelectorAll('.cell');
-    for (let slot of slots) {
-      if (slot.style.opacity) {
-        slot.style.opacity = "";
+    const cells = document.querySelectorAll('.cell');
+    for (let cell of cells) {
+      if (cell.style.opacity) {
+        cell.style.opacity = "";
       }
     }
     // If the game is a draw, no extra highlighting needs to be removed
@@ -377,7 +375,7 @@ class View {
     for (let winline of this.winlines) {
       for (let coordinates of winline) {
         const [j, i] = coordinates;
-        this.slots[j][i].classList.remove('win-line-highlight');
+        this.cells[j][i].classList.remove('win-line-highlight');
       }
     }
   }
@@ -388,9 +386,9 @@ class View {
    * Resets the player visual in the heading for touch devices.
    */
   reset() {
-    for (let column of this.slots) {
-      for (let slot of column) {
-        slot.style.backgroundColor = '';
+    for (let column of this.cells) {
+      for (let cell of column) {
+        cell.style.backgroundColor = '';
       }
     }
     this.clearMessage();
