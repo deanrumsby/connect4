@@ -54,8 +54,6 @@ class View {
     this.playableRowIndices = [];
 
     /**
-     * Any successful winlines are stored here, consisting of all the coordinates [j, i] of
-     *   the respective lines.
      * @type {Array<Array<Array<number>>>}
      */
     this.winlines = [];
@@ -114,8 +112,6 @@ class View {
     }, 2000);
   }
 
-  // METHODS USED BY CONSTRUCTOR
-
   /**
    * @returns {HTMLDivElement}
    */ 
@@ -148,8 +144,6 @@ class View {
     }
     return cellsArray;
   }
-
-  // METHODS TO BIND WITH CONTROLLER
 
   /**
    * @param {function} handler
@@ -217,15 +211,7 @@ class View {
     this.counters.push(this.counters.shift());
   }
 
-  /**
-   * Attaches listeners to each column of the board that will handle the
-   *   highlighting of any possible moves. 
-   * Highlighting changes color depending on the next player to move.
-   * Highlighting does not occur during the game over screen.
-   * NOTE: This must be initialised in the controller before the addCounter
-   *   method has been bound to get the event firing order correct.
-   * Highlighting will only appear on devices using a mouse pointer.
-   */
+
   slotHighlighting() {
     for (let j = 0; j < this.numCols; j++) {
       // Add highlighting to the next available move within the column
