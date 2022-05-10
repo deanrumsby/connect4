@@ -49,11 +49,6 @@ class View {
     this.gameOver = false;
 
     /**
-     * @type {Array<number>}
-     */
-    this.playableRowIndices = [];
-
-    /**
      * Any successful winlines are stored here, consisting of all the coordinates [j, i] of
      *   the respective lines.
      * @type {Array<Array<Array<number>>>}
@@ -212,71 +207,22 @@ class View {
     this.counters.push(this.counters.shift());
   }
 
-  /**
-   * Attaches listeners to each column of the board that will handle the
-   *   highlighting of any possible moves. 
-   * Highlighting changes color depending on the next player to move.
-   * Highlighting does not occur during the game over screen.
-   * NOTE: This must be initialised in the controller before the addCounter
-   *   method has been bound to get the event firing order correct.
-   * Highlighting will only appear on devices using a mouse pointer.
-   */
-  slotHighlighting() {
+  bindCellHighlighting(handler1, handler2, handler3) {
     for (let j = 0; j < this.numCols; j++) {
-      // Add highlighting to the next available move within the column
       this.columns[j].addEventListener('mouseenter', () => {
-        const i = this.playableRowIndices[j];
-        // If the column is full or the game is over, no highlighting occurs
-        if (i === null || this.gameOver) {
-          return;
-        }
-        this.cells[j][i].classList.add(this.currentCounter().cellHighlightingClass);
+        handler1(j);
       });
-
-      // Remove highlighting when cursor leaves the column
       this.columns[j].addEventListener('mouseleave', () => {
-        const i = this.playableRowIndices[j];
-        // If the column is full, no removal occurs
-        if (i === null) {
-          return;
-        }
-        this.cells[j][i].classList.remove(this.currentCounter().cellHighlightingClass);
+        handler2(j);
       });
-
-      // Updates the highlighting when a player adds a counter 
-      // to the column.
-      // Because the available moves are refreshed before the counter is placed,
-      // this.slots[j][i] will be the position of the counter before the newly placed one.  
       this.columns[j].addEventListener('click', () => {
-        const i = this.playableRowIndices[j];
-        // If the column is full, do nothing.
-        if (i === null) {
-          return;
-        }
-        // If on the last row, only remove the highlighting.
-        if (i === this.numRows - 1) {
-          this.cells[j][i].classList.remove(this.currentCounter().cellHighlightingClass);
-          return;
-        }
-        // If the game is over, begin highlighting from the bottom row again
-        if (this.gameOver) {
-          this.cells[j][0].classList.add(this.currentCounter().cellHighlightingClass);
-          return;
-        }
-        // Else add the highlighting to the next available slot
-        // The very small timeout is used to check if the move just made has
-        // triggered the game to end, in which case we do not want to highlight
-        // the slot above. 
-        setTimeout(() => {
-          if (this.gameOver) {
-            return;
-          }
-          this.cells[j][i + 1].classList.add(this.currentCounter().cellHighlightingClass);
-        }, 5);
-        // Removing the highlighting from the previously highlighted slot
-        this.cells[j][i].classList.remove(this.currentCounter().cellHighlightingClass);
+        handler3(j);
       });
     }
+  }
+
+  toggleCellHighlight(cell) {
+    cell.classList.toggle(this.currentCounter().cellHighlightingClass);
   }
 
   /**

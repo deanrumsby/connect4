@@ -32,9 +32,13 @@ class Controller {
 
     // Initialising slot highlighting.
     this.view.playableRowIndices = this.model.playableRowIndices();
-    this.view.slotHighlighting();
 
     // Binding our event handlers and callbacks
+    this.view.bindCellHighlighting(
+      this.handleCursorHighlighting, 
+      this.handleCursorHighlighting, 
+      this.handleClickHighlighting
+    );
     this.view.bindReset(this.handleReset);
     this.view.bindAddCounter(this.handleAddCounter);
     this.model.bindEndGame(this.endGame);
@@ -52,23 +56,21 @@ class Controller {
       return;
     }
     event.stopPropagation();
-    // Clears messages, adds counter to model and receives 
-    // the coordinates for the newly placed piece
     this.view.clearMessages();
     const coordinates = this.model.addCounter(column);
     
-    // If no coordinates, will ask the view to display a column full message
     if (!coordinates) {
       this.view.displayMessages('COLUMN_FULL', 'TRY_AGAIN');
       return;
     }
 
-    // Updates the slot given by the coordinates with the color
-    // of the current player
     this.view.updateCell(coordinates);
 
     // Updates the available moves in the view
     this.view.playableRowIndices = this.model.playableRowIndices();
+
+    // Update the available moves in the model
+    this.model.playableRows = this.model.playableRowIndices();
 
     // Cycles the current color in the view
     this.view.cycleCounters();
@@ -78,6 +80,36 @@ class Controller {
 
     // Signals the model to end the turn
     this.model.endTurn();
+  }
+
+  handleCursorHighlighting = (column) => {
+    const row = this.model.playableRows[column];
+    if (row === null || this.model.gameOver) {
+      return;
+    }
+    this.view.toggleCellHighlight(this.view.cells[column][row]);
+  }
+
+  handleClickHighlighting = (column) => {
+    const row = this.model.playableRows[column];
+    if (row === null && !this.model.gameOver) {
+      return;
+    }
+    if (row === this.model.numRows - 1) {
+      this.view.toggleCellHighlight(this.view.cells[column][row]);
+      return;
+    }
+    if (this.model.gameOver) {
+      this.view.toggleCellHighlight(this.view.cells[column][0]);
+      return;
+    }
+    setTimeout(() => {
+      if (this.model.gameOver) {
+        return;
+      }
+      this.view.toggleCellHighlight(this.view.cells[column][row + 1]);
+    }, 10);
+    this.view.toggleCellHighlight(this.view.cells[column][row]);
   }
 
   /**
@@ -91,7 +123,6 @@ class Controller {
     }
     this.view.reset();
     this.model.reset();
-    this.view.playableRowIndices = this.model.playableRowIndices();
     this.view.gameOver = false;
   }
 

@@ -38,6 +38,8 @@ class Connect4 {
      * @type {Array<Array<null>>}
      */
     this.board = this.createBoard();
+
+    this.playableRows = this.playableRowIndices();
   }
   
   /**
@@ -194,6 +196,7 @@ class Connect4 {
   reset() {
     this.gameOver = false;
     this.board = this.createBoard();
+    this.playableRows = this.playableRowIndices();
   }
 
   /**
