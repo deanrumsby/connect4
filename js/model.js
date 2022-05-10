@@ -24,6 +24,8 @@ class Connect4 {
      * @type {null|Array<number>}
      */
     this.lastPosPlayed = null
+
+    this.gameOver = false;
     
     /**
      * The player counters.
@@ -75,6 +77,7 @@ class Connect4 {
     const currentPlayer = this.counters.shift();
     const winlines = this.checkForWinlines();
     if (winlines.length > 0) {
+      this.gameOver = true;
       this.endGame(currentPlayer, winlines);
     } else if (this.checkIfFull()) {
       this.endGame(null, winlines);
@@ -188,6 +191,7 @@ class Connect4 {
    * Resets the board.
    */
   reset() {
+    this.gameOver = false;
     this.board = this.createBoard();
   }
 

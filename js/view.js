@@ -156,11 +156,8 @@ class View {
    */
   bindAddCounter(handler) {
     for (let j = 0; j < this.numCols; j++) {
-      this.columns[j].addEventListener('click', (e) => {
-        if (!this.gameOver) {
-          e.stopPropagation();
-          handler(j);
-        }
+      this.columns[j].addEventListener('click', (event) => {
+        handler(j, event);
       });
     }
   }
@@ -170,9 +167,7 @@ class View {
    */
   bindReset(handler) {
     document.addEventListener('click', () => {
-      if (this.gameOver) {
-        handler();
-      }
+      handler();
     });
   }
 

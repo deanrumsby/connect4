@@ -47,7 +47,11 @@ class Controller {
    * @param {number} column The index of the column chosen. 
    * @returns {undefined} Returns if no coordinates were given to update.
    */
-  handleAddCounter = (column) => {
+  handleAddCounter = (column, event) => {
+    if (this.model.gameOver) {
+      return;
+    }
+    event.stopPropagation();
     // Clears messages, adds counter to model and receives 
     // the coordinates for the newly placed piece
     this.view.clearMessages();
@@ -82,6 +86,9 @@ class Controller {
    * Resets the gameOver flag.
    */
   handleReset = () => {
+    if (!this.view.gameOver) {
+      return;
+    }
     this.view.reset();
     this.model.reset();
     this.view.playableRowIndices = this.model.playableRowIndices();
