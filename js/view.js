@@ -254,8 +254,8 @@ class View {
       // this.slots[j][i] will be the position of the counter before the newly placed one.  
       this.columns[j].addEventListener('click', () => {
         const i = this.playableRowIndices[j];
-        // If the column is full, do nothing.
-        if (i === null) {
+        // If the column is full and game is not over, do nothing.
+        if (i === null && !this.gameOver) {
           return;
         }
         // If on the last row, only remove the highlighting.
@@ -277,7 +277,7 @@ class View {
             return;
           }
           this.cells[j][i + 1].classList.add(this.currentCounter().cellHighlightingClass);
-        }, 5);
+        }, 10);
         // Removing the highlighting from the previously highlighted slot
         this.cells[j][i].classList.remove(this.currentCounter().cellHighlightingClass);
       });
