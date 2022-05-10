@@ -80,6 +80,7 @@ class Connect4 {
       this.gameOver = true;
       this.endGame(currentPlayer, winlines);
     } else if (this.checkIfFull()) {
+      this.gameOver = true;
       this.endGame(null, winlines);
     }
     this.counters.push(currentPlayer);

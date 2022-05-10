@@ -152,6 +152,8 @@ class View {
   // METHODS TO BIND WITH CONTROLLER
 
   /**
+   * Please use event.stopPropagation() in the handler to avoid accidentally 
+   *   triggering a board reset when the game ends.
    * @param {function} handler
    */
   bindAddCounter(handler) {
@@ -166,9 +168,7 @@ class View {
    * @param {function} handler
    */
   bindReset(handler) {
-    document.addEventListener('click', () => {
-      handler();
-    });
+    document.addEventListener('click', handler);
   }
 
   /**
