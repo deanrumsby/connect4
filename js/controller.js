@@ -34,11 +34,7 @@ class Controller {
     this.view.playableRowIndices = this.model.playableRowIndices();
 
     // Binding our event handlers and callbacks
-    this.view.bindCellHighlighting(
-      this.handleCursorHighlighting, 
-      this.handleCursorHighlighting, 
-      this.handleClickHighlighting
-    );
+    this.view.bindCellHighlighting(this.handleCellHighlighting);
     this.view.bindReset(this.handleReset);
     this.view.bindAddCounter(this.handleAddCounter);
     this.model.bindEndGame(this.endGame);
@@ -82,34 +78,67 @@ class Controller {
     this.model.endTurn();
   }
 
+  handleCellHighlighting = (column, type) => {
+    const row = this.model.playableRows[column];
+    const cells = this.view.cells;
+    switch (type) {
+      case 'click':
+        if (row === null && !this.model.gameOver) {
+          return;
+        } else if (row === this.model.numRows - 1) {
+          this.view.toggleCellHighlight(cells[column][row]);
+          return;
+        } else if (this.model.gameOver) {
+          this.view.toggleCellHighlight(cells[column][0]);
+          return;
+        }
+        setTimeout(() => {
+          if (this.model.gameOver) {
+            return;
+          }
+          this.view.toggleCellHighlight(cells[column][row + 1]);
+        }, 10);
+        this.view.toggleCellHighlight(cells[column][row]);
+        break;
+
+      default:
+        if (row === null || this.model.gameOver) {
+          return;
+        }
+        this.view.toggleCellHighlight(cells[column][row]);
+    }
+  }
+
   handleCursorHighlighting = (column) => {
     const row = this.model.playableRows[column];
+    const cells = this.view.cells;
     if (row === null || this.model.gameOver) {
       return;
     }
-    this.view.toggleCellHighlight(this.view.cells[column][row]);
+    this.view.toggleCellHighlight(cells[column][row]);
   }
 
   handleClickHighlighting = (column) => {
     const row = this.model.playableRows[column];
+    const cells = this.view.cells;
     if (row === null && !this.model.gameOver) {
       return;
     }
     if (row === this.model.numRows - 1) {
-      this.view.toggleCellHighlight(this.view.cells[column][row]);
+      this.view.toggleCellHighlight(cells[column][row]);
       return;
     }
     if (this.model.gameOver) {
-      this.view.toggleCellHighlight(this.view.cells[column][0]);
+      this.view.toggleCellHighlight(cells[column][0]);
       return;
     }
     setTimeout(() => {
       if (this.model.gameOver) {
         return;
       }
-      this.view.toggleCellHighlight(this.view.cells[column][row + 1]);
+      this.view.toggleCellHighlight(cells[column][row + 1]);
     }, 10);
-    this.view.toggleCellHighlight(this.view.cells[column][row]);
+    this.view.toggleCellHighlight(cells[column][row]);
   }
 
   /**

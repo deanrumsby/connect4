@@ -44,11 +44,6 @@ class View {
     this.title.innerHTML = "Connect<span class='player-indicator'>4</span>";
 
     /**
-     * @type {boolean}
-     */
-    this.gameOver = false;
-
-    /**
      * Any successful winlines are stored here, consisting of all the coordinates [j, i] of
      *   the respective lines.
      * @type {Array<Array<Array<number>>>}
@@ -207,17 +202,14 @@ class View {
     this.counters.push(this.counters.shift());
   }
 
-  bindCellHighlighting(handler1, handler2, handler3) {
+  bindCellHighlighting(handler) {
+    const types = ['mouseenter', 'mouseleave', 'click'];
     for (let j = 0; j < this.numCols; j++) {
-      this.columns[j].addEventListener('mouseenter', () => {
-        handler1(j);
-      });
-      this.columns[j].addEventListener('mouseleave', () => {
-        handler2(j);
-      });
-      this.columns[j].addEventListener('click', () => {
-        handler3(j);
-      });
+      for (let type of types) {
+        this.columns[j].addEventListener(type, () => {
+          handler(j, type);
+        });
+      }
     }
   }
 
