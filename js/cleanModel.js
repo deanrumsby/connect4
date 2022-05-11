@@ -86,19 +86,17 @@ class Model {
   findWinlines(coordinates) {
     const [j, i] = coordinates;
     const counter = this.board[j][i];
-
     for (let vector of [[0, 1], [1, 0], [1, 1], [1, -1]]) {
       const line = [];
       line.push([j, i]);
-      const [deltaJ, deltaI] = vector;
-      for (let m of [1, -1]) {
-        let n = 1;
-        while (
-          this.board[j + (m * n * deltaJ)] 
-          && this.board[j + (m * n * deltaJ)][i + (m * n * deltaI)] === counter) 
-        {
-          line.push([j + (m * n * deltaJ), i + (m * n * deltaI)]);
-          n++;
+      const [vectorJ, vectorI] = vector;
+      for (let directionMultiplier of [1, -1]) {
+        let numSteps = 1;
+        let nextJ = () => j + (numSteps * directionMultiplier * vectorJ);
+        let nextI = () => i + (numSteps * directionMultiplier * vectorI);
+        while (this.board[nextJ()] && this.board[nextJ()][nextI()] === counter) {
+          line.push([nextJ(), nextI()]);
+          numSteps++;
         }  
       }
       if (line.length >= 4) {
