@@ -208,6 +208,10 @@ class Connect4 {
     const playableRowIndices = [];
     for (let j = 0; j < this.numCols; j++) {
       for (let i = 0; i < this.numRows; i++) {
+        if (this.gameOver) {
+          playableRowIndices.push(null);
+          break;
+        }
         // checking if slot is empty
         if (!this.board[j][i]) {
           playableRowIndices.push(i);

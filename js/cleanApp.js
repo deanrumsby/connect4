@@ -1,0 +1,1 @@
+const game = new Controller(new View(), new Model());

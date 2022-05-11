@@ -65,9 +65,6 @@ class Controller {
     // Updates the available moves in the view
     this.view.playableRowIndices = this.model.playableRowIndices();
 
-    // Update the available moves in the model
-    this.model.playableRows = this.model.playableRowIndices();
-
     // Cycles the current color in the view
     this.view.cycleCounters();
 
@@ -76,69 +73,28 @@ class Controller {
 
     // Signals the model to end the turn
     this.model.endTurn();
+
+    // Update the available moves in the model
+    this.model.playableRows = this.model.playableRowIndices();
   }
 
   handleCellHighlighting = (column, type) => {
     const row = this.model.playableRows[column];
     const cells = this.view.cells;
-    switch (type) {
-      case 'click':
-        if (row === null && !this.model.gameOver) {
-          return;
-        } else if (row === this.model.numRows - 1) {
-          this.view.toggleCellHighlight(cells[column][row]);
-          return;
-        } else if (this.model.gameOver) {
-          this.view.toggleCellHighlight(cells[column][0]);
-          return;
-        }
-        setTimeout(() => {
-          if (this.model.gameOver) {
-            return;
-          }
-          this.view.toggleCellHighlight(cells[column][row + 1]);
-        }, 10);
-        this.view.toggleCellHighlight(cells[column][row]);
-        break;
-
-      default:
-        if (row === null || this.model.gameOver) {
-          return;
-        }
-        this.view.toggleCellHighlight(cells[column][row]);
-    }
-  }
-
-  handleCursorHighlighting = (column) => {
-    const row = this.model.playableRows[column];
-    const cells = this.view.cells;
-    if (row === null || this.model.gameOver) {
+    if (row === null) {
       return;
     }
     this.view.toggleCellHighlight(cells[column][row]);
-  }
-
-  handleClickHighlighting = (column) => {
-    const row = this.model.playableRows[column];
-    const cells = this.view.cells;
-    if (row === null && !this.model.gameOver) {
-      return;
-    }
-    if (row === this.model.numRows - 1) {
-      this.view.toggleCellHighlight(cells[column][row]);
-      return;
-    }
-    if (this.model.gameOver) {
-      this.view.toggleCellHighlight(cells[column][0]);
-      return;
-    }
-    setTimeout(() => {
-      if (this.model.gameOver) {
-        return;
-      }
-      this.view.toggleCellHighlight(cells[column][row + 1]);
-    }, 10);
-    this.view.toggleCellHighlight(cells[column][row]);
+    if (type === 'click') {
+      setTimeout(() => {
+        const newRow = this.model.playableRows[column];
+        if (newRow === null) {
+          console.log('firing');
+          return;
+        }
+        this.view.toggleCellHighlight(cells[column][newRow]);
+      }, 10);
+    } 
   }
 
   /**

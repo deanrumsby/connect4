@@ -1,0 +1,58 @@
+:root {
+    --body-bgcolor: white;
+    font-family: 'Roboto Mono', monospace;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--body-bgcolor);
+    height: 95vh;
+}
+
+.title {
+    text-align: center;
+    font-weight: 300;
+    font-size: 5vh;
+}
+
+.board {
+    cursor: pointer;
+    height: 65vh;
+    margin-top: 0.5em;
+    margin-bottom: 1em;
+    background-color: rgba(0, 0, 255, 1);
+    display: inline-flex;
+    border: solid black 1px;
+    padding: 0.5em;
+    border-radius: 3%;
+}
+
+@media (orientation: portrait) {
+    .board {
+        height: auto;
+        width: 95vw;
+    }
+}
+
+.column {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+}
+
+.cell {
+    aspect-ratio: 1 / 1;
+    margin: 6%;
+    flex-grow: 1;
+    background-color: var(--body-bgcolor);
+    border-radius: 50%;
+    border: 1px solid black;
+}
+
+.message-div {
+    text-align: center;
+    font-size: 2vh;
+}
