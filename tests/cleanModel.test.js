@@ -90,7 +90,7 @@ describe('changePlayer', () => {
 });
 
 describe('findWinlines', () => {
-  beforeEach(() => {
+  beforeAll(() => {
     game = new Model();
   });
 
@@ -104,8 +104,7 @@ describe('findWinlines', () => {
       ['x' , null, null, null, null, null],
       ['x' , null, null, null, null, null],
     ];
-    game.findWinlines([4, 1]);
-    expect(game.winlines).toEqual([[[4, 1], [4, 2], [4, 3], [4, 0]]]);
+    expect(game.findWinlines([4, 1])).toEqual([[[4, 1], [4, 2], [4, 3], [4, 0]]]);
   });
 
   test('finds horizontal winline', () => {
@@ -118,8 +117,7 @@ describe('findWinlines', () => {
       ['x' , 'o' , 'x' , null, null, null],
       ['x' , 'x' , 'x' , null, null, null],
     ];
-    game.findWinlines([6, 2]);
-    expect(game.winlines).toEqual([[[6, 2], [5, 2], [4, 2], [3, 2]]]);
+    expect(game.findWinlines([6, 2])).toEqual([[[6, 2], [5, 2], [4, 2], [3, 2]]]);
   });
 
   test('finds winline on positive diagonal', () => {
@@ -132,8 +130,7 @@ describe('findWinlines', () => {
       ['x' , 'o' , 'x' , 'o' , null, null],
       ['x' , 'x' , 'x' , null, null, null],
     ];
-    game.findWinlines([2, 0]);
-    expect(game.winlines).toEqual([[[2, 0], [3, 1], [4, 2], [5, 3]]]);
+    expect(game.findWinlines([2, 0])).toEqual([[[2, 0], [3, 1], [4, 2], [5, 3]]]);
   });
 
   test('finds winline on negative diagonal', () => {
@@ -146,8 +143,7 @@ describe('findWinlines', () => {
       ['x' , 'o' , 'x' , 'o' , null, null],
       ['x' , 'x' , 'x' , null, null, null],
     ];
-    game.findWinlines([3, 3]);
-    expect(game.winlines).toEqual([[[3, 3], [4, 2], [5, 1], [2, 4]]]);
+    expect(game.findWinlines([3, 3])).toEqual([[[3, 3], [4, 2], [5, 1], [2, 4]]]);
   });
 
   test('finds multiple winlines at once', () => {
@@ -160,8 +156,7 @@ describe('findWinlines', () => {
       ['x' , 'x' , 'x' , 'o' , null, null],
       ['x' , 'x' , 'x' , null, null, null],
     ];
-    game.findWinlines([4, 3]);
-    expect(game.winlines).toEqual([
+    expect(game.findWinlines([4, 3])).toEqual([
       [[4, 3], [4, 2], [4, 1], [4, 0]],
       [[4, 3], [5, 3], [3, 3], [2, 3]]
     ]);
@@ -177,7 +172,6 @@ describe('findWinlines', () => {
       ['x' , 'x' , 'x' , 'o' , null, null],
       ['x' , 'x' , 'x' , null, null, null],
     ];
-    game.findWinlines([4, 0]);
-    expect(game.winlines).toEqual([[[4, 0], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5]]]);
+    expect(game.findWinlines([4, 0])).toEqual([[[4, 0], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5]]]);
   });
 });

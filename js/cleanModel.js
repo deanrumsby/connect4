@@ -22,11 +22,6 @@ class Model {
      */ 
      this.counters = ['x', 'o'];
 
-     /**
-      * @type {Array<Array<Number>>}
-      */
-     this.winlines = [];
-
     /**
      * @type {Array<Array<null>>}
      */
@@ -79,11 +74,12 @@ class Model {
   }
 
   /**
-   * Finds all successful winlines at the given coordinates and pushes
-   *   them to this.winlines
+   * Finds all successful winlines passing through some coordinates.
    * @param {Array<Number>} coordinates 
+   * @returns {Array<Array<Array<Number>>>}
    */
   findWinlines(coordinates) {
+    const winlines = [];
     const [j, i] = coordinates;
     const counter = this.board[j][i];
     for (let vector of [[0, 1], [1, 0], [1, 1], [1, -1]]) {
@@ -100,9 +96,10 @@ class Model {
         }  
       }
       if (line.length >= 4) {
-        this.winlines.push(line);
+        winlines.push(line);
       }
     }
+    return winlines;
   }
 }
 
