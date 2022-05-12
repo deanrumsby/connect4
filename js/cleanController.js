@@ -27,19 +27,35 @@ class Controller {
    * @param {Number} column 
    */
   handleAddCounter = (column) => {
+    if (!this.model.on) {
+      return;
+    }
     const coordinates = this.model.addCounter(column);
     if (!coordinates) {
+      this.view.displayMessages('COLUMN_FULL', 'TRY_AGAIN');
       return;
     }
     this.view.updateCellColor(coordinates);
-
-    this.model.findWinlines(coordinates);
-    
-    if (this.model.winlines.length > 0 || this.model.isBoardFull()) {
-      this.endGame()
+    const winlines = this.model.findWinlines(coordinates);
+    if (winlines.length > 0 || this.model.isBoardFull()) {
+      this.endGame(winlines);
     } else {
       this.endTurn();
     }
+  }
+
+  /**
+   * Ends the current game.
+   * @param {Array<Array<Array<Number>>>} winlines 
+   */
+  endGame = (winlines) => {
+    if (winlines.length > 0) {
+      const winner = this.view.currentCounter().color;
+      this.view.displayMessages(winner.toUpperCase(), 'RESET');
+    } else {
+      this.view.displayMessages('DRAW', 'RESET');
+    }
+    this.model.gameOver();
   }
 
   /**

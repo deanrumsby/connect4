@@ -18,6 +18,11 @@ class Model {
     this.numRows = numRows;
 
     /**
+     * @type {boolean}
+     */
+    this.on = true;
+
+    /**
      * @type {Array<string>}
      */ 
      this.counters = ['x', 'o'];
@@ -75,8 +80,8 @@ class Model {
 
   /**
    * Finds all successful winlines passing through some coordinates.
-   * @param {Array<Number>} coordinates 
-   * @returns {Array<Array<Array<Number>>>}
+   * @param {Array<number>} coordinates 
+   * @returns {Array<Array<Array<number>>>}
    */
   findWinlines(coordinates) {
     const winlines = [];
@@ -104,7 +109,7 @@ class Model {
 
   /**
    * Checks if the board is full.
-   * @returns {Boolean}
+   * @returns {boolean}
    */
   isBoardFull() {
     for (let j = 0; j < this.numCols; j++) {
@@ -114,6 +119,13 @@ class Model {
       }
     }
     return true;
+  }
+
+  /**
+   * Flags that the game has ended.
+   */
+  gameOver() {
+    this.on = false;
   }
 }
 

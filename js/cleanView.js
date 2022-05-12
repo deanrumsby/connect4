@@ -59,8 +59,8 @@ class View {
      * @type {Object<String>}
      */
      this.messages = {
-      RED_WIN: 'RED is the winner!',
-      YELLOW_WIN: 'YELLOW is the winner!',
+      RED: 'RED is the winner!',
+      YELLOW: 'YELLOW is the winner!',
       DRAW: 'The game is a draw!',
       RESET: 'Please click / touch the screen to restart.',
       COLUMN_FULL: 'Sorry, that column is full!',
