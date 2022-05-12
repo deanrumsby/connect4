@@ -3,17 +3,17 @@
  */
 class View {
   /**
-   * @param {Number} numCols 
-   * @param {Number} numRows 
+   * @param {number} numCols 
+   * @param {number} numRows 
    */
   constructor(numCols = 7, numRows = 6) {
     /**
-     * @type {Number}
+     * @type {number}
      */
     this.numCols = numCols;
 
     /**
-     * @type {Number}
+     * @type {number}
      */
     this.numRows = numRows;
 
@@ -56,7 +56,7 @@ class View {
     this.messageDiv.classList.add('message-div');
 
     /**
-     * @type {Object<String>}
+     * @type {Object<string>}
      */
      this.messages = {
       RED: 'RED is the winner!',
@@ -134,7 +134,7 @@ class View {
 
   /**
    * Paints a cell with the current counter's color.
-   * @param {Array<Number>} coordinates 
+   * @param {Array<number>} coordinates 
    */
   updateCellColor(coordinates) {
     const [j, i] = coordinates;

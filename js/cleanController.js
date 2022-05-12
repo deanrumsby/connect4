@@ -3,17 +3,17 @@
  */
 class Controller {
   /**
-   * @param {View} view 
-   * @param {Model} model 
+   * @param {Object} view 
+   * @param {Object} model 
    */
   constructor(view, model) {
     /**
-     * @type {View}
+     * @type {Object}
      */
     this.view = view;
 
     /**
-     * @type {Model}
+     * @type {Object}
      */
     this.model = model;
 
@@ -24,7 +24,7 @@ class Controller {
   /**
    * Adds a counter to the model and updates the view.
    * Checks if a winning move has been made and responds accordingly.
-   * @param {Number} column 
+   * @param {number} column 
    */
   handleAddCounter = (column) => {
     if (!this.model.on) {
@@ -46,7 +46,7 @@ class Controller {
 
   /**
    * Ends the current game.
-   * @param {Array<Array<Array<Number>>>} winlines 
+   * @param {Array<Array<Array<number>>>} winlines 
    */
   endGame = (winlines) => {
     if (winlines.length > 0) {
