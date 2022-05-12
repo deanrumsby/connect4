@@ -140,4 +140,23 @@ class View {
     const [j, i] = coordinates;
     this.cells[j][i].style.backgroundColor = this.currentCounter().color;
   }
+
+  /**
+   * Displays messages underneath the board.
+   * @param {Array<string>} messageKeys
+   */
+   displayMessages(...messageKeys) {
+    for (let key of messageKeys) {
+      const p = document.createElement('p');
+      p.innerText = this.messages[key];
+      this.messageDiv.append(p);
+    }
+  }
+
+  /**
+   * Clears any currently displayed messages.
+   */
+  clearMessages() {
+    this.messageDiv.replaceChildren();
+  }
 }
