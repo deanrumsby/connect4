@@ -175,3 +175,35 @@ describe('findWinlines', () => {
     expect(game.findWinlines([4, 0])).toEqual([[[4, 0], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5]]]);
   });
 });
+
+describe('isBoardFull', () => {
+  beforeAll(() => {
+    game = new Model();
+  });
+
+  test('correctly identifies a full board', () => {
+    game.board = [
+      ['x' , 'x' , 'o' , 'x' , 'o' , 'x' ],
+      ['x' , 'o' , 'o' , 'o' , 'x' , 'o' ],
+      ['o' , 'o' , 'x' , 'x' , 'o' , 'x' ],
+      ['x' , 'x' , 'x' , 'o' , 'o' , 'x' ],
+      ['o' , 'o' , 'o' , 'o' , 'o' , 'o' ],
+      ['x' , 'x' , 'x' , 'o' , 'x' , 'x' ],
+      ['x' , 'x' , 'x' , 'x' , 'o' , 'o' ],
+    ];
+    expect(game.isBoardFull()).toBeTruthy();
+  });
+
+  test('correctly identifies a not full board', () => {
+    game.board = [
+      ['x' , 'x' , 'o' , 'x' , 'o' , 'x' ],
+      ['x' , 'o' , 'o' , 'o' , 'x' , null],
+      ['o' , 'o' , 'x' , 'x' , 'o' , 'x' ],
+      ['x' , 'x' , 'x' , 'o' , 'o' , 'x' ],
+      ['o' , 'o' , 'o' , 'o' , 'o' , null],
+      ['x' , 'x' , 'x' , 'o' , 'x' , 'x' ],
+      ['x' , 'x' , 'x' , 'x' , 'o' , 'o' ],
+    ];
+    expect(game.isBoardFull()).toBeFalsy();
+  });
+});

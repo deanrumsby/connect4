@@ -101,6 +101,20 @@ class Model {
     }
     return winlines;
   }
+
+  /**
+   * Checks if the board is full.
+   * @returns {Boolean}
+   */
+  isBoardFull() {
+    for (let j = 0; j < this.numCols; j++) {
+      const lastRow = this.numRows - 1;
+      if (!this.board[j][lastRow]) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
 
 module.exports = Model;
