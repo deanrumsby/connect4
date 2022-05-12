@@ -207,3 +207,37 @@ describe('isBoardFull', () => {
     expect(game.isBoardFull()).toBeFalsy();
   });
 });
+
+describe('reset', () => {
+  beforeAll(() => {
+    game = new Model();
+  });
+
+  test('resets the board', () => {
+    game.board = [
+      ['x' , 'x' , 'o' , 'x' , 'o' , 'x' ],
+      ['x' , 'o' , 'o' , 'o' , 'x' , null],
+      ['o' , 'o' , 'x' , 'x' , 'o' , 'x' ],
+      ['x' , 'x' , 'x' , 'o' , 'o' , 'x' ],
+      ['o' , 'o' , 'o' , 'o' , 'o' , null],
+      ['x' , 'x' , 'x' , 'o' , 'x' , 'x' ],
+      ['x' , 'x' , 'x' , 'x' , 'o' , 'o' ],
+    ];
+    game.reset();
+    expect(game.board).toEqual([
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+    ]);
+  });
+
+  test('resets the gameOver flag', () => {
+    game.gameOver = true;
+    game.reset();
+    expect(game.gameOver).toBeFalsy();
+  });
+});

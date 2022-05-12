@@ -20,7 +20,7 @@ class Model {
     /**
      * @type {boolean}
      */
-    this.on = true;
+    this.gameOver = false;
 
     /**
      * @type {Array<string>}
@@ -122,10 +122,11 @@ class Model {
   }
 
   /**
-   * Flags that the game has ended.
+   * Resets the board.
    */
-  gameOver() {
-    this.on = false;
+  reset() {
+    this.board = this.createBoard();
+    this.gameOver = false;
   }
 }
 

@@ -106,15 +106,23 @@ class View {
   }
 
   /**
-   * Used to bind a handler from the controller.
+   * Used to bind an add counter handler from the controller.
    * @param {Function} handler 
    */
   bindAddCounter(handler) {
     for (let j = 0; j < this.numCols; j++) {
-      this.columns[j].addEventListener('click', () => {
-        handler(j);
+      this.columns[j].addEventListener('click', (event) => {
+        handler(event, j);
       });
     }
+  }
+
+  /**
+   * Used to bind a reset handler from the controller.
+   * @param {Function} handler 
+   */
+  bindReset(handler) {
+    document.addEventListener('click', handler);
   }
 
   /**
@@ -158,5 +166,17 @@ class View {
    */
   clearMessages() {
     this.messageDiv.replaceChildren();
+  }
+
+  /**
+   * Resets the board.
+   */
+  reset() {
+    for (let column of this.cells) {
+      for (let cell of column) {
+        cell.style.backgroundColor = '';
+      }
+    }
+    this.clearMessages();
   }
 }

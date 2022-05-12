@@ -17,8 +17,9 @@ class Controller {
      */
     this.model = model;
 
-    // Binding handlers and callbacks
+    // Binding handlers
     this.view.bindAddCounter(this.handleAddCounter);
+    this.view.bindReset(this.handleReset);
   }
 
   /**
@@ -26,10 +27,13 @@ class Controller {
    * Checks if a winning move has been made and responds accordingly.
    * @param {number} column 
    */
-  handleAddCounter = (column) => {
-    if (!this.model.on) {
+  handleAddCounter = (event, column) => {
+    if (this.model.gameOver) {
       return;
     }
+    event.stopPropagation();
+    this.view.clearMessages();
+
     const coordinates = this.model.addCounter(column);
     if (!coordinates) {
       this.view.displayMessages('COLUMN_FULL', 'TRY_AGAIN');
@@ -39,9 +43,20 @@ class Controller {
     const winlines = this.model.findWinlines(coordinates);
     if (winlines.length > 0 || this.model.isBoardFull()) {
       this.endGame(winlines);
-    } else {
-      this.endTurn();
+    } 
+    this.endTurn();
+  }
+
+  /**
+   * Resets the view and the model.
+   * @returns 
+   */
+  handleReset = () => {
+    if (!this.model.gameOver) {
+      return;
     }
+    this.model.reset();
+    this.view.reset();
   }
 
   /**
@@ -55,7 +70,7 @@ class Controller {
     } else {
       this.view.displayMessages('DRAW', 'RESET');
     }
-    this.model.gameOver();
+    this.model.gameOver = true;
   }
 
   /**
