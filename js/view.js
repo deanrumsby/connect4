@@ -81,12 +81,7 @@ class View {
      */
      this.playerIndicator = this.title.querySelector('.player-indicator');
 
-     this.fixPlayerIndicatorWidth();
-
-     setTimeout(() => {
-       this.updatePlayerIndicator();
-     }, 2000);
-     
+     this.fixPlayerIndicatorWidth();     
   }
 
   /**
@@ -260,13 +255,5 @@ class View {
   fixPlayerIndicatorWidth() {
     const indicHeight = window.getComputedStyle(this.playerIndicator).height;
     this.playerIndicator.style.width = indicHeight;
-  }
-
-  /**
-   * Changes the player indicator the current player's color.
-   */
-  updatePlayerIndicator() {
-    //this.playerIndicator.classList.toggle('player-indicator');
-    //this.playerIndicator.classList.toggle('player-indicator');
   }
 }
