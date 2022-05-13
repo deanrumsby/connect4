@@ -78,3 +78,14 @@ body {
     50% {transform: scale(1.1);}
     100% {transform: scale(1);}
 }
+
+@media (pointer: coarse) {
+    .player-indicator {
+        display: inline-block;
+        border: 1px solid black;
+        color: black;
+        background-color: var(--curr-counter-color);
+        border-radius: 50%;
+        transition: background-color 1s, color 1s;
+    }
+}

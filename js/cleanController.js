@@ -108,5 +108,6 @@ class Controller {
     this.model.changePlayer();
     this.view.changeCounter();
     this.view.updateCssCounterColor();
+    this.view.updatePlayerIndicator();
   }
 }

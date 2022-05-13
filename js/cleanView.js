@@ -27,7 +27,7 @@ class View {
      */
     this.title = document.createElement('h1');
     this.title.classList.add('title');
-    this.title.innerText = 'Connect4';
+    this.title.innerHTML = "Connect<span class='player-indicator'>4</span>";
 
     /**
      * @type {Array<Counter>}
@@ -73,6 +73,20 @@ class View {
     }
 
     this.root.append(this.title, this.board, this.messageDiv);
+
+    // INITS FOR TOUCH DEVICES
+
+    /**
+     * @type {HTMLSpanElement}
+     */
+     this.playerIndicator = this.title.querySelector('.player-indicator');
+
+     this.fixPlayerIndicatorWidth();
+
+     setTimeout(() => {
+       this.updatePlayerIndicator();
+     }, 2000);
+     
   }
 
   /**
@@ -236,5 +250,23 @@ class View {
     }
     this.coloredCells = [];
     this.clearMessages();
+  }
+
+  // METHODS FOR TOUCH DEVICES 
+
+  /**
+   * Ensures the player indicator is circular.
+   */
+  fixPlayerIndicatorWidth() {
+    const indicHeight = window.getComputedStyle(this.playerIndicator).height;
+    this.playerIndicator.style.width = indicHeight;
+  }
+
+  /**
+   * Changes the player indicator the current player's color.
+   */
+  updatePlayerIndicator() {
+    //this.playerIndicator.classList.toggle('player-indicator');
+    //this.playerIndicator.classList.toggle('player-indicator');
   }
 }
