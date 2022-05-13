@@ -106,7 +106,7 @@ class View {
   }
 
   /**
-   * Used to bind an add counter handler from the controller.
+   * Used to bind an addCounter handler from the controller.
    * @param {Function} handler 
    */
   bindAddCounter(handler) {
@@ -114,6 +114,21 @@ class View {
       this.columns[j].addEventListener('click', (event) => {
         handler(event, j);
       });
+    }
+  }
+
+  /**
+   * Used to bind a cellHighlighting handler from the controller.
+   * @param {Function} handler 
+   */
+  bindCellHighlighter(handler) {
+    const types = ['mouseenter', 'mouseleave', 'click'];
+    for (let j = 0; j < this.numCols; j++) {
+      for (let type of types) {
+        this.columns[j].addEventListener(type, (event) => {
+          handler(event, j);
+        });
+      }
     }
   }
 
@@ -141,12 +156,29 @@ class View {
   }
 
   /**
+   * Updates the counter color CSS variable.
+   */
+  updateCssCounterColor() {
+    const r = document.querySelector(':root');
+    r.style.setProperty('--curr-counter-color', this.currentCounter().color);
+  }
+
+  /**
    * Paints a cell with the current counter's color.
    * @param {Array<number>} coordinates 
    */
   updateCellColor(coordinates) {
     const [j, i] = coordinates;
     this.cells[j][i].style.backgroundColor = this.currentCounter().color;
+  }
+
+  /**
+   * Toggles the highlighting for the cell at the given coordinates.
+   * @param {Array<Array<number>>} coordinates 
+   */
+  toggleCellHighlighting(coordinates) {
+    const [j, i] = coordinates;
+    this.cells[j][i].classList.toggle('cell-highlight');
   }
 
   /**

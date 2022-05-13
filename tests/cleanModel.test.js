@@ -208,6 +208,26 @@ describe('isBoardFull', () => {
   });
 });
 
+describe('updateAvailableRows', () => {
+  beforeAll(() => {
+    game = new Model();
+  });
+
+  test('updates correctly', () => {
+    game.board = [
+      ['x' , null, null, null, null, null],
+      ['x' , null, null, null, null, null],
+      ['o' , 'o' , 'x' , 'x' , 'o' , null],
+      ['x' , 'x' , 'x' , 'o' , null, null],
+      ['o' , 'o' , 'o' , 'o' , 'o' , 'o' ],
+      ['x' , 'x' , 'x' , 'o' , null, null],
+      ['x' , 'x' , 'x' , null, null, null],
+    ];
+    game.updateAvailableRows();
+    expect(game.availableRows).toEqual([1, 1, 5, 4, null, 4, 3]);
+  });
+});
+
 describe('reset', () => {
   beforeAll(() => {
     game = new Model();

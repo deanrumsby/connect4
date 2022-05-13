@@ -28,9 +28,16 @@ class Model {
      this.counters = ['x', 'o'];
 
     /**
+     * @type {Array<number>}
+     */
+    this.availableRows = [];
+
+    /**
      * @type {Array<Array<null>>}
      */
      this.board = this.createBoard();
+
+     this.updateAvailableRows();
   }
 
   /**
@@ -87,14 +94,17 @@ class Model {
     const winlines = [];
     const [j, i] = coordinates;
     const counter = this.board[j][i];
+
     for (let vector of [[0, 1], [1, 0], [1, 1], [1, -1]]) {
       const line = [];
       line.push([j, i]);
       const [vectorJ, vectorI] = vector;
+
       for (let directionMultiplier of [1, -1]) {
         let numSteps = 1;
         let nextJ = () => j + (numSteps * directionMultiplier * vectorJ);
         let nextI = () => i + (numSteps * directionMultiplier * vectorI);
+
         while (this.board[nextJ()] && this.board[nextJ()][nextI()] === counter) {
           line.push([nextJ(), nextI()]);
           numSteps++;
@@ -119,6 +129,26 @@ class Model {
       }
     }
     return true;
+  }
+
+  /**
+   * Updates the next available row index for each column on the board.
+   */
+  updateAvailableRows() {
+    const availableRows = [];
+    const lastRow = this.numRows - 1;
+    for (let j = 0; j < this.numCols; j++) {
+      for (let i = 0; i < this.numRows; i++) {
+        if (!this.board[j][i]) {
+          availableRows.push(i);
+          break;
+        }
+        if (i === lastRow) {
+          availableRows.push(null);
+        }
+      }
+    }
+    this.availableRows = availableRows;
   }
 
   /**

@@ -1,5 +1,6 @@
 :root {
     --body-bgcolor: white;
+    --curr-counter-color: red;
     font-family: 'Roboto Mono', monospace;
 }
 
@@ -55,4 +56,11 @@ body {
 .message-div {
     text-align: center;
     font-size: 2vh;
+}
+
+@media (pointer: fine) {
+    .cell-highlight {
+        border: none;
+        outline: 4px solid var(--curr-counter-color);
+    }
 }

@@ -18,6 +18,7 @@ class Controller {
     this.model = model;
 
     // Binding handlers
+    this.view.bindCellHighlighter(this.handleCellHighlighting);
     this.view.bindAddCounter(this.handleAddCounter);
     this.view.bindReset(this.handleReset);
   }
@@ -25,6 +26,7 @@ class Controller {
   /**
    * Adds a counter to the model and updates the view.
    * Checks if a winning move has been made and responds accordingly.
+   * @param {Event} event
    * @param {number} column 
    */
   handleAddCounter = (event, column) => {
@@ -32,6 +34,7 @@ class Controller {
       return;
     }
     event.stopPropagation();
+
     this.view.clearMessages();
 
     const coordinates = this.model.addCounter(column);
@@ -40,11 +43,33 @@ class Controller {
       return;
     }
     this.view.updateCellColor(coordinates);
+
     const winlines = this.model.findWinlines(coordinates);
     if (winlines.length > 0 || this.model.isBoardFull()) {
       this.endGame(winlines);
     } 
     this.endTurn();
+  }
+
+  /**
+   * Highlights the next available move in the column.
+   * @param {Event} event 
+   * @param {number} column 
+   */
+  handleCellHighlighting = (event, column) => {
+    const toggleNextCell = () => {
+      const availableRow = this.model.availableRows[column];
+      if (availableRow === null || this.model.gameOver) {
+        return;
+      }
+      this.view.toggleCellHighlighting([column, availableRow]);
+    }
+
+    toggleNextCell();
+
+    if (event.type === 'click') {
+      setTimeout(toggleNextCell, 10);
+    }
   }
 
   /**
@@ -56,6 +81,7 @@ class Controller {
       return;
     }
     this.model.reset();
+    this.model.updateAvailableRows();
     this.view.reset();
   }
 
@@ -77,7 +103,9 @@ class Controller {
    * Ends the current turn.
    */
   endTurn = () => {
+    this.model.updateAvailableRows();
     this.model.changePlayer();
     this.view.changeCounter();
+    this.view.updateCssCounterColor();
   }
 }
