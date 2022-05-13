@@ -1,5 +1,5 @@
 # connect4
-A simple and deliberately over-engineered connect4 clone.
+A Connect4 web app, following the MVC design pattern.
 
 Built as a way to primarily practice:
 - Object Oriented Programming skills in vanilla JavaScript.
