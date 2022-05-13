@@ -1,5 +1,6 @@
 :root {
     --body-bgcolor: white;
+    --curr-counter-color: red;
     font-family: 'Roboto Mono', monospace;
 }
 
@@ -15,27 +16,6 @@ body {
     text-align: center;
     font-weight: 300;
     font-size: 5vh;
-}
-
-@media (pointer: coarse) {
-    .player-indicator {
-        display: inline-block;
-        border: 1px solid black;
-        color: black;
-        background: linear-gradient(45deg, rgba(255,0,0,0.5) 50%, rgba(255,255,0,0.5) 50%);
-        border-radius: 50%;
-        transition: background 1s, color 1s;
-    }
-
-    .player-indicator-red {
-        background: red;
-        color: white;
-    }
-
-    .player-indicator-yellow {
-        background: yellow;
-        color: black;
-    }
 }
 
 .board {
@@ -73,7 +53,23 @@ body {
     border: 1px solid black;
 }
 
-.win-line-highlight {
+.message-div {
+    text-align: center;
+    font-size: 2vh;
+}
+
+@media (pointer: fine) {
+    .cell-highlight {
+        border: none;
+        outline: 4px solid var(--curr-counter-color);
+    }
+}
+
+.darken {
+    opacity: 0.75;
+}
+
+.winline-highlight {
     animation: win-highlight 1.3s ease-in-out infinite;
     opacity: 1;
 }
@@ -83,19 +79,13 @@ body {
     100% {transform: scale(1);}
 }
 
-@media (pointer: fine) {
-    .cell-highlight-red {
-        border: none;
-        outline: 4px solid red;
+@media (pointer: coarse) {
+    .player-indicator {
+        display: inline-block;
+        border: 1px solid black;
+        color: black;
+        background-color: var(--curr-counter-color);
+        border-radius: 50%;
+        transition: background-color 1s, color 1s;
     }
-    
-    .cell-highlight-yellow {
-        border: none;
-        outline: 4px solid yellow;
-    }   
-}
-
-.message-div {
-    text-align: center;
-    font-size: 2vh;
 }
