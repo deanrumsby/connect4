@@ -1,4 +1,4 @@
-const Model = require('../js/cleanModel');
+const Model = require('../js/model');
 let game;
 
 describe('createBoard', () => {
