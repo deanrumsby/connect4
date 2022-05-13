@@ -96,6 +96,7 @@ class Controller {
     } else {
       this.view.displayMessages('DRAW', 'RESET');
     }
+    this.view.addWinlinesHighlighting(winlines);
     this.model.gameOver = true;
   }
 

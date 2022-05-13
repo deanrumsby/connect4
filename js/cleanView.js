@@ -48,6 +48,11 @@ class View {
      * @type {Array<HTMLCollectionOf<HTMLDivElement>>}
      */
     this.cells = this.createCellsArray();
+
+    /**
+     * @type {Array<HTMLDivElement>}
+     */
+    this.coloredCells = [];
      
     /**
      * @type {HTMLDivElement}
@@ -170,6 +175,7 @@ class View {
   updateCellColor(coordinates) {
     const [j, i] = coordinates;
     this.cells[j][i].style.backgroundColor = this.currentCounter().color;
+    this.coloredCells.push(this.cells[j][i]);
   }
 
   /**
@@ -201,14 +207,34 @@ class View {
   }
 
   /**
+   * Adds highlighting to the given winlines.
+   * @param {Array<Array<Array<number>>>} winlines 
+   * @returns
+   */
+  addWinlinesHighlighting(winlines) {
+    for (let cell of this.coloredCells) {
+      cell.classList.add('darken');
+    }
+    if (winlines.length === 0) {
+      return;
+    }
+    for (let winline of winlines) {
+      for (let coordinates of winline) {
+        const [j, i] = coordinates;
+        this.cells[j][i].classList.add('winline-highlight');
+      }
+    }
+  }
+
+  /**
    * Resets the board.
    */
   reset() {
-    for (let column of this.cells) {
-      for (let cell of column) {
-        cell.style.backgroundColor = '';
-      }
+    for (let cell of this.coloredCells) {
+      cell.style.backgroundColor = '';
+      cell.classList.remove('winline-highlight', 'darken');
     }
+    this.coloredCells = [];
     this.clearMessages();
   }
 }

@@ -64,3 +64,17 @@ body {
         outline: 4px solid var(--curr-counter-color);
     }
 }
+
+.darken {
+    opacity: 0.75;
+}
+
+.winline-highlight {
+    animation: win-highlight 1.3s ease-in-out infinite;
+    opacity: 1;
+}
+
+@keyframes win-highlight {
+    50% {transform: scale(1.1);}
+    100% {transform: scale(1);}
+}
