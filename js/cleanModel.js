@@ -30,14 +30,14 @@ class Model {
     /**
      * @type {Array<number>}
      */
-    this.availableRows = [];
+    this.nextRows = [];
 
     /**
      * @type {Array<Array<null>>}
      */
      this.board = this.createBoard();
 
-     this.updateAvailableRows();
+     this.updateNextRows();
   }
 
   /**
@@ -132,23 +132,24 @@ class Model {
   }
 
   /**
-   * Updates the next available row index for each column on the board.
+   * Updates this.nextRows with the next available row index 
+   *   for each column on the board.
    */
-  updateAvailableRows() {
-    const availableRows = [];
+  updateNextRows() {
+    const nextRows = [];
     const lastRow = this.numRows - 1;
     for (let j = 0; j < this.numCols; j++) {
       for (let i = 0; i < this.numRows; i++) {
         if (!this.board[j][i]) {
-          availableRows.push(i);
+          nextRows.push(i);
           break;
         }
         if (i === lastRow) {
-          availableRows.push(null);
+          nextRows.push(null);
         }
       }
     }
-    this.availableRows = availableRows;
+    this.nextRows = nextRows;
   }
 
   /**

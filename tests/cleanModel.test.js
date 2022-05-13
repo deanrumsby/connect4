@@ -208,7 +208,7 @@ describe('isBoardFull', () => {
   });
 });
 
-describe('updateAvailableRows', () => {
+describe('updateNextRows', () => {
   beforeAll(() => {
     game = new Model();
   });
@@ -223,8 +223,8 @@ describe('updateAvailableRows', () => {
       ['x' , 'x' , 'x' , 'o' , null, null],
       ['x' , 'x' , 'x' , null, null, null],
     ];
-    game.updateAvailableRows();
-    expect(game.availableRows).toEqual([1, 1, 5, 4, null, 4, 3]);
+    game.updateNextRows();
+    expect(game.nextRows).toEqual([1, 1, 5, 4, null, 4, 3]);
   });
 });
 

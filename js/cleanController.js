@@ -58,11 +58,11 @@ class Controller {
    */
   handleCellHighlighting = (event, column) => {
     const toggleNextCell = () => {
-      const availableRow = this.model.availableRows[column];
-      if (availableRow === null || this.model.gameOver) {
+      const nextRow = this.model.nextRows[column];
+      if (nextRow === null || this.model.gameOver) {
         return;
       }
-      this.view.toggleCellHighlighting([column, availableRow]);
+      this.view.toggleCellHighlighting([column, nextRow]);
     }
 
     toggleNextCell();
@@ -81,7 +81,7 @@ class Controller {
       return;
     }
     this.model.reset();
-    this.model.updateAvailableRows();
+    this.model.updateNextRows();
     this.view.reset();
   }
 
@@ -103,7 +103,7 @@ class Controller {
    * Ends the current turn.
    */
   endTurn = () => {
-    this.model.updateAvailableRows();
+    this.model.updateNextRows();
     this.model.changePlayer();
     this.view.changeCounter();
     this.view.updateCssCounterColor();
