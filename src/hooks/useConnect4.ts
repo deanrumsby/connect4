@@ -1,12 +1,34 @@
 import { useState } from "react";
 
 type Board = Array<Array<Counter | null>>;
-type Counter = "red" | "yellow";
-type WinDirection = "horizontal" | "vertical" | "diagonal" | "antidiagonal";
+type Counter = 0 | 1;
+
+interface BoardState {
+  board: Board;
+  nextAvailableRows: Array<number | null>;
+  lastMove: [number, number] | null;
+}
+
+interface Connect4 {
+  boardState: BoardState;
+  nextAvailableRows: Array<number | null>;
+  nextPlayer: Counter;
+  winner: Counter | null;
+  dropCounter: (column: number) => void;
+  reset: () => void;
+  stringifyBoard: () => string;
+}
 
 const NUM_ROWS = 6;
 const NUM_COLS = 7;
 const NUM_TO_WIN = 4;
+
+const DIRECTIONS = {
+  horizontal: [0, 1],
+  vertical: [1, 0],
+  diagonal: [1, 1],
+  antidiagonal: [-1, 1],
+};
 
 class NonExistentColumnError extends Error {
   constructor(column: number) {
@@ -20,12 +42,18 @@ class ColumnFullError extends Error {
   }
 }
 
-function useConnect4() {
-  const [player, setPlayer] = useState<Counter>("red");
-  const [winner, setWinner] = useState<Counter | null>(null);
-
-  // Create a 2D array of size NUM_ROWS x NUM_COLS
-  // and initialize it with null values
+/**
+ * A hook for playing Connect 4.
+ *
+ * @returns An object containing the current state of the game and
+ * functions for interacting with it.
+ */
+function useConnect4(): Connect4 {
+  /**
+   * Creates a new board.
+   *
+   * @returns A new board.
+   */
   function createBoard(): Board {
     const board = [];
     for (let i = 0; i < NUM_ROWS; i++) {
@@ -34,32 +62,52 @@ function useConnect4() {
     return board;
   }
 
-  const [board, setBoard] = useState<Board>(createBoard());
+  const initialBoardState: BoardState = {
+    board: createBoard(),
+    nextAvailableRows: new Array(NUM_COLS).fill(NUM_ROWS - 1),
+    lastMove: null,
+  };
 
-  // Drop a counter into the board
-  // The counter should fall to the lowest available row
-  // in the given column
-  function _dropCounter(column: number) {
+  const [boardState, setBoardState] = useState<BoardState>(initialBoardState);
+  const { board, nextAvailableRows, lastMove } = boardState;
+
+  /**
+   * Drops the next player's counter into the specified column.
+   *
+   * @param column The column to drop the counter into.
+   * @throws {NonExistentColumnError} If the column does not exist.
+   * @throws {ColumnFullError} If the column is full.
+   */
+  function dropCounter(column: number) {
+    const { board, nextAvailableRows } = boardState;
+
     if (column < 0 || column >= NUM_COLS) {
       throw new NonExistentColumnError(column);
     }
-    if (board[0][column] !== null) {
+    if (nextAvailableRows[column] === null) {
       throw new ColumnFullError(column);
     }
+
     const newBoard = [...board];
-    let row;
-    for (let i = NUM_ROWS - 1; i >= 0; i--) {
-      if (newBoard[i][column] === null) {
-        newBoard[i][column] = player;
-        row = i;
-        break;
-      }
-    }
-    setBoard(newBoard);
-    return row as number;
+    const row = nextAvailableRows[column] as number;
+    newBoard[row][column] = nextPlayer();
+    const newNextAvailableRows = [...nextAvailableRows];
+    newNextAvailableRows[column] = row === 0 ? null : row - 1;
+
+    setBoardState({
+      board: newBoard,
+      nextAvailableRows: newNextAvailableRows,
+      lastMove: [row, column],
+    });
   }
 
-  // Check if there is a win at the given position
+  /**
+   * Checks a position on the board for a win.
+   *
+   * @param row The row of the position to check.
+   * @param col The column of the position to check.
+   * @returns Whether the position is part of a winning line.
+   */
   function checkWin(row: number, col: number) {
     const player = board[row]?.[col];
 
@@ -67,31 +115,8 @@ function useConnect4() {
       return false;
     }
 
-    // Check a given direction for a win
-    function check(direction: WinDirection) {
+    for (const [deltaRow, deltaCol] of Object.values(DIRECTIONS)) {
       let count = 0;
-      let deltaRow;
-      let deltaCol;
-      switch (direction) {
-        case "horizontal":
-          deltaRow = 0;
-          deltaCol = 1;
-          break;
-        case "vertical":
-          deltaRow = 1;
-          deltaCol = 0;
-          break;
-        case "diagonal": {
-          deltaRow = 1;
-          deltaCol = 1;
-          break;
-        }
-        case "antidiagonal": {
-          deltaRow = -1;
-          deltaCol = 1;
-          break;
-        }
-      }
       for (let t = -NUM_TO_WIN; t < NUM_TO_WIN; t++) {
         const i = row + t * deltaRow;
         const j = col + t * deltaCol;
@@ -107,37 +132,65 @@ function useConnect4() {
           count = 0;
         }
       }
-      return false;
     }
-
-    for (const direction of [
-      "horizontal",
-      "vertical",
-      "diagonal",
-      "antidiagonal",
-    ]) {
-      if (check(direction as WinDirection)) {
-        return true;
-      }
-    }
+    return false;
   }
 
-  // Drop a counter into the board and check for a win
-  function dropCounter(column: number) {
-    const row = _dropCounter(column);
-    if (checkWin(row, column)) {
-      setWinner(player);
-    } else {
-      setPlayer(player === "red" ? "yellow" : "red");
+  /**
+   * Returns the next player to play.
+   *
+   * @returns The next player to play.
+   */
+  function nextPlayer(): Counter {
+    if (lastMove === null) {
+      return 0;
     }
+    const [row, col] = lastMove;
+    return board[row][col] === 0 ? 1 : 0;
   }
 
-  // Reset the board to its initial state
+  /**
+   * Returns the winning player, or null if there is no winner.
+   *
+   * @returns The winning player, or null if there is no winner.
+   */
+  function winningPlayer(): Counter | null {
+    if (lastMove === null) {
+      return null;
+    }
+    const [row, col] = lastMove;
+    const player = board[row][col];
+    return checkWin(row, col) ? player : null;
+  }
+
+  /**
+   * Resets the game to its initial state.
+   */
   function reset() {
-    setBoard(createBoard());
+    setBoardState(initialBoardState);
   }
 
-  return { board, player, winner, dropCounter, reset };
+  /**
+   * Returns a string representation of the board.
+   *
+   * @returns A string representation of the board.
+   */
+  function stringifyBoard() {
+    return board
+      .map((row) => row.map((cell) => (cell === null ? "x" : cell)).join(""))
+      .join("\n");
+  }
+
+  return {
+    boardState,
+    nextAvailableRows,
+    nextPlayer: nextPlayer(),
+    winner: winningPlayer(),
+    dropCounter,
+    reset,
+    stringifyBoard,
+  };
 }
 
+export type { Counter };
 export default useConnect4;
