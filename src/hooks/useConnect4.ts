@@ -3,6 +3,12 @@ import { useState } from "react";
 type Board = Array<Array<Counter | null>>;
 type Counter = 0 | 1;
 
+interface UseConnect4Props {
+  numberOfColumns?: number;
+  numberOfRows?: number;
+  numberToWin?: number;
+}
+
 interface BoardState {
   board: Board;
   nextAvailableRows: Array<number | null>;
@@ -11,7 +17,6 @@ interface BoardState {
 
 interface Connect4 {
   boardState: BoardState;
-  nextAvailableRows: Array<number | null>;
   nextPlayer: Counter;
   winner: Counter | null;
   dropCounter: (column: number) => void;
@@ -19,9 +24,11 @@ interface Connect4 {
   stringifyBoard: () => string;
 }
 
-const NUM_ROWS = 6;
-const NUM_COLS = 7;
-const NUM_TO_WIN = 4;
+const DEFAULTS = {
+  numberOfColumns: 7,
+  numberOfRows: 6,
+  numberToWin: 4,
+};
 
 const DIRECTIONS = {
   horizontal: [0, 1],
@@ -45,10 +52,17 @@ class ColumnFullError extends Error {
 /**
  * A hook for playing Connect 4.
  *
+ * @param numberOfColumns The number of columns on the board.
+ * @param numberOfRows The number of rows on the board.
+ * @param numberToWin The number of counters in a row required to win.
  * @returns An object containing the current state of the game and
  * functions for interacting with it.
  */
-function useConnect4(): Connect4 {
+function useConnect4({
+  numberOfColumns = DEFAULTS.numberOfColumns,
+  numberOfRows = DEFAULTS.numberOfRows,
+  numberToWin = DEFAULTS.numberToWin,
+}: UseConnect4Props = {}): Connect4 {
   /**
    * Creates a new board.
    *
@@ -56,15 +70,15 @@ function useConnect4(): Connect4 {
    */
   function createBoard(): Board {
     const board = [];
-    for (let i = 0; i < NUM_ROWS; i++) {
-      board.push(new Array(NUM_COLS).fill(null));
+    for (let i = 0; i < numberOfRows; i++) {
+      board.push(new Array(numberOfColumns).fill(null));
     }
     return board;
   }
 
   const initialBoardState: BoardState = {
     board: createBoard(),
-    nextAvailableRows: new Array(NUM_COLS).fill(NUM_ROWS - 1),
+    nextAvailableRows: new Array(numberOfColumns).fill(numberOfRows - 1),
     lastMove: null,
   };
 
@@ -79,9 +93,7 @@ function useConnect4(): Connect4 {
    * @throws {ColumnFullError} If the column is full.
    */
   function dropCounter(column: number) {
-    const { board, nextAvailableRows } = boardState;
-
-    if (column < 0 || column >= NUM_COLS) {
+    if (column < 0 || column >= numberOfColumns) {
       throw new NonExistentColumnError(column);
     }
     if (nextAvailableRows[column] === null) {
@@ -117,15 +129,15 @@ function useConnect4(): Connect4 {
 
     for (const [deltaRow, deltaCol] of Object.values(DIRECTIONS)) {
       let count = 0;
-      for (let t = -NUM_TO_WIN; t < NUM_TO_WIN; t++) {
+      for (let t = -numberToWin + 1; t < numberToWin; t++) {
         const i = row + t * deltaRow;
         const j = col + t * deltaCol;
-        if (i < 0 || i >= NUM_ROWS || j < 0 || j >= NUM_COLS) {
+        if (i < 0 || i >= numberOfRows || j < 0 || j >= numberOfColumns) {
           continue;
         }
         if (board[i][j] === player) {
           count++;
-          if (count === NUM_TO_WIN) {
+          if (count === numberToWin) {
             return true;
           }
         } else {
@@ -183,7 +195,6 @@ function useConnect4(): Connect4 {
 
   return {
     boardState,
-    nextAvailableRows,
     nextPlayer: nextPlayer(),
     winner: winningPlayer(),
     dropCounter,
@@ -193,4 +204,5 @@ function useConnect4(): Connect4 {
 }
 
 export type { Counter };
+export { DEFAULTS, NonExistentColumnError, ColumnFullError };
 export default useConnect4;
