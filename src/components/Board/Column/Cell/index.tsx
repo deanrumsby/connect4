@@ -7,7 +7,7 @@ interface CellProps {
 
 function Cell({ counter }: CellProps) {
   let counterClass = "counter-empty";
-  if (counter) {
+  if (counter !== null) {
     counterClass = `counter-${counter}`;
   }
 

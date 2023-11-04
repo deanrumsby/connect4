@@ -108,7 +108,7 @@ function useConnect4({
     const row = nextAvailableRows[column] as number;
     newBoard[column][row] = nextPlayer();
     const newNextAvailableRows = [...nextAvailableRows];
-    newNextAvailableRows[column] = row < numberOfRows - 1 ? row : null;
+    newNextAvailableRows[column] = row < numberOfRows - 1 ? row + 1 : null;
 
     setBoardState({
       board: newBoard,

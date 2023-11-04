@@ -4,19 +4,23 @@ import "./Board.css";
 
 interface BoardProps {
   board: (Counter | null)[][];
+  dropCounter: (columnIndex: number) => void;
 }
 
-function Board({ board }: BoardProps) {
-  const numberOfColumns = board.length;
-  const numberOfRows = board[0].length;
+function Board({ board, dropCounter }: BoardProps) {
+  const numberOfColumns = board[0].length;
+  const numberOfRows = board.length;
 
   return (
     <div
       className="board"
-      style={{ aspectRatio: numberOfColumns / numberOfRows }}
+      style={{ aspectRatio: numberOfRows / numberOfColumns }}
     >
-      {board.map((counters: (Counter | null)[]) => (
-        <Column counters={counters} />
+      {board.map((counters: (Counter | null)[], columnIndex) => (
+        <Column
+          counters={counters}
+          addCounter={() => dropCounter(columnIndex)}
+        />
       ))}
     </div>
   );

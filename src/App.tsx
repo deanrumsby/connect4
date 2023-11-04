@@ -7,6 +7,7 @@ import Board from "./components/Board";
 function App() {
   const {
     boardState: { board },
+    dropCounter,
   } = useConnect4();
 
   useEffect(() => {
@@ -15,7 +16,7 @@ function App() {
 
   return (
     <div className="board-container">
-      <Board board={board} />;
+      <Board board={board} dropCounter={dropCounter} />;
     </div>
   );
 }
