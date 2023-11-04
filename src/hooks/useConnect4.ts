@@ -31,10 +31,10 @@ const DEFAULTS = {
 };
 
 const DIRECTIONS = {
-  horizontal: [0, 1],
-  vertical: [1, 0],
+  horizontal: [1, 0],
+  vertical: [0, 1],
   diagonal: [1, 1],
-  antidiagonal: [-1, 1],
+  antidiagonal: [1, -1],
 };
 
 class NonExistentColumnError extends Error {
@@ -65,20 +65,24 @@ function useConnect4({
 }: UseConnect4Props = {}): Connect4 {
   /**
    * Creates a new board.
+   * The board is represented as a 2D array of nulls.
+   * The first dimension represents the columns, and the second dimension
+   * represents the rows.
+   * The bottom left cell is [0, 0].
    *
    * @returns A new board.
    */
   function createBoard(): Board {
     const board = [];
-    for (let i = 0; i < numberOfRows; i++) {
-      board.push(new Array(numberOfColumns).fill(null));
+    for (let i = 0; i < numberOfColumns; i++) {
+      board.push(new Array(numberOfRows).fill(null));
     }
     return board;
   }
 
   const initialBoardState: BoardState = {
     board: createBoard(),
-    nextAvailableRows: new Array(numberOfColumns).fill(numberOfRows - 1),
+    nextAvailableRows: new Array(numberOfColumns).fill(0),
     lastMove: null,
   };
 
@@ -102,14 +106,14 @@ function useConnect4({
 
     const newBoard = [...board];
     const row = nextAvailableRows[column] as number;
-    newBoard[row][column] = nextPlayer();
+    newBoard[column][row] = nextPlayer();
     const newNextAvailableRows = [...nextAvailableRows];
-    newNextAvailableRows[column] = row === 0 ? null : row - 1;
+    newNextAvailableRows[column] = row < numberOfRows - 1 ? row : null;
 
     setBoardState({
       board: newBoard,
       nextAvailableRows: newNextAvailableRows,
-      lastMove: [row, column],
+      lastMove: [column, row],
     });
   }
 
@@ -120,19 +124,19 @@ function useConnect4({
    * @param col The column of the position to check.
    * @returns Whether the position is part of a winning line.
    */
-  function checkWin(row: number, col: number) {
-    const player = board[row]?.[col];
+  function checkWin(col: number, row: number) {
+    const player = board[col]?.[row];
 
     if (player === null || player === undefined) {
       return false;
     }
 
-    for (const [deltaRow, deltaCol] of Object.values(DIRECTIONS)) {
+    for (const [deltaCol, deltaRow] of Object.values(DIRECTIONS)) {
       let count = 0;
       for (let t = -numberToWin + 1; t < numberToWin; t++) {
-        const i = row + t * deltaRow;
-        const j = col + t * deltaCol;
-        if (i < 0 || i >= numberOfRows || j < 0 || j >= numberOfColumns) {
+        const i = col + t * deltaCol;
+        const j = row + t * deltaRow;
+        if (i < 0 || i >= numberOfColumns || j < 0 || j >= numberOfRows) {
           continue;
         }
         if (board[i][j] === player) {
@@ -157,8 +161,8 @@ function useConnect4({
     if (lastMove === null) {
       return 0;
     }
-    const [row, col] = lastMove;
-    return board[row][col] === 0 ? 1 : 0;
+    const [col, row] = lastMove;
+    return board[col][row] === 0 ? 1 : 0;
   }
 
   /**
@@ -170,9 +174,9 @@ function useConnect4({
     if (lastMove === null) {
       return null;
     }
-    const [row, col] = lastMove;
-    const player = board[row][col];
-    return checkWin(row, col) ? player : null;
+    const [col, row] = lastMove;
+    const player = board[col][row];
+    return checkWin(col, row) ? player : null;
   }
 
   /**
@@ -188,9 +192,14 @@ function useConnect4({
    * @returns A string representation of the board.
    */
   function stringifyBoard() {
-    return board
-      .map((row) => row.map((cell) => (cell === null ? "x" : cell)).join(""))
-      .join("\n");
+    let boardString = "";
+    for (let j = numberOfRows - 1; j >= 0; j--) {
+      for (let i = 0; i < numberOfColumns; i++) {
+        boardString += board[i][j] === null ? "x" : board[i][j];
+      }
+      boardString += "\n";
+    }
+    return boardString;
   }
 
   return {

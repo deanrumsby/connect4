@@ -1,6 +1,6 @@
 .cell {
   aspect-ratio: 1;
-  padding: 0.2em;
+  padding: 0.4em;
   min-width: 20px;
   background-color: blue;
 }

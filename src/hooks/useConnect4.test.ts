@@ -19,12 +19,12 @@ test("should return initial board state and values", () => {
       "xxxxxxx\n" +
       "xxxxxxx\n" +
       "xxxxxxx\n" +
-      "xxxxxxx",
+      "xxxxxxx\n",
   );
   expect(nextPlayer).toBe(0);
   expect(winner).toBe(null);
   expect(lastMove).toBe(null);
-  expect(nextAvailableRows).toEqual([5, 5, 5, 5, 5, 5, 5]);
+  expect(nextAvailableRows).toEqual([0, 0, 0, 0, 0, 0, 0]);
 });
 
 test("player should change after each counter added", () => {
