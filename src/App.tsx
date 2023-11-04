@@ -13,7 +13,11 @@ function App() {
     console.log(board);
   }, [board]);
 
-  return <Board board={board} />;
+  return (
+    <div className="board-container">
+      <Board board={board} />;
+    </div>
+  );
 }
 
 export default App;
