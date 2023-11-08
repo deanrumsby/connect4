@@ -4,12 +4,12 @@ import "./Column.css";
 
 interface ColumnProps {
   counters: (Counter | null)[];
-  addCounter: () => void;
+  onClick: () => void;
 }
 
-function Column({ counters, addCounter }: ColumnProps) {
+function Column({ counters, onClick }: ColumnProps) {
   return (
-    <div className="column" onClick={addCounter}>
+    <div className="column" onClick={onClick}>
       {counters.map((counter: Counter | null) => (
         <Cell counter={counter} />
       ))}
