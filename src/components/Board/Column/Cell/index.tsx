@@ -5,15 +5,24 @@ interface CellProps {
   counter: Counter | null;
 }
 
+const counterColors: {
+  [K in Counter]: string;
+} = {
+  0: "red",
+  1: "yellow",
+};
+
 function Cell({ counter }: CellProps) {
-  let counterClass = "counter-empty";
-  if (counter !== null) {
-    counterClass = `counter-${counter}`;
-  }
+  const counterColor = counter !== null ? counterColors[counter] : "white";
+  const counterStyles = {
+    backgroundColor: counterColor,
+  };
 
   return (
     <div className="cell">
-      <div className={`counter ${counterClass}`}>&nbsp;</div>
+      <div className="counter" style={counterStyles}>
+        &nbsp;
+      </div>
     </div>
   );
 }

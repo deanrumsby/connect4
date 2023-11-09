@@ -10,15 +10,3 @@
   height: 100%;
   border-radius: 50%;
 }
-
-.counter-empty {
-  background-color: white;
-}
-
-.counter-0 {
-  background-color: red;
-}
-
-.counter-1 {
-  background-color: yellow;
-}
