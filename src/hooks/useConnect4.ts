@@ -88,7 +88,7 @@ function useConnect4({
     if (column < 0 || column >= numberOfColumns) {
       throw new NonExistentColumnError(column);
     }
-    if (board[column] === undefined) {
+    if (board[column][numberOfRows - 1] !== null) {
       throw new ColumnFullError(column);
     }
 
