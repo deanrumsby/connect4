@@ -1,26 +1,33 @@
 import type { Counter } from "@/hooks/useConnect4";
+import { counterColors } from "../../../../constants";
 import "./Cell.css";
 
 interface CellProps {
   counter: Counter | null;
+  highlighting?: {
+    color: string;
+  };
 }
 
-const counterColors: {
-  [K in Counter]: string;
-} = {
-  0: "red",
-  1: "yellow",
-};
-
-function Cell({ counter }: CellProps) {
+function Cell({ counter, highlighting }: CellProps) {
   const counterColor = counter !== null ? counterColors[counter] : "white";
-  const counterStyles = {
+  const counterStyle = {
     backgroundColor: counterColor,
   };
 
+  let finalCounterStyle = counterStyle;
+  if (highlighting) {
+    const highlightStyle = {
+      outlineStyle: "solid",
+      outlineWidth: "5px",
+      outlineColor: highlighting.color,
+    };
+    finalCounterStyle = { ...finalCounterStyle, ...highlightStyle };
+  }
+
   return (
     <div className="cell">
-      <div className="counter" style={counterStyles}>
+      <div className="counter" style={finalCounterStyle}>
         &nbsp;
       </div>
     </div>

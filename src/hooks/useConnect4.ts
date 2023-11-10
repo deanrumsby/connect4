@@ -156,6 +156,6 @@ function useConnect4({
   };
 }
 
-export type { Counter, Board };
+export type { Counter, Board, Connect4 };
 export { DEFAULTS, NonExistentColumnError, ColumnFullError };
 export default useConnect4;
