@@ -13,6 +13,7 @@ interface Connect4 {
   board: Board;
   player: Counter;
   winner: Counter | null;
+  error: string | null;
   dropCounter: (column: number) => void;
   reset: () => void;
 }
@@ -29,18 +30,6 @@ const DIRECTIONS = {
   diagonal: [1, 1],
   antidiagonal: [1, -1],
 };
-
-class NonExistentColumnError extends Error {
-  constructor(column: number) {
-    super(`Column ${column} does not exist`);
-  }
-}
-
-class ColumnFullError extends Error {
-  constructor(column: number) {
-    super(`Column ${column} is full`);
-  }
-}
 
 /**
  * A hook for playing Connect 4.
@@ -76,20 +65,21 @@ function useConnect4({
   const [board, setBoard] = useState<Board>(createBoard());
   const [player, setPlayer] = useState<Counter>(0);
   const [winner, setWinner] = useState<Counter | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   /**
    * Drops the next player's counter into the specified column.
    *
    * @param column The column to drop the counter into.
-   * @throws {NonExistentColumnError} If the column does not exist.
-   * @throws {ColumnFullError} If the column is full.
    */
   function dropCounter(column: number) {
     if (column < 0 || column >= numberOfColumns) {
-      throw new NonExistentColumnError(column);
+      setError(`Column ${column} does not exist`);
+      return;
     }
     if (board[column][numberOfRows - 1] !== null) {
-      throw new ColumnFullError(column);
+      setError(`Column ${column} is full`);
+      return;
     }
 
     const newBoard = [...board];
@@ -107,6 +97,7 @@ function useConnect4({
     }
     setBoard(newBoard);
     setPlayer((p) => (p === 0 ? 1 : 0));
+    setError(null);
   }
 
   /**
@@ -145,17 +136,19 @@ function useConnect4({
     setBoard(createBoard());
     setPlayer(0);
     setWinner(null);
+    setError(null);
   }
 
   return {
     board,
     player,
     winner,
+    error,
     dropCounter,
     reset,
   };
 }
 
 export type { Counter, Board, Connect4 };
-export { DEFAULTS, NonExistentColumnError, ColumnFullError };
+export { DEFAULTS };
 export default useConnect4;
