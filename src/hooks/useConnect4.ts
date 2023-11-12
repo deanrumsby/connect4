@@ -13,6 +13,7 @@ interface Connect4 {
   board: Board;
   player: Counter;
   winner: Counter | null;
+  winLine: number[][] | null;
   error: string | null;
   dropCounter: (column: number) => void;
   reset: () => void;
@@ -65,6 +66,7 @@ function useConnect4({
   const [board, setBoard] = useState<Board>(createBoard());
   const [player, setPlayer] = useState<Counter>(0);
   const [winner, setWinner] = useState<Counter | null>(null);
+  const [winLine, setWinLine] = useState<number[][] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   /**
@@ -96,8 +98,12 @@ function useConnect4({
       }
     }
 
-    if (row !== undefined && winner === null && isWinning(column, row)) {
-      setWinner(player);
+    if (row !== undefined && winner === null) {
+      const winLine = findWinLine(column, row);
+      if (winLine.length > 0) {
+        setWinner(player);
+        setWinLine(winLine);
+      }
     }
     setBoard(newBoard);
     setPlayer((p) => (p === 0 ? 1 : 0));
@@ -105,15 +111,15 @@ function useConnect4({
   }
 
   /**
-   * Checks a position on the board for a win.
+   * Checks a position on the board for a winning line.
    *
    * @param row The row of the position to check.
    * @param col The column of the position to check.
-   * @returns Whether the position is part of a winning line.
+   * @returns The coordinates of a winning line
    */
-  function isWinning(col: number, row: number) {
+  function findWinLine(col: number, row: number) {
     for (const [deltaCol, deltaRow] of Object.values(DIRECTIONS)) {
-      let count = 0;
+      let winLine = [];
       for (let t = -numberToWin + 1; t < numberToWin; t++) {
         const i = col + t * deltaCol;
         const j = row + t * deltaRow;
@@ -121,16 +127,16 @@ function useConnect4({
           continue;
         }
         if (board[i][j] === player) {
-          count++;
-          if (count === numberToWin) {
-            return true;
+          winLine.push([i, j]);
+          if (winLine.length === numberToWin) {
+            return winLine;
           }
         } else {
-          count = 0;
+          winLine = [];
         }
       }
     }
-    return false;
+    return [];
   }
 
   /**
@@ -147,6 +153,7 @@ function useConnect4({
     board,
     player,
     winner,
+    winLine,
     error,
     dropCounter,
     reset,

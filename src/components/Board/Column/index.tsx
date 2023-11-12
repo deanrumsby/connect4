@@ -12,7 +12,7 @@ interface ColumnProps {
 }
 
 function Column({ columnIndex, counters }: ColumnProps) {
-  const { player, dropCounter, winner } = useConnect4Context();
+  const { player, dropCounter, winner, winLine } = useConnect4Context();
 
   const [shouldHighlightNextCell, setShouldHighlightNextCell] =
     useState<boolean>(false);
@@ -22,9 +22,6 @@ function Column({ columnIndex, counters }: ColumnProps) {
   }
 
   const nextCellIndex = counters.findIndex((counter) => counter === null);
-  const nextCellHighlighting = {
-    color: counterColors[player],
-  };
 
   const handleOnMouseEnter = () => {
     setShouldHighlightNextCell(winner === null); // Don't highlight if there's a winner
@@ -34,11 +31,24 @@ function Column({ columnIndex, counters }: ColumnProps) {
     setShouldHighlightNextCell(false);
   };
 
+  const determineHighlighting = (rowIndex: number) => {
+    if (winLine !== null) {
+      if (
+        winLine.find(
+          ([winCol, winRow]) => winCol === columnIndex && winRow === rowIndex,
+        )
+      ) {
+        return { color: "pink" };
+      }
+    }
+    if (rowIndex === nextCellIndex && shouldHighlightNextCell) {
+      return { color: counterColors[player] };
+    }
+    return undefined;
+  };
+
   const renderCell = (counter: Counter | null, rowIndex: number) => {
-    const highlighting =
-      rowIndex === nextCellIndex && shouldHighlightNextCell
-        ? nextCellHighlighting
-        : undefined;
+    const highlighting = determineHighlighting(rowIndex);
     return (
       <Cell key={rowIndex} counter={counter} highlighting={highlighting} />
     );
