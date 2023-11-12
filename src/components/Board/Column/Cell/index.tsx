@@ -6,6 +6,7 @@ interface CellProps {
   counter: Counter | null;
   highlighting?: {
     color: string;
+    animation?: string;
   };
 }
 
@@ -21,6 +22,9 @@ function Cell({ counter, highlighting }: CellProps) {
       outlineStyle: "solid",
       outlineWidth: "5px",
       outlineColor: highlighting.color,
+      animationName: highlighting.animation,
+      animationDuration: "1s",
+      animationIterationCount: "infinite",
     };
     finalCounterStyle = { ...finalCounterStyle, ...highlightStyle };
   }

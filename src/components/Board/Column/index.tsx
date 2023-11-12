@@ -38,7 +38,7 @@ function Column({ columnIndex, counters }: ColumnProps) {
           ([winCol, winRow]) => winCol === columnIndex && winRow === rowIndex,
         )
       ) {
-        return { color: "pink" };
+        return { color: "pink", animation: "pulse" };
       }
     }
     if (rowIndex === nextCellIndex && shouldHighlightNextCell) {
