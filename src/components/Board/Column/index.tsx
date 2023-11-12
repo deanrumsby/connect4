@@ -12,10 +12,14 @@ interface ColumnProps {
 }
 
 function Column({ columnIndex, counters }: ColumnProps) {
-  const { player, dropCounter } = useConnect4Context();
+  const { player, dropCounter, winner } = useConnect4Context();
 
   const [shouldHighlightNextCell, setShouldHighlightNextCell] =
     useState<boolean>(false);
+
+  if (winner !== null && shouldHighlightNextCell) {
+    setShouldHighlightNextCell(false);
+  }
 
   const nextCellIndex = counters.findIndex((counter) => counter === null);
   const nextCellHighlighting = {
@@ -23,7 +27,7 @@ function Column({ columnIndex, counters }: ColumnProps) {
   };
 
   const handleOnMouseEnter = () => {
-    setShouldHighlightNextCell(true);
+    setShouldHighlightNextCell(winner === null); // Don't highlight if there's a winner
   };
 
   const handleOnMouseLeave = () => {

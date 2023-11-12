@@ -73,6 +73,10 @@ function useConnect4({
    * @param column The column to drop the counter into.
    */
   function dropCounter(column: number) {
+    if (winner !== null) {
+      return;
+    }
+
     if (column < 0 || column >= numberOfColumns) {
       setError("Column does not exist");
       return;
