@@ -74,11 +74,11 @@ function useConnect4({
    */
   function dropCounter(column: number) {
     if (column < 0 || column >= numberOfColumns) {
-      setError(`Column ${column} does not exist`);
+      setError("Column does not exist");
       return;
     }
     if (board[column][numberOfRows - 1] !== null) {
-      setError(`Column ${column} is full`);
+      setError("Column is full");
       return;
     }
 
