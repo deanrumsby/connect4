@@ -92,7 +92,7 @@ function useConnect4({
       }
     }
 
-    if (row && isWinning(column, row)) {
+    if (row !== undefined && winner === null && isWinning(column, row)) {
       setWinner(player);
     }
     setBoard(newBoard);
