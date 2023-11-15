@@ -1,10 +1,11 @@
-import type { Counter, Board } from "@/hooks/useConnect4";
-import useConnect4Context from "@/hooks/useConnect4Context";
+import { useConnect4, type Counter } from "@/context/Connect4Context";
 import Column from "./Column";
 import "./Board.css";
 
 function Board() {
-  const { board } = useConnect4Context();
+  const [connect4] = useConnect4();
+  const { board } = connect4;
+
   const numberOfColumns = board[0].length;
   const numberOfRows = board.length;
 

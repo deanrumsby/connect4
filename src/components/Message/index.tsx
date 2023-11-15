@@ -1,8 +1,9 @@
-import useConnect4Context from "@/hooks/useConnect4Context";
+import { useConnect4 } from "@/context/Connect4Context";
 import "./Message.css";
 
 function Message() {
-  const { winner, error } = useConnect4Context();
+  const [connect4] = useConnect4();
+  const { winner, error } = connect4;
 
   const determineMessage = () => {
     if (winner !== null) {

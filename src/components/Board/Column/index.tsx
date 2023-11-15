@@ -1,7 +1,6 @@
 import { useState } from "react";
 
-import type { Counter } from "@/hooks/useConnect4";
-import useConnect4Context from "@/hooks/useConnect4Context";
+import { useConnect4, type Counter } from "@/context/Connect4Context";
 import { counterColors } from "@/constants";
 import Cell from "./Cell";
 import "./Column.css";
@@ -12,7 +11,8 @@ interface ColumnProps {
 }
 
 function Column({ columnIndex, counters }: ColumnProps) {
-  const { player, dropCounter, winner, winLine } = useConnect4Context();
+  const [connect4, dispatch] = useConnect4();
+  const { player, winner, winLine } = connect4;
 
   const [shouldHighlightNextCell, setShouldHighlightNextCell] =
     useState<boolean>(false);
@@ -57,7 +57,9 @@ function Column({ columnIndex, counters }: ColumnProps) {
   return (
     <div
       className="column"
-      onClick={() => dropCounter(columnIndex)}
+      onClick={() =>
+        dispatch({ type: "DROP_COUNTER", payload: { column: columnIndex } })
+      }
       onMouseEnter={handleOnMouseEnter}
       onMouseLeave={handleOnMouseLeave}
     >

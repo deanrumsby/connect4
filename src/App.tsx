@@ -1,5 +1,5 @@
 import "./App.css";
-import { Connect4Provider } from "./context/Connect4Context";
+import Connect4Provider from "./context/Connect4Context";
 import Board from "./components/Board";
 import Message from "./components/Message";
 
